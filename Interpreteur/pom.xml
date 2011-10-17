@@ -5,10 +5,11 @@
        <modelVersion>4.0.0</modelVersion>
        <artifactId>Interpreteur</artifactId>
        <version>1.0.0</version>
+       <name>Interpreteur</name>
        <parent>
               <groupId>compilationm1_G4</groupId>
-              <artifactId>compilationm1</artifactId>
-              <version>1.0.0</version>
+			  <artifactId>compilationm1</artifactId>
+			  <version>1.0.0</version>
        </parent>
 </project>
 

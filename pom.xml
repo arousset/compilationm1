@@ -7,6 +7,7 @@
     <groupId>compilationm1_G4</groupId>
     <artifactId>compilationm1</artifactId>
     <version>1.0.0</version>
+    <packaging>pom</packaging>
     <name>projet_compilation</name>
 
     <properties>
