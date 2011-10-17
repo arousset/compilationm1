@@ -49,7 +49,20 @@
             <version>3.8.2</version>
         </dependency>
     </dependencies>
-
+    
+	<distributionManagement>
+		<repository>
+			<id>nexus</id>
+			<name>Nexus-repository</name>
+			<url>http://172.20.65.33:8080/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus</id>
+			<name>Nexus-repository-snapshot</name>
+			<url>http://172.20.65.33:8080/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
 <modules>
     <module>Analyseur</module>
     <module>Compilateur</module>
