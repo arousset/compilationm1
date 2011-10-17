@@ -5,14 +5,17 @@
        <modelVersion>4.0.0</modelVersion>
        <artifactId>Memoire</artifactId>
        <version>1.0.0</version>
+       <name>Memoire</name>
+                     <packaging>pom</packaging>
        <parent>
               <groupId>compilationm1_G4</groupId>
               <artifactId>compilationm1</artifactId>
               <version>1.0.0</version>
+
        </parent>
 
 	<modules>
-	    <module>Pile</module>
+	    <module>PIle</module>
 	    <module>Tas</module>
 	</modules>
 </project>
