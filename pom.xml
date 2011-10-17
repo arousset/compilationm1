@@ -54,13 +54,8 @@
 		<repository>
 			<id>nexus</id>
 			<name>Nexus-repository</name>
-			<url>http://172.20.65.33:8080/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus</id>
-			<name>Nexus-repository-snapshot</name>
-			<url>http://172.20.65.33:8080/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
+			<url>http://prjmng.deptinfo-st.univ-fcomte.fr:8081/nexus/content/repositories/releases/</url>
+		</repository> 
 	</distributionManagement>
 	
 <modules>
