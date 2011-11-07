@@ -1,0 +1,269 @@
+/*
+	Parseur minijaja
+	ROUSSET Alban & KAWCZAK Clement
+*/
+
+options{
+	MULTI=true;
+	VISITOR=true;
+	VISITOR_EXCEPTION="MiniJajaVisitorException";
+}
+
+PARSER_BEGIN(MiniJaja)
+	import java.io.*;
+	
+public class MiniJaja{
+
+	public static void main (String arg[]) throws Exception {
+		MiniJaja mjj = new MiniJaja(new FileReader(new File("exemple.txt")));
+    	mjj.classe();
+    	
+    	Node racine = mjj.jjtree.rootNode();
+    	((SimpleNode)racine).dump("-->");
+  	}
+}	
+PARSER_END(MiniJaja)
+
+// Définition des élements à sauter
+
+SKIP:{
+  " "
+  | "\t"
+  | "\n"
+  | "\r"
+  | <"//"(~["\n", "\r"])*("\n" // Commentaires simples
+  | "\r"
+  | "\r\n")>
+  | <"/*"(~["*"])*"*"(~["/"](~["*"])*"*")*"/"> // Commentaires complexes
+}
+
+// Définition des Tokens
+
+TOKEN:{
+	<BOOLEAN:"boolean">
+	| <CLASS:"class">
+	| <FALSE:"false">
+	| <TRUE:"true">
+	| <IF:"if">
+	| <ELSE:"else">
+	| <MAIN:"main">
+	| <FINAL:"final">
+	| <INT:"int">
+	| <RETURN:"return">
+	| <VOID:"void">
+	| <WHILE:"while">
+}
+
+TOKEN:
+{
+	<LPAREN:"(">
+	| <RPAREN:")">
+	| <LACCOL:"{">
+	| <RACCOL:"}">
+	| <LCROCH:"[">
+	| <RCROCH:"]">
+	| <POINTVIRG:";">
+	| <VIRG:",">
+}
+
+TOKEN:
+{
+	< IDENTIFIER: (["a"-"z","A"-"Z"]) (["a"-"z","A"-"Z","0"-"9","_"])* >
+ 	| < NOMBRE: (["0"-"9"]) (["0"-"9"])* >
+}
+
+TOKEN:
+{
+	<EQ:"==">
+	| <ASSIGN:"=">
+	| <BANG:"!">
+	| <INCR:"++">
+	| <PLUSASSIGN:"+=">
+	| <PLUS:"+">
+	| <MINUS:"-">
+	| <STAR:"*">
+	| <SLASH:"/">
+	| <LT:"<">
+	| <OR:"||">
+	| <AND:"&&">
+	| <GT:">">
+}
+
+// Regles syntaxicales
+
+void classe() #classe : {} {
+	<CLASS> ident() <LACCOL> decls() methmain() <RACCOL> <EOF>
+}
+
+void ident() #ident: {} {
+	<IDENTIFIER> { jjtThis.setValeur(token.image); }
+}
+
+void decls() #void : {} {
+	decl() <POINTVIRG> decls() #decls(2) 
+	| {} #vnil
+}
+
+void decl() #void : {} {
+	<FINAL> type() ident() vexp() #cst(3)
+	| typemeth() ident() declbis()
+}
+
+void declbis() #void : {} {
+	<LCROCH> exp() <RCROCH> #tableau(3)
+	| <LPAREN> entetes() <RPAREN> <LACCOL> vars() instrs() <RACCOL> #methode(5)
+	| vexp() #var(3)
+}
+
+void vars() #void : {} {
+	var() <POINTVIRG> vars() #vars(2)
+	| {} #vnil
+}
+
+void var() #void : {} {
+	<FINAL> type() ident() vexp() #cst(3)
+	| typemeth() ident() varbis()
+}
+
+void varbis() #void : {} {
+	<LCROCH> exp() <RCROCH> #tableau(3)
+	|  vexp() #var(3) 
+}
+
+void vexp() #void : {} {
+	<ASSIGN> exp()
+	| {} #omega
+}
+
+void methmain() #main(2) : {} {
+	<MAIN> <LACCOL> vars() instrs() <RACCOL>
+}
+
+void entetes() #void : {} {
+	entete() entetes2() #entetes(2)
+	| {} #enil
+}
+
+void entetes2() #void : {} {
+	<VIRG> entete() entetes2() #entetes(2)
+	| {} #enil
+}
+
+void entete() #void : {} {
+	type() ident() #entete(2)
+}
+
+void instrs() #void : {} {
+	instr() <POINTVIRG> instrs() #instrs(2)
+	| {} #inil
+}
+
+void instr() #void : {} {
+	<RETURN> exp() #retour
+	| <WHILE> <LPAREN> exp() <RPAREN> <LACCOL> instrs() <RACCOL> #tantque(2)
+	| <IF> <LPAREN> exp() <RPAREN> <LACCOL> instrs() <RACCOL> elseNode() #si(3)
+	| ident() instrbis()
+}
+
+void elseNode() #void : {} {
+	<ELSE> <LACCOL> instrs() <RACCOL>
+	| {} #inil
+}
+
+void instrbis() #void : {} {
+	identbis() instrbisbis() 
+	| <LPAREN> listexp() <RPAREN> #appelI(2)
+}
+
+void instrbisbis() #void : {}{
+	<ASSIGN> exp() #affectation(2)
+	| <PLUSASSIGN> exp() #somme(2)
+	| <INCR> #increment(1)
+}
+
+void identbis() #void : {} {
+	[ <LCROCH> exp() <RCROCH> #tab(2) ]
+}
+
+void listexp() #void : {} {
+	exp() listexpbis() #listexp(2)
+	| {} #exnil
+}
+
+void listexpbis() #void : {} {
+	<VIRG> exp() listexpbis() #listexp(2)
+	| {} #exnil
+}
+
+void exp() #void : {} {
+	<BANG> exp1() #non
+	| <MINUS> exp1() #neg
+	| exp1() expbis()
+}
+
+void expbis() #void : {} {
+
+	[ <AND> exp1() expbis() #et(2)
+	| <OR> exp1() expbis() #ou(2) ]
+}
+
+void exp1() #void : {} {
+	exp2() exp1bis()
+}
+
+void exp1bis() #void : {} {
+	[ <EQ> exp2() #egal(2)
+	| <LT> exp2() #inf(2)
+	| <GT> exp2() #sup(2) ]
+}
+
+void exp2() #void : {} {
+	terme() exp2bis()
+}
+
+void exp2bis() #void : {} {
+	[ <PLUS> exp2() #plus(2)
+	| <MINUS> exp2() #moins(2) ]
+}
+
+void terme() #void : {} {
+	fact() termebis()
+}
+
+void termebis() #void : {} {
+	[ <STAR> fact() termebis() #mult(2)
+	| <SLASH> fact() termebis() #div(2) ]
+}
+
+void fact() #void : {} {
+	<TRUE> #vrai
+	| <FALSE> #faux
+	| <LPAREN> exp() <RPAREN>
+	| ident() factbis()
+	| nbre()
+}
+void factbis() #void:{}{
+	( <LPAREN> listexp() <RPAREN> ) #appelE(2)
+	| identbis()
+}
+
+void nbre() #nbre : {int x;} { 
+	<NOMBRE> {
+		try { x = Integer.parseInt(token.image);
+		} catch (NumberFormatException ee) {
+			System.err.println("Error: " + token.image + " is not a number.");
+			x = 0;
+		}		
+		jjtThis.setValeur(x);
+	} 
+}
+
+void typemeth() #void : {} {
+	<VOID> #rien
+	| type() 
+}
+
+void type() #void:{}{
+	<INT> #entier
+	| <BOOLEAN> #booleen
+}
