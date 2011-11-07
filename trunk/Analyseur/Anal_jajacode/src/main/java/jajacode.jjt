@@ -1,0 +1,163 @@
+/*
+	Parseur jajacode
+	ROUSSET Alban & KAWCZAK Clement
+*/
+
+options{
+  MULTI=true;
+  VISITOR=true;
+  VISITOR_EXCEPTION="JajaCodeVisitorException";
+}
+
+
+PARSER_BEGIN(JajaCode)
+	package jajacode.jjtree;
+
+	public class JajaCode{
+		public static void main (String arg[]) throws ParseException {
+  			JajaCode jjc = new JajaCode(System.in);
+    		jjc.Classe() ;
+  		}
+	}
+PARSER_END(JajaCode)
+
+SKIP : { 
+	" "      
+  |	"\r"    
+  |	"\n"    
+  |	"\t" 
+}  
+
+TOKEN : {   
+     < ADD : "add" >
+  |  < AINC : "ainc" >
+  |  < ALOAD : "aload" >
+  |  < AND : "and" >
+  |  < ASTORE : "astore" >
+  |  < BOOLEEN : "booleen">
+  |  < CST : "cst">
+  |  < CMP : "cmp" >
+  |  < DIV : "div" >
+  |  < ENTIER : "entier">
+  |  < FALSE : "false" >
+  |  < GOTO : "goto" >
+  |  < IF : "if" >
+  |  < INC : "inc" >
+  |  < INF : "inf" >
+  |  < INIT : "init" >
+  |  < INVOKE : "invoke" >
+  |  < JCSTOP : "jcstop" >
+  |  < LOAD : "load" >
+  |  < METH : "meth">
+  |  < MUL : "mul" >
+  |  < NEG : "neg" >
+  |  < NEWARRAY : "newarray" >
+  |  < NEW : "new" >
+  |  < NOP : "nop" >
+  |  < NOT : "not" >
+  |  < OR : "or" >
+  |  < POP : "pop" >
+  |  < PUSH : "push" >
+  |  < RETURN : "return" >
+  |  < STORE : "store" >
+  |  < SUB : "sub" >
+  |  < SUP : "sup" >
+  |  < SWAP : "swap" >
+  |  < TRUE : "true" >
+  |  < POINTVIRGULE : ";" >
+  |  < PAROUV : "(" >
+  |  < PARFERM : ")" >
+  |  < VIRGULE : "," >
+  |  < VAR : "var">
+  |  < VOID : "void">
+}
+
+TOKEN:
+{
+	< IDENTIFIER: (["a"-"z","A"-"Z"]) (["a"-"z","A"-"Z","0"-"9","_"])* >
+ 	| < NOMBRE: (["0"-"9"]) (["0"-"9"])* >
+}
+
+void Classe() #void : {
+	Adresse() Instrs() <POINTVIRGULE> Classe() #JajaCode(3) | <EOF> #JCNil
+}
+
+void Instrs() #void : {
+	   <INIT> #Init
+     | <SWAP> #Swap
+     | <NEW> <PAROUV> Ident() <VIRGULE> Type() <VIRGULE> Sorte() <VIRGULE> Adresse() <PARFERM> #New(4)
+     | <NEWARRAY> <PAROUV> Ident() <VIRGULE> Type() <PARFERM> #NewArray(2)
+     | <INVOKE> <PAROUV> Ident() <PARFERM> #Invoke(1)
+     | <RETURN> #Return
+     | <PUSH> <PAROUV> Valeur() <PARFERM> #Push(1)
+     | <POP> #Pop
+     | <LOAD> <PAROUV> Ident() <PARFERM> #Load(1)
+     | <ALOAD> <PAROUV> Ident() <PARFERM> #ALoad(1)
+     | <STORE> <PAROUV> Ident() <PARFERM> #Store(1)
+     | <ASTORE> <PAROUV> Ident() <PARFERM> #AStore(1)
+     | <IF> <PAROUV> Adresse() <PARFERM> #If(1)
+     | <GOTO> <PAROUV> Adresse() <PARFERM> #Goto(1)
+     | <INC> <PAROUV> Ident() <PARFERM> #Inc(1)
+     | <AINC> <PAROUV> Ident() <PARFERM> #AInc
+     | <NOP> #Nop
+     | <JCSTOP> #JCStop
+     | Oper()
+}
+
+void Ident() #JCIdent : {} {
+	<IDENTIFIER> { jjtThis.setValeur(token.image); } 
+}
+
+void Type() #JCType : {} {
+	( <ENTIER> | <BOOLEEN> | <VOID> ) { jjtThis.setValeur(token.image); } 
+}
+
+void Sorte() #JCSorte : {} {
+	( <VAR> | <METH> | <CST> ) { jjtThis.setValeur(token.image); } 
+}
+
+void Valeur() #void : {} {
+	  <TRUE> #JCVrai
+	| <FALSE> #JCFaux
+	| Nombre()
+	| {} #JCNil
+}
+
+void Adresse() #void : {} {
+	Nombre()
+}
+
+void Oper() #void : {} {
+	Oper2() | Oper1()
+}
+
+void Oper1() #void : {} {
+	  <NEG> #Neg 
+	| <NOT> #Not
+}
+
+void Oper2() #void : {} {
+	  <ADD> #Add
+	| <SUB> #Sub
+	| <MUL> #Mul
+	| <DIV> #Div
+	| <CMP> #Cmp
+	| <SUP> #Sup
+	| <INF> #Inf
+	| <OR> #Or
+	| <AND> #And
+}
+
+void Nombre() #JCNbre() : { int x = 0; } {
+    <NOMBRE> {  
+    	try { 
+    		x = Integer.parseInt(token.image);
+        } catch (NumberFormatException ee) {
+        	System.err.println("Error: " + token.image + " is not a number.");
+        	x = 0;
+        }
+        jjtThis.setValeur(x);
+    } 
+}
+
+}
