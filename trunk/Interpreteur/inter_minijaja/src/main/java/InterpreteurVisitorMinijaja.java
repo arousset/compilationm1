@@ -1,7 +1,7 @@
 
 /**
  *
- * @author hermes
+ * @author ROUSSET Alban & Lucas PERRONNE
  */
 public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
 	MiniJaja Asa_Minijaja;

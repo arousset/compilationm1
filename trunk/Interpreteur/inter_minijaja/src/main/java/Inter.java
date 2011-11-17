@@ -1,4 +1,4 @@
-//package Interpreteur;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -6,13 +6,14 @@ import java.io.FileReader;
 
 /**
  *
- * @author hermes
+ * @author ROUSSET Alban & Lucas PERRONNE
  */
 public class Inter {
-       /*  Pile pile;
+         Pile pile;
          Tas tas;
-         MiniJaja parser;*/
-	public static void main(String args[]) throws ParseException, FileNotFoundException, MiniJajaVisitorException {
+         MiniJaja parser;
+
+	/*public static void main(String args[]) throws ParseException, FileNotFoundException, MiniJajaVisitorException {
 	    // on declare la memoire
             Pile pile = new Pile();
             Tas tas = new Tas();
@@ -29,9 +30,9 @@ public class Inter {
             // Affichage de l'ASA.
 	   /* System.out.println("Debut arbre");
             ((SimpleNode) racine).dump(" > ");
-	    System.out.println("Fin arbre");*/
-	}
-   /* public Inter() {
+	    System.out.println("Fin arbre");
+	}*/
+    public Inter() {
         // on declare la memoire
             pile = new Pile();
             tas = new Tas();
@@ -51,6 +52,6 @@ public class Inter {
             //((SimpleNode) racine).dump(" > ");
 	    //System.out.println("Fin arbre");
 
-    }*/
+    }
 }
 
