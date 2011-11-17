@@ -1,4 +1,5 @@
 import java.util.Stack;
+import java.util.Vector;
 
 
 public class Pile {
@@ -45,6 +46,17 @@ public class Pile {
                 retour = retour + pile.get(i).toString() + "\n";                 
                 }         
         return retour;
+        }
+
+        public Vector<String> get_PileV() {
+            Vector<String> vs = new Vector<String>();
+            int i =0;
+            System.out.println(pile.size());
+            while (i< pile.size()) {
+                vs.add(pile.get(i).toString());
+                i++;
+            }
+            return vs;
         }
 	
 }
