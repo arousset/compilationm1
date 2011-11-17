@@ -14,14 +14,25 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 
 /**
@@ -33,18 +44,27 @@ public class Fwindow extends javax.swing.JFrame {
     private boolean fileExists = false;
     private String openFile = "";
 
+    // Delcaration de la memoire
+    Pile pile;
+    Tas tas;
+
     /** Creates new form Fwindow */
     public Fwindow() {
         initComponents();
 
+        // on cree les icones pour les tabpanel
+        ImageIcon warning = createImageIcon("icons/warning.jpg");
+            ImageIcon error = createImageIcon("icons/error.gif");
+
+  
         JComponent panel1 = new JPanel();
         JComponent panel2 = new JPanel();
         panel1.setBackground(Color.white);
         panel2.setBackground(Color.white);
-        //jTabbedPane1.addTab("Sortie", null, panel1, "Sortie");
-        //jTabbedPane1.addTab("Erreurs", null, panel2, "Erreurs");
+        jTabbedPane1.addTab("Sortie", warning, panel1, "Sortie");
+        jTabbedPane1.addTab("Erreurs", error, panel2, "Erreurs");
+        
         textSortie = new JTextArea();
-
 
         // Permet de rendre le texte area non ediable
         textSortie.setEditable(false);
@@ -74,7 +94,7 @@ public class Fwindow extends javax.swing.JFrame {
     public void nouveauFichier()
     {
         taln.jta.setText("");
-        textSortie.setText("> Creation d'un nouveau fichier\n");
+        aff_sortie("> Creation d'un nouveau fichier");
         fileExists = false;
         openFile = "";
     }
@@ -106,7 +126,7 @@ public class Fwindow extends javax.swing.JFrame {
 
 
            taln.jta.setText(chaine);
-            textSortie.setText("> Ouverture de " + fichier.getName() + "\n");
+            aff_sortie("> Ouverture de " + fichier.getName());
             fileExists = true;
         } else {
         }
@@ -123,10 +143,10 @@ public class Fwindow extends javax.swing.JFrame {
 		output.write(taln.jta.getText().replaceAll("\r", "\n"));
 		output.flush();
 		output.close();
-		textSortie.append("> Fichier enregistre \n");
+		aff_sortie("> Fichier enregistre");
 	}
 	catch(Exception e){
-	textSortie.append("> Erreur enregistrement fichier \n");
+	aff_sortie("> Erreur enregistrement fichier");
         }
       }
       else
@@ -147,7 +167,7 @@ public class Fwindow extends javax.swing.JFrame {
 		output.flush();
 		output.close();
                 fileExists = true;
-		textSortie.append("> Fichier enregistre \n");
+		aff_sortie("> Fichier enregistre");
            }
            catch (Exception e){
 			System.out.println(e.toString());
@@ -170,20 +190,6 @@ public class Fwindow extends javax.swing.JFrame {
         jMenuItem5.setEnabled(true);
         jMenuItem6.setEnabled(true);
         jMenuItem7.setEnabled(true);
-
-        //Exemple
-        pilemjj.add("<C, w, var, w>");
-        pilemjj.add("<MAX, 3, cst, entier>");
-        pilemjj.add("<t, @t, tab, entier>");
-        pilemjj.add("<t1, @t1, tab, entier>");
-        pilemjj.add("<t2, @t2, tab, entier>");
-        pilemjj.add("<i, 3, var, entier>");
-        pilemjj.add("<t3, @t3, tab, boolean>");
-
-        tasmjj.add("@t : [0, 10, 6]");
-        tasmjj.add("@t1 : [0, 2, 4]");
-        tasmjj.add("@t2 : [?, ?, ?, ?]");
-        tasmjj.add("@t3 : [true, true, false, true, false]");
 
         jList1.updateUI();
         jList2.updateUI();
@@ -231,53 +237,111 @@ public class Fwindow extends javax.swing.JFrame {
 
                                       
 
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    nouveauFichier();
-}                                        
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        nouveauFichier();
+    }
 
-private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    ouvrirFichier();
-}                                        
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        ouvrirFichier();
+    }
 
-private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    sauvegarder();
-}                                        
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+        sauvegarder();
+    }
 
-private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-// TODO add your handling code here:
-}                                        
-
-private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    stop();
-}                                        
-
-private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {                                           
-    executer();
-}                                          
-
-private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    executer();
-}                                        
-
-private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {                                           
-    stop();
-}                                          
-
-private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
     // TODO add your handling code here:
-}
+    }
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
+        stop();
+    }
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {
+        executer();
+    }
+
+    // Ma petite methode a garder car je voudrais implementer des icone devant certaine lignes de texte Merci !
+    private ImageIcon createImageIcon(String path,
+                                               String description) {
+        java.net.URL imgURL = getClass().getResource(path);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL, description);
+        } else {
+            System.err.println("Couldn't find file: " + path);
+            return null;
+        }
+    }
+
+    protected static ImageIcon createImageIcon(String path) {
+        URL imgURL = Fwindow.class.getResource(path);
+        System.out.println(imgURL);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        } else {
+            System.err.println("Couldn't find image in system: " + path);
+            return null;
+        }
+    }
 
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt)  {
+        if(taln.jta.getText().isEmpty()){
+            System.out.println("ya rien ");
+            aff_sortie("[Informations] : Aucun fichier.");
+          // Merci de laisser le code !
+            //ImageIcon icon = createImageIcon("icons/Stop2.png", "sa marche de la foluieeeee");
+            //label1 = new JLabel("Image and Text", icon, JLabel.CENTER);
+          // Fin de merci de laisser le code
+        } else {
+            aff_sortie("[Informations] : On balance l'interpreteur.");
+            try {
+                Vector<String> pilev = new Vector<String>();
+                executer();
+                String lefile = "un file de fou duingue";
+
+
+                // Permet d'instancier le parser et l'interpreteur
+                Inter interminijaja = new Inter();
+                interminijaja.parse(lefile);
+
+                // On recupere la pile une premiere fois
+                pilev = interminijaja.pile.get_PileV();
+                    for (int i=0; i< pilev.size(); i++) {
+                        pilemjj.add(pilev.elementAt(i).toString());
+                    }
+
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MiniJajaVisitorException ex) {
+                Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {
+        stop();
+    }
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void aff_sortie(String message) {
+        textSortie.append(message+"\n");
+    }
+    
     private JTextArea textSortie;
     private TextAreaLineNumber taln;
     Vector<String> pilemjj;
     Vector<String> tasmjj;
     Vector<String> pilejjc;
     Vector<String> tasjjc;
-
-
     
-    // End of variables declaration
+    
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -313,6 +377,10 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jToolBar2 = new javax.swing.JToolBar();
+        jLabel5 = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        jProgressBar1 = new javax.swing.JProgressBar();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -460,8 +528,17 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 365, Short.MAX_VALUE)
+            .addGap(0, 345, Short.MAX_VALUE)
         );
+
+        jToolBar2.setFloatable(false);
+        jToolBar2.setRollover(true);
+        jToolBar2.setFocusable(false);
+
+        jLabel5.setText("Voici une barre du bas ^^ et le truc a cote : progress bar !!!");
+        jToolBar2.add(jLabel5);
+        jToolBar2.add(jSeparator3);
+        jToolBar2.add(jProgressBar1);
 
         jMenu1.setText("Fichier");
 
@@ -555,6 +632,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 1096, Short.MAX_VALUE)
+            .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 1096, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -569,7 +647,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
                                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -577,19 +655,20 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                                 .addGap(7, 7, 7)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
                                 .addGap(27, 27, 27)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE))))
-                .addContainerGap())
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -597,7 +676,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
 
     private void jPanel2ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jPanel2ComponentResized
         // TODO add your handling code here:
-          taln.jsp.setSize(jPanel2.getSize());
+         // taln.jsp.setSize(jPanel2.getSize());
          repaint();
     }//GEN-LAST:event_jPanel2ComponentResized
 
@@ -624,6 +703,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JList jList1;
     private javax.swing.JList jList2;
     private javax.swing.JList jList3;
@@ -639,6 +719,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -646,8 +727,10 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToolBar jToolBar2;
     private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 
