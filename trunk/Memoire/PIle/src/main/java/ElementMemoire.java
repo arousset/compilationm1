@@ -1,5 +1,9 @@
 public abstract class ElementMemoire {
 
-	protected Quadruplet quadruplet;	
+	protected Quadruplet quadruplet;
+
+        Quadruplet getQuad(){
+            return quadruplet;
+        }
 	
 }
