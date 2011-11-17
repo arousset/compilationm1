@@ -28,6 +28,24 @@ public class Pile {
 		pile.push(tmp);
 		pile.push(tmp2);	
 	}
+
+        public ElementMemoire searchident(String s){
+        ElementMemoire retour=null;
+            for (int i = 0;i<pile.size();i++){
+                if (pile.get(i).getQuad().getIdent().equals(s)){                  
+                    retour = pile.get(i);
+                }
+            }
+        return retour;
+        }
+        
+        public String AfficherPile(){
+            String retour = "";
+            for (int i = 0;i<pile.size();i++){
+                retour = retour + pile.get(i).toString() + "\n";                 
+                }         
+        return retour;
+        }
 	
 }
 

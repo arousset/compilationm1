@@ -1,7 +1,8 @@
-public class BooleenPile extends ElementMemoire{
+public class MethPile extends ElementMemoire {
 
 	
-	public BooleenPile(String nom, BooleanValue b,Genre tp, TypeBoolean ttp){	
+	public MethPile(String nom, MethValue b,Genre tp, Type ttp){	
+		
 		quadruplet = new Quadruplet(nom,b,tp,ttp, null); 
 	}
 
