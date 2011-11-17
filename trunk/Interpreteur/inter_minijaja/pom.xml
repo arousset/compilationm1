@@ -18,6 +18,18 @@
 				<artifactId>Anal_minijaja</artifactId>
 				<version>1.0.0</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>compilationm1_G4</groupId>
+				<artifactId>Tas</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>compilationm1_G4</groupId>
+				<artifactId>Pile</artifactId>
+				<version>1.0.0</version>
+			</dependency>	
 		</dependencies>
 </project>
 
