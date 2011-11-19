@@ -1,8 +1,8 @@
 public class BooleenPile extends ElementMemoire{
 
 	
-	public BooleenPile(String nom, BooleanValue b,Genre tp, TypeBoolean ttp){	
-		quadruplet = new Quadruplet(nom,b,tp,ttp, null); 
+	public BooleenPile(String nom, BooleanValue b,Genre tp, TypeBoolean ttp, String conteneur){	
+		quadruplet = new Quadruplet(nom,b,tp,ttp, conteneur); 
 	}
 
 	public String toString(){

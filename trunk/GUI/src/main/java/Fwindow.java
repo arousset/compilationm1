@@ -46,7 +46,7 @@ public class Fwindow extends javax.swing.JFrame {
 
     // Delcaration de la memoire
     Pile pile;
-    Tas tas;
+    Tas_Tas tas;
 
     /** Creates new form Fwindow */
     public Fwindow() {
@@ -297,6 +297,7 @@ public class Fwindow extends javax.swing.JFrame {
             aff_sortie("[Informations] : On balance l'interpreteur.");
             try {
                 Vector<String> pilev = new Vector<String>();
+                Vector<String> tas = new Vector<String>();
                 executer();
                 String lefile = "un file de fou duingue";
 
@@ -306,7 +307,13 @@ public class Fwindow extends javax.swing.JFrame {
                 interminijaja.parse(lefile);
 
                 // On recupere la pile une premiere fois
+                tas = interminijaja.tas.get_Tas();
                 pilev = interminijaja.pile.get_PileV();
+                
+                    for (int i=0; i< tas.size(); i++) {
+                        tasmjj.add(tas.elementAt(i).toString());
+                    }
+                
                     for (int i=0; i< pilev.size(); i++) {
                         pilemjj.add(pilev.elementAt(i).toString());
                     }

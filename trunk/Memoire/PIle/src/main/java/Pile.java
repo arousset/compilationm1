@@ -40,6 +40,33 @@ public class Pile {
         return retour;
         }
         
+        
+        public boolean estpresent(String s){
+        
+            for (int i = 0;i<pile.size();i++){
+                if (pile.get(i).getQuad().getIdent().equals(s)){                  
+                    return true;
+                }
+            }
+            return false;
+        } 
+        
+        
+        public void supprimer(String s, Tas_Tas t){
+                for (int i = 0;i<pile.size();i++){
+                    
+                  if (pile.get(i).getQuad().getConteneur().equals(s)){
+                      if (pile.get(i).getQuad().getGenre().equals("tab")){
+                          t.Tas_supprimerTableau(pile.get(i).getQuad().getValeur());
+                      }
+                      pile.remove(i);
+                      i--;
+                  }                 
+                }         
+        
+        }
+        
+        
         public String AfficherPile(){
             String retour = "";
             for (int i = 0;i<pile.size();i++){

@@ -7,7 +7,7 @@ public class BooleanValue extends Value_pile {
 	}
 
         public String toString(){
-		return Valeur;
+		return (String)Valeur;
 	}
 
 }

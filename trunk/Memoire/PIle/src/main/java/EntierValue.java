@@ -5,7 +5,7 @@ public class EntierValue  extends Value_pile  {
 	}
 
         public String toString() {
-            return Valeur;
+            return (String)Valeur;
         }
 
 }

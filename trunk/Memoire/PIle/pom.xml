@@ -11,5 +11,13 @@
               <artifactId>Memoire</artifactId>
               <version>1.0.0</version>
        </parent>
+    <dependencies>
+        <dependency>
+            <groupId>compilationm1_G4</groupId>
+            <artifactId>Tas</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>
 
