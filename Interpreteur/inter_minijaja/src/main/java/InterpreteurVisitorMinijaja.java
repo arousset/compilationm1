@@ -1,4 +1,5 @@
 
+
 /**
  *
  * @author ROUSSET Alban & Lucas PERRONNE
@@ -6,12 +7,12 @@
 public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
 	MiniJaja Asa_Minijaja;
 	Pile pile;
-    Tas tas;
+        Tas_Tas tas;
 
     // Permet de gerer le pas a pas.
   //  Boolean thread_sleep = false;
 
-  public InterpreteurVisitorMinijaja(Pile pile, Tas tas, MiniJaja Asa_Minijaja) {
+  public InterpreteurVisitorMinijaja(Pile pile, Tas_Tas tas, MiniJaja Asa_Minijaja) {
 
 		this. Asa_Minijaja = Asa_Minijaja;
 		this.tas = tas;
@@ -29,20 +30,44 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
 
   public Object visit(ASTclasse node, Object data) throws MiniJajaVisitorException {
       System.out.println("On passe par ASTCLASSE");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
+
+      
+     String name;
+
+     name = (String) node.jjtGetChild(0).jjtAccept(this, data);
+
+     pile.getPile().push(new ClassPile(name, new ClassValue("w"), new GenreClass(), new TypeClass(), name));
+
+      System.out.println(pile.AfficherPile());
+      
+      node.jjtGetChild(1).jjtAccept(this, data);
+      node.jjtGetChild(2).jjtAccept(this, data);
+      
+      
+     // RETIRER QUADRUPLET CLASSE ET TAS
+      
+      
+      
+      
+   // ENLEVER LES 2 COMMENTAIRES SUIVANTS   
+      
+    // pile.supprimer(name,tas);
+    // tas.Tas_dump();
+      
+      
+      
+     System.out.println("hahaha" + tas.toString());
+     System.out.println("hahaha" + pile.AfficherPile());
+      
+      return "";
+      
+      
+      
+      
   }
 
   public Object visit(ASTident node, Object data) throws MiniJajaVisitorException {
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
+
       System.out.println("On passe par ASTIDENT");
       System.out.println(node.getValeur());
       return node.getValeur();
@@ -55,78 +80,153 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
           node.jjtGetChild(i).jjtAccept(this, data);
           i++;
       }
-      return true;
+      return "";
   }
 
   public Object visit(ASTvnil node, Object data) throws MiniJajaVisitorException {
-
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
+      return "";
   }
 
   public Object visit(ASTcst node, Object data) throws MiniJajaVisitorException {
 
       String name;
       String value;
-
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
       
      name = (String) node.jjtGetChild(1).jjtAccept(this, data);
      value = (String) node.jjtGetChild(2).jjtAccept(this, data);
 
+     
+     
+      Node n = node.jjtGetParent();
+      while (n.toString() != "classe" && n.toString() != "methode" && n.toString() != "main" ){
+          n=n.jjtGetParent();
+      }
+      
+      String ident_conteneur;
+      if (n.toString() == "classe" ){
+          ident_conteneur = ""+n.jjtGetChild(0).jjtAccept(this, data);
+      }else{
+          if (n.toString() == "methode" ){
+              ident_conteneur = ""+n.jjtGetChild(1).jjtAccept(this, data);
+          }
+          else{
+              ident_conteneur = "main";
+          }
+      }
+     
       if(node.jjtGetChild(0).toString() == "booleen") {
-          pile.getPile().push(new BooleenPile(name, new BooleanValue(value), new GenreCst(), new TypeBoolean()));
+          pile.getPile().push(new BooleenPile(name, new BooleanValue(value), new GenreCst(), new TypeBoolean(), ident_conteneur));
       } else if (node.jjtGetChild(0).toString() == "entier") {
-          pile.getPile().push(new EntierPile(name, new EntierValue(value), new GenreCst(), new TypeEntier()));
+          pile.getPile().push(new EntierPile(name, new EntierValue(value), new GenreCst(), new TypeEntier(), ident_conteneur));
       }
 
-      System.out.println(pile.getPile().peek().toString());
-      return true;
+      System.out.println(pile.AfficherPile());
+      return "";
   }
 
+  
   public Object visit(ASTtableau node, Object data) throws MiniJajaVisitorException {
       System.out.println("On passe par ASTtableau");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
+      
+      
+      String type_tab;
+      
+      
+      if (node.jjtGetChild(0).toString().equals("entier")){
+          type_tab = "entier";
       }
-      return true;
+      else{
+         type_tab = "booleen"; 
+      }
+      
+      String iden_tab = ""+node.jjtGetChild(1).jjtAccept(this, data);
+      String nombre_de_case_tab = ""+ node.jjtGetChild(2).jjtAccept(this, data);
+      
+      
+      
+      int adressetas = tas.Tas_allouerTableau(iden_tab, type_tab, Integer.parseInt(nombre_de_case_tab));
+
+        
+      
+      Node n = node.jjtGetParent();
+      while (n.toString() != "classe" && n.toString() != "methode" && n.toString() != "main" ){
+          n=n.jjtGetParent();
+      }
+      
+      String ident_conteneur;
+      if (n.toString() == "classe" ){
+          ident_conteneur = ""+n.jjtGetChild(0).jjtAccept(this, data);
+      }else{
+          if (n.toString() == "methode" ){
+              ident_conteneur = ""+n.jjtGetChild(1).jjtAccept(this, data);
+          }
+          else{
+              ident_conteneur = "main";
+          }
+      }
+        
+        
+      if (type_tab == "entier"){
+          System.out.println( " ONESTBON " );
+        pile.getPile().push(new TabPile(iden_tab,new TabValue(adressetas),new GenreTab(),new TypeEntier(), ident_conteneur ));                          
+      }   
+      if (type_tab == "booleen"){
+          System.out.println( " 2159198199819581 " );
+        pile.getPile().push(new TabPile(iden_tab,new TabValue(adressetas),new GenreTab(),new TypeBoolean(), ident_conteneur ));                          
+      }       
+      
+      
+      System.out.println("type tab : " + type_tab + " ident tab " + iden_tab + " nombre de case " + nombre_de_case_tab);
+      
+      System.out.println(pile.AfficherPile());
+      System.out.println(tas.toString());
+      return "";
   }
 
   public Object visit(ASTmethode node, Object data) throws MiniJajaVisitorException{
       
       String name;
       String value;
-/*
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-*/
+
      name = (String) node.jjtGetChild(1).jjtAccept(this, data);
     // value = (String) node.jjtGetChild(2).jjtAccept(this, data);
 
+     
+     
+     
+           Node n = node.jjtGetParent();
+      while (n.toString() != "classe" && n.toString() != "methode" && n.toString() != "main" ){
+          n=n.jjtGetParent();
+      }
+      
+      String ident_conteneur;
+      if (n.toString() == "classe" ){
+          ident_conteneur = ""+n.jjtGetChild(0).jjtAccept(this, data);
+      }else{
+          if (n.toString() == "methode" ){
+              ident_conteneur = ""+n.jjtGetChild(1).jjtAccept(this, data);
+          }
+          else{
+              ident_conteneur = "main";
+          }
+      }
+     
+     
+ 
+     
+     
       if(node.jjtGetChild(0).toString() == "booleen") {
-          pile.getPile().push(new MethPile(name, new MethValue("w"), new GenreMeth(), new TypeBoolean()));
+          pile.getPile().push(new MethPile(name, new MethValue(node), new GenreMeth(), new TypeBoolean(), ident_conteneur));
       } else if (node.jjtGetChild(0).toString() == "entier") {
-          pile.getPile().push(new MethPile(name, new MethValue("w"), new GenreMeth(), new TypeEntier()));
+          System.out.println("ENCULAGE");
+          pile.getPile().push(new MethPile(name, new MethValue(node), new GenreMeth(), new TypeEntier(), ident_conteneur));
       }
       else if (node.jjtGetChild(0).toString() == "rien") {
-          pile.getPile().push(new MethPile(name, new MethValue("w"), new GenreMeth(), new TypeVoid()));
+          pile.getPile().push(new MethPile(name, new MethValue(node), new GenreMeth(), new TypeVoid(), ident_conteneur));
       }
 
-      System.out.println(pile.getPile().peek().toString());
-      return true;
+     System.out.println(pile.AfficherPile());
+      return "";
   }
 
   public Object visit(ASTvar node, Object data) throws MiniJajaVisitorException{
@@ -135,23 +235,40 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
       String name;
       String value;
 
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-
      name = (String) node.jjtGetChild(1).jjtAccept(this, data);
-     value = (String) node.jjtGetChild(2).jjtAccept(this, data);
+     value = ""+ node.jjtGetChild(2).jjtAccept(this, data);
 
+     
+         
+           Node n = node.jjtGetParent();
+      while (n.toString() != "classe" && n.toString() != "methode" && n.toString() != "main" ){
+          System.out.println(n);
+          n=n.jjtGetParent();
+      }
+      
+      String ident_conteneur;
+      if (n.toString() == "classe" ){
+          ident_conteneur = ""+n.jjtGetChild(0).jjtAccept(this, data);
+      }else{
+          if (n.toString() == "methode" ){
+              ident_conteneur = ""+n.jjtGetChild(1).jjtAccept(this, data);
+          }
+          else{
+              ident_conteneur = "main";
+          }
+      } 
+     
+    
+     
+     
       if(node.jjtGetChild(0).toString() == "booleen") {
-          pile.getPile().push(new BooleenPile(name, new BooleanValue(value), new GenreVar(), new TypeBoolean()));
+          pile.getPile().push(new BooleenPile(name, new BooleanValue(value), new GenreVar(), new TypeBoolean(),ident_conteneur));
       } else if (node.jjtGetChild(0).toString() == "entier") {
-          pile.getPile().push(new EntierPile(name, new EntierValue(value), new GenreVar(), new TypeEntier()));
+          pile.getPile().push(new EntierPile(name, new EntierValue(value), new GenreVar(), new TypeEntier(), ident_conteneur));
       }
 
-      System.out.println(pile.getPile().peek().toString());
-      return true;
+      System.out.println(pile.AfficherPile());
+      return "";
   }
 
   public Object visit(ASTvars node, Object data) throws MiniJajaVisitorException{
@@ -162,16 +279,11 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
           i++;
       }
 
-      return true;
+      return "";
   }
 
   public Object visit(ASTomega node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTomega");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
       return "w";
   }
 
@@ -182,7 +294,17 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
           node.jjtGetChild(i).jjtAccept(this, data);
           i++;
       }
-      return true;
+      
+      
+      // RETIRER TOUTES LES DECLARATION DU MAIN
+      
+         // ENLEVER LE COMMENTAIRE SUIVANT      
+        //   pile.supprimer("main", tas);
+      
+      
+     System.out.println(pile.AfficherPile());
+      
+      return "";
   }
 
   public Object visit(ASTentetes node, Object data) throws MiniJajaVisitorException{
@@ -192,122 +314,273 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
           node.jjtGetChild(i).jjtAccept(this, data);
           i++;
       }
-      return true;
+      return "";
   }
 
   public Object visit(ASTenil node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTenil");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
+      return "";
   }
 
   public Object visit(ASTentete node, Object data) throws MiniJajaVisitorException{
+      
       System.out.println("On passe par ASTentete");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
+      String name;
+      String value;
+
+     name = (String) node.jjtGetChild(1).jjtAccept(this, data);
+     value = "w";
+
+              
+      Node n = node.jjtGetParent();
+      while (n.toString() != "classe" && n.toString() != "methode" && n.toString() != "main" ){
+          n=n.jjtGetParent();
       }
-      return true;
+      
+      String ident_conteneur;
+      if (n.toString() == "classe" ){
+          ident_conteneur = ""+n.jjtGetChild(0).jjtAccept(this, data);
+      }else{
+          if (n.toString() == "methode" ){
+              ident_conteneur = ""+n.jjtGetChild(1).jjtAccept(this, data);
+          }
+          else{
+              ident_conteneur = "main";
+          }
+      } 
+     
+     
+     
+     
+     
+      if(node.jjtGetChild(0).toString() == "booleen") {
+          pile.getPile().push(new BooleenPile(name, new BooleanValue(value), new GenreVar(), new TypeBoolean(), ident_conteneur));
+      } else if (node.jjtGetChild(0).toString() == "entier") {
+          pile.getPile().push(new EntierPile(name, new EntierValue(value), new GenreVar(), new TypeEntier(), ident_conteneur));
+      }
+
+     System.out.println(pile.AfficherPile());
+      return "";
+      
   }
 
   public Object visit(ASTinstrs node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTinstrs");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
-  }
+  
+          String retour1 = ""+node.jjtGetChild(0).jjtAccept(this, data);         
+          String retour2 = ""+node.jjtGetChild(1).jjtAccept(this, data);
+          
 
+           
+          if (node.jjtGetChild(0).toString() == "retour" ){   
+              if(pile.estpresent(retour1)){                 
+                      return "ilsagitdelafeinteduretourancestrale"+ pile.searchident(""+retour1).getQuad().getValeurMethode();    
+              }
+              else{
+                return "ilsagitdelafeinteduretourancestrale"+ retour1;  
+              }
+          }
+                   
+          if (retour1.length() > 35 ){
+          
+               System.out.println("passage dans le noeud INSTRS " + retour1);
+              if (retour1.substring(0,36) == "ilsagitdelafeinteduretourancestrale"){
+                  return retour1;
+              }
+          
+          }        
+
+          if (node.jjtGetChild(1).toString() == "retour" ){   
+              if(pile.estpresent(retour2)){                 
+                      return "ilsagitdelafeinteduretourancestrale"+ pile.searchident(""+retour2).getQuad().getValeurMethode();    
+              }
+              else{
+                return "ilsagitdelafeinteduretourancestrale"+ retour2;  
+              }
+          }
+          
+                   
+          if (retour1.length() > 35 ){
+          
+               System.out.println("passage dans le noeud INSTRS " + retour2);
+              if (retour1.substring(0,36) == "ilsagitdelafeinteduretourancestrale"){
+                  return retour1;
+              }
+          
+          }    
+          
+
+                System.out.println("RETOUR : " + retour1 + "" + retour2 ); 
+      
+      return "" + retour1 + retour2;
+
+
+  }
+  
   public Object visit(ASTinil node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTinil");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
+
+      return "";
   }
 
   public Object visit(ASTretour node, Object data) throws MiniJajaVisitorException{
-     System.out.println("On passe par ASTretour");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
+     System.out.println("On passe par ASTretour");    
+      return node.jjtGetChild(0).jjtAccept(this, data);
   }
 
+  
   public Object visit(ASTtantque node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTwhile");
-     /* int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      */
+
       if (node.jjtGetChild(0).jjtAccept(this, data).equals(true)){
           node.jjtGetChild(1).jjtAccept(this, data);
           node.jjtAccept(this, data);
       }
       
       
-      return true;
+      return "";
   }
 
   public Object visit(ASTsi node, Object data) throws MiniJajaVisitorException{
       
       System.out.println("On passe par ASTSI");
-    /*  int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-     */ 
+
       
-     if  (node.jjtGetChild(0).jjtAccept(this, data).equals(true)){
-         node.jjtGetChild(1).jjtAccept(this, data);
+     if  (node.jjtGetChild(0).jjtAccept(this, data).equals(true) || node.jjtGetChild(0).jjtAccept(this, data).equals("true")){         
+         return node.jjtGetChild(1).jjtAccept(this, data);
      }
-     else if (node.jjtGetChild(0).jjtAccept(this, data).equals(false)){
-         node.jjtGetChild(2).jjtAccept(this, data);
+     else 
+         {
+         return node.jjtGetChild(2).jjtAccept(this, data);
      }
       
-      
-      return true;
   }
   
   
   
   public Object visit(ASTappelI node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTappI");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
+
+   
+      String ident_fonction = (String) node.jjtGetChild(0).jjtAccept(this, data);
+      ElementMemoire e = pile.searchident(ident_fonction);
+      ASTmethode n  = (ASTmethode) e.getQuad().getValeurMethode();
+      
+
+      
+      int taille_avant_decl = pile.getPile().size();
+      n.jjtGetChild(2).jjtAccept(this, data);
+      int taille_apres_decl = pile.getPile().size();
+      
+      System.out.println("nombre_de_nouvelles_valeurs = "+(taille_apres_decl - taille_avant_decl));
+      
+      ASTlistexp o = (ASTlistexp) node.jjtGetChild(1);
+      
+      
+      System.out.println("--------------------------");
+     System.out.println(pile.AfficherPile());
+      
+      
+      for (int i=taille_avant_decl;i<taille_apres_decl;i++){     
+                  
+          
+          if ( o.jjtGetChild(0).toString() == "ident"){
+              ElementMemoire em = pile.searchident(""+o.jjtGetChild(0).jjtAccept(this, data));
+              String em_type = em.getQuad().getType(); 
+              String value_param = (String) em.getQuad().getValeurMethode();
+              if (em_type == "Entier"){
+                  pile.getPile().get(i).getQuad().setValue(new EntierValue(value_param));
+              }
+              if (em_type == "Boolean"){
+                  pile.getPile().get(i).getQuad().setValue(new BooleanValue(value_param));                    
+              }
+          }
+          else{           
+              if (pile.getPile().get(i).getQuad().getType() == "Entier"){
+                  pile.getPile().get(i).getQuad().setValue(new EntierValue(""+o.jjtGetChild(0).jjtAccept(this, data)));
+              }
+              if (pile.getPile().get(i).getQuad().getType() == "Boolean"){
+                  pile.getPile().get(i).getQuad().setValue(new BooleanValue(""+o.jjtGetChild(0).jjtAccept(this, data)));                    
+              }
+                       
+          }
+
+        if (o.jjtGetChild(1).toString() != "exnil"){
+           o=  (ASTlistexp) o.jjtGetChild(1); 
+        }        
       }
-      return true;
+      
+      
+      System.out.println("avant " + taille_avant_decl + " apres " + taille_apres_decl);
+      
+      
+        //(t, ident(i), ent, dvs, iss) 
+           
+      
+     n.jjtGetChild(3).jjtAccept(this, data);
+     
+     
+      System.out.println("--------------------------");
+     System.out.println(pile.AfficherPile());
+              
+     // Node n = e.getQuad().getValeur();
+      System.out.println("LE JOLI IDENT " + ident_fonction);
+ 
+
+       n.jjtGetChild(4).jjtAccept(this, data);
+       
+       // ENLEVER LE COMMENTAIRE SUIVANT   
+       
+       // pile.supprimer(ident_fonction,tas);
+       return "";
+     
+     
+     
   }
 
   public Object visit(ASTaffectation node, Object data) throws MiniJajaVisitorException{
       
       System.out.println("On passe par ASTaffec");
-      /*
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-*/
+
       String ident_affecation;
       String eval_affectation;
 
+      
+      
+      if (node.jjtGetChild(0).toString().equals("tab")){
+          ident_affecation = ""+node.jjtGetChild(0).jjtGetChild(0).jjtAccept(this, data);
+          String case_tab = ""+node.jjtGetChild(0).jjtGetChild(1).jjtAccept(this, data);
+          int case_tab_int = Integer.parseInt(case_tab);
+          
+          
+          eval_affectation = ""+node.jjtGetChild(1).jjtAccept(this, data); 
+          
+          if (node.jjtGetChild(1).toString() == "ident"){                    
+              eval_affectation = (""+pile.searchident(eval_affectation).getQuad().getValeurMethode());
+          }
+              
+          //(String) node.jjtGetChild(1).jjtAccept(this, data);
+   
+
+    System.out.println("EVALUATION DE LAFFECTATION :      -----   "+ eval_affectation);
+        
+     System.out.println("ADRESSE DU TABLEAU : " + ident_affecation +" CASETAB " + case_tab_int + " EVAL AFFECTATION "+ eval_affectation);   
+     
+
+         tas.Tas_affecterValeur(ident_affecation, case_tab_int, eval_affectation);    
+
+       
+   
+       System.out.println(pile.AfficherPile());
+       System.out.println(tas.toString());
+          
+          
+          
+      }
+      else{
+      
+      
+      
     ident_affecation = (String) node.jjtGetChild(0).jjtAccept(this, data);
     System.out.println("IDENT AFFECTATION "+ident_affecation);
     
@@ -315,8 +588,13 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
     eval_affectation = ""+node.jjtGetChild(1).jjtAccept(this, data); //(String) node.jjtGetChild(1).jjtAccept(this, data);
    
 
-    System.out.println(node.jjtGetChild(1).toString());
+    System.out.println("EVALUATION DE LAFFECTATION :      -----   "+ eval_affectation);
 
+   
+    if(node.jjtGetChild(1).toString() == "ident") {
+       pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(""+eval(eval_affectation)));
+    }
+    
     
     if(node.jjtGetChild(1).toString() == "nbre") {
        pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(eval_affectation));
@@ -327,7 +605,7 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
        pile.searchident(ident_affecation).getQuad().setValue(new BooleanValue(eval_affectation));
     }
 
-    if(node.jjtGetChild(1).toString() == "plus" || node.jjtGetChild(1).toString() == "moins" || node.jjtGetChild(1).toString() == "mult" || node.jjtGetChild(1).toString() == "div" ) {
+    if(node.jjtGetChild(1).toString() == "plus" || node.jjtGetChild(1).toString() == "moins" || node.jjtGetChild(1).toString() == "mult" || node.jjtGetChild(1).toString() == "div" || node.jjtGetChild(1).toString() == "neg" ) {
        System.out.println("BORDELDEMERDE " + eval_affectation );
        ElementMemoire e = pile.searchident(ident_affecation);
        e.getQuad().setValue(new EntierValue(eval_affectation));
@@ -337,46 +615,154 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
        pile.searchident(ident_affecation).getQuad().setValue(new MethValue(eval_affectation));
     }
     
-     System.out.println(pile.getPile().peek().toString());
+    
+    
+    
+    if (pile.searchident(ident_affecation).getQuad().getType().toString() == "Entier" && node.jjtGetChild(1).toString() == "appelE" ){
+        if(eval_affectation == "true" || eval_affectation == "false"){
+       
+            
+            // NEW EXCEPTION
+            
+            
+        }else{
+           pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(eval_affectation)); 
+        }
+    }
+    
+    if (pile.searchident(ident_affecation).getQuad().getType().toString() == "Boolean" && node.jjtGetChild(1).toString() == "appelE" ){
+        
+        if(eval_affectation == "true" || eval_affectation == "false"){      
+            pile.searchident(ident_affecation).getQuad().setValue(new BooleanValue(eval_affectation));                      
+        }else{
+         
+            
+            // NEW EXCEPTION
+            
+            
+        }
+    }
+    
+      }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     System.out.println(pile.AfficherPile());
      
-    return true;
+    return "";
     
   }
 
   public Object visit(ASTsomme node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTsomme");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
+
+
+      String ident_affecation;
+      String eval_affectation;
+
+    ident_affecation = (String) node.jjtGetChild(0).jjtAccept(this, data);
+    System.out.println("IDENT AFFECTATION "+ident_affecation);
+    
+  //  System.out.println("VALEUR AFFECTATION "+node.jjtGetChild(1).jjtAccept(this, data));
+    eval_affectation = ""+node.jjtGetChild(1).jjtAccept(this, data); //(String) node.jjtGetChild(1).jjtAccept(this, data);
+   
+
+    System.out.println("EVALUATION DE LAFFECTATION :      -----   "+ eval_affectation);
+    
+    int ancienne_affectation=Integer.parseInt(""+pile.searchident(ident_affecation).getQuad().getValeurMethode());
+    
+
+   
+    if(node.jjtGetChild(1).toString() == "ident") {
+       int valeur_evaluee =  eval(eval_affectation);
+       int resultat = valeur_evaluee + ancienne_affectation;
+       pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(""+resultat));
+       
+    }
+    
+    
+    if(node.jjtGetChild(1).toString() == "nbre") {
+        int resultat = Integer.parseInt(eval_affectation) + ancienne_affectation;
+       pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(eval_affectation));
+    }
+    
+    
+    if(node.jjtGetChild(1).toString() == "boolean") {
+       pile.searchident(ident_affecation).getQuad().setValue(new BooleanValue(eval_affectation));
+    }
+
+    if(node.jjtGetChild(1).toString() == "plus" || node.jjtGetChild(1).toString() == "moins" || node.jjtGetChild(1).toString() == "mult" || node.jjtGetChild(1).toString() == "div" ) {
+      int resultat = Integer.parseInt(eval_affectation) + ancienne_affectation;
+        
+        
+        System.out.println("BORDELDEMERDE " + eval_affectation );
+       ElementMemoire e = pile.searchident(ident_affecation);
+       e.getQuad().setValue(new EntierValue(""+resultat));
+    }
+   
+    
+    if (pile.searchident(ident_affecation).getQuad().getType().toString() == "Entier" && node.jjtGetChild(1).toString() == "appelE" ){
+        if(eval_affectation.substring(35) == "true" || eval_affectation.substring(35) == "false"){
+       
+            
+            // NEW EXCEPTION
+            
+            
+        }else{
+                int resultat = Integer.parseInt(eval_affectation.substring(35)) + ancienne_affectation;  
+           pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(""+resultat)); 
+        }
+    }
+    
+    if (pile.searchident(ident_affecation).getQuad().getType().toString() == "Boolean" && node.jjtGetChild(1).toString() == "appelE" ){
+        
+        if(eval_affectation.substring(35) == "true" || eval_affectation.substring(35) == "false"){   
+            pile.searchident(ident_affecation).getQuad().setValue(new BooleanValue(eval_affectation.substring(35)));                      
+        }else{
+         
+            
+            // NEW EXCEPTION
+            
+            
+        }
+    }
+    
+     System.out.println(pile.AfficherPile());
+     
+    return "";
+      
+      
+      
+      
+      
   }
 
   public Object visit(ASTincrement node, Object data) throws MiniJajaVisitorException{
 
-      System.out.println("On passe par ASTinc");int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
+      System.out.println("On passe par ASTinc");
       
       String ident_affecation = (String) node.jjtGetChild(0).jjtAccept(this, data);
       int nouvelleval = pile.searchident(ident_affecation).getQuad().getValeur()+1;
       String eval_affectation = ""+nouvelleval;
       pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(eval_affectation));
-      System.out.println(pile.getPile().peek().toString());
+      System.out.println(pile.AfficherPile());
       
-      return true;
+      return "";
   }
 
   public Object visit(ASTtab node, Object data) throws MiniJajaVisitorException{
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
+      
+      String ident_tableau = ""+node.jjtGetChild(0).jjtAccept(this, data);
+      int index_tableau = Integer.parseInt(""+node.jjtGetChild(1).jjtAccept(this, data));
+      
+      String s = ""+tas.Tas_recupValeur(ident_tableau, index_tableau);
+      return s;
   }
 
   public Object visit(ASTlistexp node, Object data) throws MiniJajaVisitorException{
@@ -386,73 +772,102 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
           node.jjtGetChild(i).jjtAccept(this, data);
           i++;
       }
-      return true;
+      return "";
   }
 
   public Object visit(ASTexnil node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTexil");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
+      return "";
   }
+
 
   public Object visit(ASTnon node, Object data) throws MiniJajaVisitorException{
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
+
+      String s = ""+node.jjtGetChild(0).jjtAccept(this, data);
+      if (node.jjtGetChild(0).toString() == "ident"){
+          s= ""+pile.searchident(s).getQuad().getValeurMethode();
       }
-      return true;
+
+      
+      
+      if (s.equals("false")){
+        return true;
+      }
+      else{
+          return false;
+      }
+
+       
   }
 
+  
   public Object visit(ASTneg node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTng");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
+      String eval_fils = ""+node.jjtGetChild(0).jjtAccept(this, data);
+      
+      if (eval_fils.equalsIgnoreCase("0")){
+          return eval_fils;
       }
-      return true;
+      else{
+        return "-"+eval_fils;
+      }
   }
-
+  
   public Object visit(ASTet node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTet");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
+             
+       
+      if ((node.jjtGetChild(0).jjtAccept(this, data).equals(true) || node.jjtGetChild(0).jjtAccept(this, data).equals("true")  ) && (node.jjtGetChild(1).jjtAccept(this, data).equals(true) || node.jjtGetChild(1).jjtAccept(this, data).equals("true")  )){
+          return true;
       }
-      return true;
+      else{
+          return false;
+      }
+       
+       
   }
 
+ 
   public Object visit(ASTou node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTou");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
+      
+      if (node.jjtGetChild(0).jjtAccept(this, data).equals(true) || node.jjtGetChild(1).jjtAccept(this, data).equals(true)){
+          return true;
       }
-      return true;
+      else{
+          return false;
+      }
   }
 
   public Object visit(ASTegal node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTegal");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
+
+      
+      
+      String operateur1 = ""+node.jjtGetChild(0).jjtAccept(this, data);
+      String operateur2 = ""+node.jjtGetChild(1).jjtAccept(this, data);
+      
+      if (pile.estpresent(operateur1)){
+          operateur1 = ""+pile.searchident(operateur1).getQuad().getValeurMethode();
       }
-      return true;
+      
+      if (pile.estpresent(operateur2)){
+          operateur1 = ""+pile.searchident(operateur2).getQuad().getValeurMethode();
+      }
+      
+      System.out.println( operateur1 + " CACACACACACACACA "+operateur2);
+      
+      if (operateur1.equalsIgnoreCase(operateur2)){
+          return true;
+      }
+      else{
+          return false;
+      }
   }
 
   public Object visit(ASTinf node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTinf");
-
-      
-      
+     
             int operateur1;
       int operateur2;
          
@@ -538,13 +953,7 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
 
   public Object visit(ASTplus node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTplus");
-/*      
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-*/
+
       int operateur1;
       int operateur2;
          
@@ -699,68 +1108,114 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
 
   public Object visit(ASTvrai node, Object data) throws MiniJajaVisitorException {
       System.out.println("On passe par ASTvrai");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
 	  return "true";
   }
 
   public Object visit(ASTfaux node, Object data) throws MiniJajaVisitorException {
       System.out.println("On passe par ASTfaux");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
 	  return "false";
   }
 
   public Object visit(ASTappelE node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTappelE");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
+
+           String ident_fonction = (String) node.jjtGetChild(0).jjtAccept(this, data);
+      ElementMemoire e = pile.searchident(ident_fonction);
+      ASTmethode n  = (ASTmethode) e.getQuad().getValeurMethode();
+      
+
+      
+      int taille_avant_decl = pile.getPile().size();
+      n.jjtGetChild(2).jjtAccept(this, data);
+      int taille_apres_decl = pile.getPile().size();
+      
+      int nombre_de_nouvelles_valeurs = taille_apres_decl - taille_avant_decl;
+      
+      ASTlistexp o = (ASTlistexp) node.jjtGetChild(1);
+      
+      
+      System.out.println("--------------------------");
+     System.out.println(pile.AfficherPile());
+      
+      
+      for (int i=taille_avant_decl;i<taille_apres_decl;i++){     
+                  
+          
+          if ( o.jjtGetChild(0).toString() == "ident"){
+              ElementMemoire em = pile.searchident(""+o.jjtGetChild(0).jjtAccept(this, data));
+              String em_type = em.getQuad().getType(); 
+              String value_param = (String) em.getQuad().getValeurMethode();
+              if (em_type == "Entier"){
+                  pile.getPile().get(i).getQuad().setValue(new EntierValue(value_param));
+              }
+              if (em_type == "Boolean"){
+                  pile.getPile().get(i).getQuad().setValue(new BooleanValue(value_param));                    
+              }
+          }
+          else{           
+              if (pile.getPile().get(i).getQuad().getType() == "Entier"){
+                  pile.getPile().get(i).getQuad().setValue(new EntierValue(""+o.jjtGetChild(0).jjtAccept(this, data)));
+              }
+              if (pile.getPile().get(i).getQuad().getType() == "Boolean"){
+                  pile.getPile().get(i).getQuad().setValue(new BooleanValue(""+o.jjtGetChild(0).jjtAccept(this, data)));                    
+              }
+                       
+          }
+
+        if (o.jjtGetChild(1).toString() != "exnil"){
+           o=  (ASTlistexp) o.jjtGetChild(1); 
+        }        
       }
-      return true;
+      
+      
+      System.out.println("avant " + taille_avant_decl + " apres " + taille_apres_decl);
+      
+      
+        //(t, ident(i), ent, dvs, iss)       
+      
+     n.jjtGetChild(3).jjtAccept(this, data);
+     
+     
+      System.out.println("--------------------------");
+     System.out.println(pile.AfficherPile());
+              
+     // Node n = e.getQuad().getValeur();
+         System.out.println("------------DERNIER PASSAGE--------------");
+     String retour = (""+n.jjtGetChild(4).jjtAccept(this, data));
+      System.out.println("&&&&&&&&&&&&&&&&&&&&&&&& " + retour);
+     
+      
+      // ENLEVER LE COMMENTAIRE SUIVANT   
+      
+      
+    // pile.supprimer(ident_fonction,tas);
+     System.out.println(pile.AfficherPile());
+      return retour.substring(35); 
+      
+      
+      
   }
 
   public Object visit(ASTnbre node, Object data) throws MiniJajaVisitorException {
       System.out.println("On passe par ASTnbre");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
+
       System.out.println(node.getValeur());
       return String.valueOf(node.getValeur());
   }
 
   public Object visit(ASTrien node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTrien");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
+      return "";
   }
 
   public Object visit(ASTentier node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTEntier");
-      int i=0;
-      while (i <node.jjtGetNumChildren()) {
-          node.jjtGetChild(i).jjtAccept(this, data);
-          i++;
-      }
-      return true;
+      return "";
   }
 
   public Object visit(ASTbooleen node, Object data) throws MiniJajaVisitorException {
     System.out.println("On passe par ASTBool");
-    return true;
+    return "";
   }
 
 

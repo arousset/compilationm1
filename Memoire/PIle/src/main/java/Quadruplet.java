@@ -5,9 +5,9 @@ public class Quadruplet {
 	private Value_pile valeur;
 	private Genre genre;
 	private Type type;
-	private Quadruplet conteneur;
+	private String conteneur;
 	
-	public Quadruplet(String nom, Value_pile valeur, Genre genre, Type type, Quadruplet conteneur){
+	public Quadruplet(String nom, Value_pile valeur, Genre genre, Type type, String conteneur){
 		this.nom=nom;
 		this.valeur=valeur;
 		this.genre=genre;
@@ -17,7 +17,7 @@ public class Quadruplet {
 	}
 	
 	public String toString(){
-		return ("<" + nom + "," + valeur + "," + genre + "," + type  + ">");
+		return ("<" + nom + "," + valeur + "," + genre + "," + type  + ">" + "a pour conteneur : " + conteneur);
 	}
 	
         public String getIdent(){
@@ -32,7 +32,23 @@ public class Quadruplet {
          public int getValeur() {
             return Integer.parseInt(valeur.toString());
         }   
+                  
+         public Object getValeurMethode() {
+            return valeur.getValeur();
+        } 
+         
+        public String getType() {
+            return type.getType();
+        } 
 	
+        public String getConteneur(){
+            return conteneur;
+        }
+        
+        public String getGenre(){
+            return genre.toString();
+        }
+        
 }
 
 

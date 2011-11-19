@@ -11,5 +11,19 @@
               <artifactId>compilationm1</artifactId>
               <version>1.0.0</version>
        </parent>
+    <dependencies>
+        <dependency>
+            <groupId>compilationm1_G4</groupId>
+            <artifactId>Pile</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>compilationm1_G4</groupId>
+            <artifactId>inter_minijaja</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>
 

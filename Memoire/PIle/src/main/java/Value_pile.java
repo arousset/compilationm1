@@ -8,7 +8,12 @@
  * @author ubuntu1
  */
  public abstract class Value_pile {
-	protected String Valeur;
+     
+	protected Object Valeur;
 
+                
+        public Object getValeur(){
+            return Valeur;
+        }
        
 }
