@@ -3,87 +3,79 @@
 	ROUSSET Alban & KAWCZAK Clement
 */
 
-options{
+options {
   MULTI=true;
   VISITOR=true;
   VISITOR_EXCEPTION="JajaCodeVisitorException";
 }
 
-
 PARSER_BEGIN(JajaCode)
-	package jajacode.jjtree;
 
-	public class JajaCode{
-		public static void main (String arg[]) throws ParseException {
-  			JajaCode jjc = new JajaCode(System.in);
-    		jjc.Classe() ;
-  		}
+	public class JajaCode {
+	  public static void main (String arg[]) throws ParseException {
+      JajaCode jjc = new JajaCode(System.in) ;
+        jjc.Classe() ;
+        
+        Node racine = jjc.jjtree.rootNode();
+    	((SimpleNode)racine).dump("-->");
+      }
 	}
 PARSER_END(JajaCode)
 
-SKIP : { 
-	" "      
-  |	"\r"    
-  |	"\n"    
-  |	"\t" 
-}  
-
+/** ----------------- Regles lexicales ------------------------ */
+SKIP : { " "   |   "\r"   |  "\n"  |  "\t" }  
 TOKEN : {   
-     < ADD : "add" >
-  |  < AINC : "ainc" >
-  |  < ALOAD : "aload" >
-  |  < AND : "and" >
-  |  < ASTORE : "astore" >
+     < ADD: "add" >
+  |  < AINC: "ainc" >
+  |  < ALOAD: "aload" >
+  |  < AND: "and" >
+  |  < ASTORE: "astore" >
   |  < BOOLEEN : "booleen">
   |  < CST : "cst">
-  |  < CMP : "cmp" >
-  |  < DIV : "div" >
+  |  < CMP: "cmp" >
+  |  < DIV: "div" >
   |  < ENTIER : "entier">
-  |  < FALSE : "false" >
-  |  < GOTO : "goto" >
-  |  < IF : "if" >
-  |  < INC : "inc" >
-  |  < INF : "inf" >
-  |  < INIT : "init" >
-  |  < INVOKE : "invoke" >
-  |  < JCSTOP : "jcstop" >
-  |  < LOAD : "load" >
+  |  < FALSE: "false" >
+  |  < GOTO: "goto" >
+  |  < IF: "if" >
+  |  < INC: "inc" >
+  |  < INF: "inf" >
+  |  < INIT: "init" >
+  |  < INVOKE: "invoke" >
+  |  < JCSTOP: "jcstop" >
+  |  < LOAD: "load" >
   |  < METH : "meth">
-  |  < MUL : "mul" >
-  |  < NEG : "neg" >
-  |  < NEWARRAY : "newarray" >
-  |  < NEW : "new" >
-  |  < NOP : "nop" >
-  |  < NOT : "not" >
-  |  < OR : "or" >
-  |  < POP : "pop" >
-  |  < PUSH : "push" >
-  |  < RETURN : "return" >
-  |  < STORE : "store" >
-  |  < SUB : "sub" >
-  |  < SUP : "sup" >
-  |  < SWAP : "swap" >
-  |  < TRUE : "true" >
-  |  < POINTVIRGULE : ";" >
-  |  < PAROUV : "(" >
-  |  < PARFERM : ")" >
-  |  < VIRGULE : "," >
+  |  < MUL: "mul" >
+  |  < NEG: "neg" >
+  |  < NEWARRAY: "newarray" >
+  |  < NEW: "new" >
+  |  < NOP: "nop" >
+  |  < NOT: "not" >
+  |  < OR: "or" >
+  |  < POP: "pop" >
+  |  < PUSH: "push" >
+  |  < RETURN: "return" >
+  |  < STORE: "store" >
+  |  < SUB: "sub" >
+  |  < SUP: "sup" >
+  |  < SWAP: "swap" >
+  |  < TRUE: "true" >
+  |  < POINTVIRGULE: ";" >
+  |  < PAROUV: "(" >
+  |  < PARFERM: ")" >
+  |  < VIRGULE: "," >
   |  < VAR : "var">
   |  < VOID : "void">
+  |  < IDENTIFIER: (["a"-"z","A"-"Z"]) (["a"-"z","A"-"Z","0"-"9","_"])* >
+  |  < NOMBRE: (["0"-"9"]) (["0"-"9"])* >
 }
 
-TOKEN:
-{
-	< IDENTIFIER: (["a"-"z","A"-"Z"]) (["a"-"z","A"-"Z","0"-"9","_"])* >
- 	| < NOMBRE: (["0"-"9"]) (["0"-"9"])* >
+void Classe() #void : {} {
+     Adresse() Instrs() <POINTVIRGULE> Classe() #JajaCode(3) | <EOF> #JCNil
 }
 
-void Classe() #void : {
-	Adresse() Instrs() <POINTVIRGULE> Classe() #JajaCode(3) | <EOF> #JCNil
-}
-
-void Instrs() #void : {
-	   <INIT> #Init
+void Instrs() #void : {} {
+       <INIT> #Init
      | <SWAP> #Swap
      | <NEW> <PAROUV> Ident() <VIRGULE> Type() <VIRGULE> Sorte() <VIRGULE> Adresse() <PARFERM> #New(4)
      | <NEWARRAY> <PAROUV> Ident() <VIRGULE> Type() <PARFERM> #NewArray(2)
@@ -158,6 +150,4 @@ void Nombre() #JCNbre() : { int x = 0; } {
         }
         jjtThis.setValeur(x);
     } 
-}
-
 }
