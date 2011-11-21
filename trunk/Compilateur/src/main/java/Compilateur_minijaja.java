@@ -7,9 +7,6 @@
  *
  * @author ROUSSET Alban & Clement KAWCZAK
  */
-/*import minijaja.exception.*;
-import minijaja.jjtree.*;
-import minijaja.controleurtype.*;*/
 
 import java.io.*;
 import javax.xml.soap.Node;
