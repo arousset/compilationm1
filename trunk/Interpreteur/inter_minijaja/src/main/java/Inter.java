@@ -44,7 +44,7 @@ public class Inter {
     }
 
     public void parse(String file_parse) throws FileNotFoundException, ParseException, MiniJajaVisitorException {
-        MiniJaja parser = new MiniJaja(new FileReader(new File("C:/Users/rhork/Desktop/compilationm1/Interpreteur/inter_minijaja/exemple.txt")));
+         MiniJaja parser = new MiniJaja(new FileReader(new File(file_parse)));
         parser.classe();
 	    // Recuperation de la racine de l'AST (Abstract Syntax Tree).
 	    Node racine = parser.getJJTree().rootNode();
