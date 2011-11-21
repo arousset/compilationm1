@@ -18,21 +18,16 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+import javax.swing.tree.TreeModel;
 
 
 /**
@@ -41,37 +36,56 @@ import javax.swing.text.StyledDocument;
  */
  
 public class Fwindow extends javax.swing.JFrame {
+    
     private boolean fileExists = false;
-    private String openFile = "";
+    private String pathFile = "";
+    private File currentFile = null;
 
     // Delcaration de la memoire
     Pile pile;
     Tas_Tas tas;
-
+    private JTextArea textSortie;
+    private JTextArea textErreurs;
+    private TextAreaLineNumber taln;
+    Vector<String> pilemjj;
+    Vector<String> tasmjj;
+    Vector<String> pilejjc;
+    Vector<String> tasjjc;
+    
     /** Creates new form Fwindow */
     public Fwindow() {
         initComponents();
-
-        // on cree les icones pour les tabpanel
-        ImageIcon warning = createImageIcon("icons/warning.jpg");
-            ImageIcon error = createImageIcon("icons/error.gif");
-
-  
-        JComponent panel1 = new JPanel();
-        JComponent panel2 = new JPanel();
+ 
+        JScrollPane panel1 = new JScrollPane();
+        JScrollPane panel2 = new JScrollPane();
         panel1.setBackground(Color.white);
         panel2.setBackground(Color.white);
-        jTabbedPane1.addTab("Sortie", warning, panel1, "Sortie");
-        jTabbedPane1.addTab("Erreurs", error, panel2, "Erreurs");
+        jTabbedPane1.addTab("Sortie", null, panel1, "Sortie");
+        jTabbedPane1.addTab("Erreurs", null, panel2, "Erreurs");
         
         textSortie = new JTextArea();
+        textErreurs = new JTextArea();
 
-        // Permet de rendre le texte area non ediable
         textSortie.setEditable(false);
-        textSortie.setAlignmentX(LEFT_ALIGNMENT);
-        panel1.add(textSortie);
-
-        //jEditTextArea1.setTokenMarker(new JavaTokenMarker());
+        textErreurs.setEditable(false);
+        panel1.getViewport().add(textSortie);
+        panel2.getViewport().add(textErreurs);
+        
+        jButton1.setIcon(new ImageIcon("src/main/java/icons/New.png"));
+        jButton2.setIcon(new ImageIcon("src/main/java/icons/Add.png"));
+        jButton3.setIcon(new ImageIcon("src/main/java/icons/Save.png"));
+        jButton4.setIcon(new ImageIcon("src/main/java/icons/Play.png"));
+        jButton5.setIcon(new ImageIcon("src/main/java/icons/old-go-bottom.png"));
+        jButton6.setIcon(new ImageIcon("src/main/java/icons/old-go-down.png"));
+        jButton7.setIcon(new ImageIcon("src/main/java/icons/Stop.png"));
+        
+        jMenuItem2.setIcon(new ImageIcon("src/main/java/icons/New2.png"));
+        jMenuItem1.setIcon(new ImageIcon("src/main/java/icons/Add2.png"));
+        jMenuItem3.setIcon(new ImageIcon("src/main/java/icons/Save2.png"));
+        jMenuItem4.setIcon(new ImageIcon("src/main/java/icons/Play2.png"));
+        jMenuItem5.setIcon(new ImageIcon("src/main/java/icons/old-go-bottom2.png"));
+        jMenuItem6.setIcon(new ImageIcon("src/main/java/icons/old-go-down2.png"));
+        jMenuItem7.setIcon(new ImageIcon("src/main/java/icons/Stop2.png"));
 
         taln = new TextAreaLineNumber();
         taln.jsp.setSize(jPanel2.getSize());
@@ -93,20 +107,56 @@ public class Fwindow extends javax.swing.JFrame {
 
     public void nouveauFichier()
     {
+        if(fileExists)
+        {
+            Object[] options = {"Oui", "Non"};
+            JOptionPane dial = new JOptionPane();
+            int n = dial.showOptionDialog(this,
+            "Voulez-vous enregistrer le fichier ?",
+            "Enregistrer le fichier",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,     //do not use a custom Icon
+            options,  //the titles of buttons
+            options[0]); //default button title
+        
+            if(n == 0)
+                sauvegarder();
+        }
+        
         taln.jta.setText("");
-        aff_sortie("> Creation d'un nouveau fichier");
+        aff_sortie("Creation d'un nouveau fichier");
         fileExists = false;
-        openFile = "";
+        pathFile = "";
+        currentFile = null;
     }
 
     public void ouvrirFichier()
     {
+        if(fileExists)
+        {
+            Object[] options = {"Oui", "Non"};
+            JOptionPane dial = new JOptionPane();
+            int n = dial.showOptionDialog(this,
+            "Voulez-vous enregistrer le fichier ?",
+            "Enregistrer le fichier",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,     //do not use a custom Icon
+            options,  //the titles of buttons
+            options[0]); //default button title
+        
+            if(n == 0)
+                sauvegarder();
+        }
+        
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File fichier = fc.getSelectedFile();
-            openFile = fichier.getAbsolutePath();
+            currentFile = fichier;
+            pathFile = fichier.getAbsolutePath();
 
             String chaine = "";
            try{
@@ -126,7 +176,7 @@ public class Fwindow extends javax.swing.JFrame {
 
 
            taln.jta.setText(chaine);
-            aff_sortie("> Ouverture de " + fichier.getName());
+            aff_sortie("Ouverture de " + fichier.getName());
             fileExists = true;
         } else {
         }
@@ -138,15 +188,15 @@ public class Fwindow extends javax.swing.JFrame {
       {
         try
 	{
-		FileWriter fw = new FileWriter(openFile, false);
+		FileWriter fw = new FileWriter(pathFile, false);
 		BufferedWriter output = new BufferedWriter(fw);
 		output.write(taln.jta.getText().replaceAll("\r", "\n"));
 		output.flush();
 		output.close();
-		aff_sortie("> Fichier enregistre");
+		aff_sortie(currentFile.getName() + " enregistre");
 	}
 	catch(Exception e){
-	aff_sortie("> Erreur enregistrement fichier");
+            aff_sortie("Erreur enregistrement " + currentFile.getName());
         }
       }
       else
@@ -157,17 +207,18 @@ public class Fwindow extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION)
         {
             File fichier = fc.getSelectedFile();
-            openFile = fichier.getAbsolutePath();
+            pathFile = fichier.getAbsolutePath();
+            currentFile = fichier;
 
             String chaine = "";
            try{
-               FileWriter fw = new FileWriter(openFile, false);
+               FileWriter fw = new FileWriter(pathFile, false);
 		BufferedWriter output = new BufferedWriter(fw);
 		output.write(taln.jta.getText().replaceAll("\r", "\n"));
 		output.flush();
 		output.close();
                 fileExists = true;
-		aff_sortie("> Fichier enregistre");
+		aff_sortie(currentFile.getName() + " enregistre");
            }
            catch (Exception e){
 			System.out.println(e.toString());
@@ -180,6 +231,7 @@ public class Fwindow extends javax.swing.JFrame {
 
     public void executer()
     {
+        sauvegarder();
         jButton4.setEnabled(false);
         jMenuItem4.setEnabled(false);
 
@@ -190,6 +242,45 @@ public class Fwindow extends javax.swing.JFrame {
         jMenuItem5.setEnabled(true);
         jMenuItem6.setEnabled(true);
         jMenuItem7.setEnabled(true);
+        
+        if(taln.jta.getText().isEmpty()){
+            aff_sortie("Debut de l'interpretation");
+            aff_sortie("Fin de l'interpretation");
+          // Merci de laisser le code !
+            //ImageIcon icon = createImageIcon("icons/Stop2.png", "sa marche de la foluieeeee");
+            //label1 = new JLabel("Image and Text", icon, JLabel.CENTER);
+          // Fin de merci de laisser le code
+        } else {
+            aff_sortie("Debut de l'interpretation");
+            try {
+                Vector<String> pilev = new Vector<String>();
+                Vector<String> tas = new Vector<String>();
+
+                // Permet d'instancier le parser et l'interpreteur
+                Inter interminijaja = new Inter();
+                interminijaja.parse(pathFile);
+
+                // On recupere la pile une premiere fois
+                tas = interminijaja.tas.get_Tas();
+                pilev = interminijaja.pile.get_PileV();
+                
+                    for (int i=0; i< tas.size(); i++) {
+                        tasmjj.add(tas.elementAt(i).toString());
+                    }
+                
+                    for (int i=0; i< pilev.size(); i++) {
+                        pilemjj.add(pilev.elementAt(i).toString());
+                    }
+                                       
+
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MiniJajaVisitorException ex) {
+                Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
         jList1.updateUI();
         jList2.updateUI();
@@ -199,6 +290,7 @@ public class Fwindow extends javax.swing.JFrame {
 
     public void stop()
     {
+        aff_sortie("Fin de l'interpretation");
         jButton4.setEnabled(true);
         jMenuItem4.setEnabled(true);
 
@@ -261,71 +353,8 @@ public class Fwindow extends javax.swing.JFrame {
         executer();
     }
 
-    // Ma petite methode a garder car je voudrais implementer des icone devant certaine lignes de texte Merci !
-    private ImageIcon createImageIcon(String path,
-                                               String description) {
-        java.net.URL imgURL = getClass().getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL, description);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
-        }
-    }
-
-    protected static ImageIcon createImageIcon(String path) {
-        URL imgURL = Fwindow.class.getResource(path);
-        System.out.println(imgURL);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL);
-        } else {
-            System.err.println("Couldn't find image in system: " + path);
-            return null;
-        }
-    }
-
-
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt)  {
-        if(taln.jta.getText().isEmpty()){
-            System.out.println("ya rien ");
-            aff_sortie("[Informations] : Aucun fichier.");
-          // Merci de laisser le code !
-            //ImageIcon icon = createImageIcon("icons/Stop2.png", "sa marche de la foluieeeee");
-            //label1 = new JLabel("Image and Text", icon, JLabel.CENTER);
-          // Fin de merci de laisser le code
-        } else {
-            aff_sortie("[Informations] : On balance l'interpreteur.");
-            try {
-                Vector<String> pilev = new Vector<String>();
-                Vector<String> tas = new Vector<String>();
-                executer();
-                String lefile = "un file de fou duingue";
-
-
-                // Permet d'instancier le parser et l'interpreteur
-                Inter interminijaja = new Inter();
-                interminijaja.parse(lefile);
-
-                // On recupere la pile une premiere fois
-                tas = interminijaja.tas.get_Tas();
-                pilev = interminijaja.pile.get_PileV();
-                
-                    for (int i=0; i< tas.size(); i++) {
-                        tasmjj.add(tas.elementAt(i).toString());
-                    }
-                
-                    for (int i=0; i< pilev.size(); i++) {
-                        pilemjj.add(pilev.elementAt(i).toString());
-                    }
-
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ParseException ex) {
-                Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (MiniJajaVisitorException ex) {
-                Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        executer();
     }
 
 
@@ -338,17 +367,14 @@ public class Fwindow extends javax.swing.JFrame {
     }
 
     private void aff_sortie(String message) {
-        textSortie.append(message+"\n");
+        GregorianCalendar heure = new GregorianCalendar();
+        textSortie.append("[Infos] [" + heure.getTime().getHours() + ":" + heure.getTime().getMinutes()+ "] : " + message+"\n");
     }
     
-    private JTextArea textSortie;
-    private TextAreaLineNumber taln;
-    Vector<String> pilemjj;
-    Vector<String> tasmjj;
-    Vector<String> pilejjc;
-    Vector<String> tasjjc;
-    
-    
+    private void aff_erreurs(String message) {
+        textSortie.append(message+"\n");
+    }
+     
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -384,10 +410,6 @@ public class Fwindow extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jToolBar2 = new javax.swing.JToolBar();
-        jLabel5 = new javax.swing.JLabel();
-        jSeparator3 = new javax.swing.JToolBar.Separator();
-        jProgressBar1 = new javax.swing.JProgressBar();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -407,7 +429,6 @@ public class Fwindow extends javax.swing.JFrame {
         jToolBar1.setRollover(true);
         jToolBar1.setMinimumSize(new java.awt.Dimension(236, 200));
 
-        jButton1.setText("new");
         jButton1.setToolTipText("Nouveau fichier (Ctrl + N)");
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -419,7 +440,6 @@ public class Fwindow extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton1);
 
-        jButton2.setText("+");
         jButton2.setToolTipText("Ouvrir un fichier (Ctrl + O)");
         jButton2.setFocusable(false);
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -431,7 +451,6 @@ public class Fwindow extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton2);
 
-        jButton3.setText("save");
         jButton3.setToolTipText("Enregistrer (Ctrl + S)");
         jButton3.setFocusable(false);
         jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -444,7 +463,6 @@ public class Fwindow extends javax.swing.JFrame {
         jToolBar1.add(jButton3);
         jToolBar1.add(jSeparator1);
 
-        jButton4.setText("exe");
         jButton4.setToolTipText("Executer (F5)");
         jButton4.setFocusable(false);
         jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -457,7 +475,6 @@ public class Fwindow extends javax.swing.JFrame {
         jToolBar1.add(jButton4);
         jButton4.getAccessibleContext().setAccessibleDescription("");
 
-        jButton5.setText("conti");
         jButton5.setToolTipText("Continuer jusqu'au prochain point d'arret (F5)");
         jButton5.setEnabled(false);
         jButton5.setFocusable(false);
@@ -470,7 +487,6 @@ public class Fwindow extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton5);
 
-        jButton6.setText("contia");
         jButton6.setToolTipText("Passer a l'instruction suivante (F11)");
         jButton6.setEnabled(false);
         jButton6.setFocusable(false);
@@ -483,7 +499,6 @@ public class Fwindow extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton6);
 
-        jButton7.setText("stop");
         jButton7.setToolTipText("Arreter l'execution (Shift + F5)");
         jButton7.setEnabled(false);
         jButton7.setFocusable(false);
@@ -531,21 +546,12 @@ public class Fwindow extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 482, Short.MAX_VALUE)
+            .addGap(0, 498, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 345, Short.MAX_VALUE)
+            .addGap(0, 365, Short.MAX_VALUE)
         );
-
-        jToolBar2.setFloatable(false);
-        jToolBar2.setRollover(true);
-        jToolBar2.setFocusable(false);
-
-        jLabel5.setText("Voici une barre du bas ^^ et le truc a cote : progress bar !!!");
-        jToolBar2.add(jLabel5);
-        jToolBar2.add(jSeparator3);
-        jToolBar2.add(jProgressBar1);
 
         jMenu1.setText("Fichier");
 
@@ -623,7 +629,7 @@ public class Fwindow extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -639,7 +645,6 @@ public class Fwindow extends javax.swing.JFrame {
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 1096, Short.MAX_VALUE)
-            .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 1096, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -654,7 +659,7 @@ public class Fwindow extends javax.swing.JFrame {
                                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -662,20 +667,19 @@ public class Fwindow extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
                                 .addGap(7, 7, 7)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
                                 .addGap(27, 27, 27)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE))))
+                .addContainerGap())
         );
 
         pack();
@@ -686,17 +690,7 @@ public class Fwindow extends javax.swing.JFrame {
          // taln.jsp.setSize(jPanel2.getSize());
          repaint();
     }//GEN-LAST:event_jPanel2ComponentResized
-
-    /**
-    * @param args the command line arguments
-    */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Fwindow().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -710,7 +704,6 @@ public class Fwindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JList jList1;
     private javax.swing.JList jList2;
     private javax.swing.JList jList3;
@@ -726,7 +719,6 @@ public class Fwindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -734,10 +726,8 @@ public class Fwindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JToolBar jToolBar2;
     private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 
