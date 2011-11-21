@@ -64,6 +64,8 @@
     <module>Memoire</module>
     <module>GUI</module>
     <module>Interpreteur</module>
+    <module>ControleType</module>
+    <module>Exceptions</module>
 </modules>
 	
 </project>
