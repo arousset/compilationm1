@@ -113,7 +113,7 @@ public class Tas_Tas {
                 return addrTab;
 	}
 	
-	public void Tas_affecterValeur(String nom, int index, Object val){		// TODO : ajouter des exceptions lors de modification de genre int bool sur un même tableau		
+	public void Tas_affecterValeur(String nom, int index, Object val){		// TODO : ajouter des exceptions lors de modification de genre int bool sur un meme tableau
 		this.tas[Tas_selectionnerTableau(nom)].Espace_affecterValeur(index, val);
 	}
 	
@@ -230,7 +230,7 @@ public class Tas_Tas {
     public Vector<String> get_Tas(){
         Vector<String> vs = new Vector<String>();
         if(this.tas!=null){
-            //String retour= "Taille du tas : " + this.tailleTas + " \n" + "Espace mémoire utilisé : " + (this.tailleTas-this.espaceTotal) + " \n" + "Espace mémoire disponible total : " + this.espaceTotal + " \n" + "Espace mémoire fragmenté : " + this.espaceFragmente + " \n"+ "Espace mémoire non fragmenté : " + this.espaceDefragmente + " \n" + "Nombre d'espaces mémoires existants : " + this.nbTab + " \n" ;
+            //String retour= "Taille du tas : " + this.tailleTas + " \n" + "Espace memoire utilise : " + (this.tailleTas-this.espaceTotal) + " \n" + "Espace memoire disponible total : " + this.espaceTotal + " \n" + "Espace memoire fragmente : " + this.espaceFragmente + " \n"+ "Espace memoire non fragmente : " + this.espaceDefragmente + " \n" + "Nombre d'espaces memoires existants : " + this.nbTab + " \n" ;
             for(int i=0; i<this.tailleTas; i++){
                 if(!Tas_verifIndexTasDispo(i)){
                     if (this.tas[i].genre != "-"){

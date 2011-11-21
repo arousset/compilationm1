@@ -5,7 +5,7 @@ public class Tas_Espaces {
 		String genre;			//  entier indiquant le type de variable stockÃ©es
 		Object[] tableau;		
 		String nom; 		//  chaÃ®ne contenant le nom du tableau
-		int espace, occupe; // choix de ne pas avoir à se balader dans les tableaux à vérifier tout d'abord si le type de la première case est "Tas_Vide" et ensuite dans le cas contraire vérifier s'il contient des espaces vide
+		int espace, occupe; // choix de ne pas avoir a se balader dans les tableaux a verifier tout d'abord si le type de la premiere case est "Tas_Vide" et ensuite dans le cas contraire verifier s'il contient des espaces vide
 		
 				
 		
