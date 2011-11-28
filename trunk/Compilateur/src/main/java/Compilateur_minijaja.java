@@ -72,4 +72,16 @@ public class Compilateur_minijaja {
             throw new MiniJajaCompilationProcessusException(ex.toString());
         }
     }
+
+    /* A virer par la suite ! phase test */
+    public static void main(String args[]) throws Exception {
+        Compilateur_minijaja compilo;
+        compilo = new Compilateur_minijaja(new FileReader("/home/ubuntu1/exemple.txt"));
+        try {
+            compilo.compile_MiniJaja();
+        } catch(MiniJajaVisitorException e) {
+            System.err.println(e.toString());
+        }
+        System.out.println("On a fini le parsing");
+    }
 }
