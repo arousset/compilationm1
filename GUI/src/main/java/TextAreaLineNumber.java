@@ -19,10 +19,16 @@ public class TextAreaLineNumber extends JComponent implements MouseInputListener
         public JTextArea jta;
 	private JTextArea lines;
         public JScrollPane jsp;
+        public int breakPoint[];
+        public int PointToPointPosition = 0;
 
 	public TextAreaLineNumber(){
 		//super();
 
+                breakPoint = new int[50];
+                for(int i = 0; i < 50;i++)
+                    breakPoint[i] = 0;
+            
 		/* Set up JtextArea */
 		jta = new JTextArea();
 		jta.getDocument().addDocumentListener(this);
@@ -31,7 +37,7 @@ public class TextAreaLineNumber extends JComponent implements MouseInputListener
 		//highlighter = jta.getHighlighter();
 
 		/* Set up line numbers */
-		lines = new JTextArea("1");
+		lines = new JTextArea("    1");
 		lines.setBackground(Color.LIGHT_GRAY);
 		lines.setEditable(false);
 		lines.addMouseListener(this);
@@ -59,15 +65,70 @@ public class TextAreaLineNumber extends JComponent implements MouseInputListener
 	public String getText(){
 		int caretPosition = jta.getDocument().getLength();
 		Element root = jta.getDocument().getDefaultRootElement();
-		String text = "1\n";
+                boolean exists = false;
+                for(int j = 0; j < 50;j++)
+                {
+                    if(breakPoint[j] == 1)
+                        exists = true;
+                }
+                String text = "";
+                if(exists)
+                    {
+                        if(1 == PointToPointPosition)
+                            text += "[+] ";
+                        else
+                            text += "[  ] ";
+                    }
+                    else
+                    {
+                        if(1 == PointToPointPosition)
+                            text += " +  ";
+                        else
+                            text += "    "; 
+                    }
+                text += "1\n";
+                exists = false;
 		for(int i = 2; i < root.getElementIndex( caretPosition ) + 2; i++)
-			text += i + "\n";
+                {
+                    for(int j = 0; j < 50;j++)
+                     {
+                         if(breakPoint[j] == i)
+                              exists = true;
+                       }
+                    /*if(exists)
+			text += "[+] " + i + "\n";
+                    else
+                        text += "     " + i + "\n";*/
+                    if(exists)
+                    {
+                        if(i == PointToPointPosition)
+                            text += "[+] ";
+                        else
+                            text += "[  ] ";
+                    }
+                    else
+                    {
+                        if(i == PointToPointPosition)
+                            text += " +  ";
+                        else
+                            text += "    "; 
+                    }
+                    text += i + "\n";
+                    exists = false;
+                }
 		return text;
 	}
+        
+        void ProchaineInstruction()
+        {
+            PointToPointPosition++;
+            lines.setText(getText());
+            jsp.repaint();
+        }
 
 	/* Mouse Listener Events */
 	public void mouseClicked(MouseEvent me) {
-		if(me.getClickCount() == 2){
+
 			try {
 				int caretPos = lines.getCaretPosition();
 				int lineOffset = lines.getLineOfOffset(caretPos);
@@ -75,11 +136,56 @@ public class TextAreaLineNumber extends JComponent implements MouseInputListener
 					lineOffset--;
 				/*highlighter.addHighlight(jta.getLineStartOffset(lineOffset),
 										 jta.getLineEndOffset(lineOffset), (HighlightPainter) new MyHilighter(Color.cyan));*/
+                                boolean exists = false;
+                                boolean stop = false;
+                                for(int i = 0; i < 50;i++)
+                                 {
+                                     if(!stop)
+                                     {
+                                         if(breakPoint[i] == lineOffset+1)
+                                         {
+                                             breakPoint[i] = 0;
+                                             stop = true;
+                                             exists = true;
+                                         }
+                                         
+                                     }
+                                 }
+                                stop = false;
+                                if(!exists)
+                                {
+                                    for(int i = 0; i < 50;i++)
+                                    {
+                                        if(!stop)
+                                        {
+                                            if(breakPoint[i] == 0)
+                                            {
+                                                breakPoint[i] = lineOffset+1;
+                                                stop = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                System.out.println(lineOffset);
+                                printTabBreak();
+                                lines.setText(getText());
+                                jsp.repaint();
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
-		}
 	}
+        
+        public void printTabBreak()
+        {
+            String s = "[";
+            for(int i = 0; i < 50;i++)
+            {
+                s += breakPoint[i]+", ";
+            }
+            s +="]";
+            System.out.println(s);
+        }
+        
 	public void mouseEntered(MouseEvent me) {}
 	public void mouseExited(MouseEvent me) {}
 	public void mousePressed(MouseEvent me) {}
