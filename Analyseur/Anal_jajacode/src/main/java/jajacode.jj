@@ -329,7 +329,7 @@ void Instrs()       : {} {/*@bgen(jjtree) Init */
                                 }
                               }
 /*@egen*/        
-     | <AINC> <PAROUV> Ident()/*@bgen(jjtree) AInc */
+     | <AINC> <PAROUV> Ident()/*@bgen(jjtree) #AInc( 1) */
                                {
                                  ASTAInc jjtn016 = new ASTAInc(JJTAINC);
                                  boolean jjtc016 = true;
@@ -339,10 +339,10 @@ void Instrs()       : {} {/*@bgen(jjtree) Init */
 /*@egen*/ <PARFERM>/*@bgen(jjtree)*/
                                } finally {
                                  if (jjtc016) {
-                                   jjtree.closeNodeScope(jjtn016, true);
+                                   jjtree.closeNodeScope(jjtn016,  1);
                                  }
                                }
-/*@egen*/      
+/*@egen*/         
      |/*@bgen(jjtree) Nop */
        {
          ASTNop jjtn017 = new ASTNop(JJTNOP);
