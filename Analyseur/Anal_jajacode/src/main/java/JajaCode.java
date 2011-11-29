@@ -7,6 +7,14 @@
         Node racine = jjc.jjtree.rootNode();
         ((SimpleNode)racine).dump("-->");
       }
+  
+  
+  
+public JJTJajaCodeState getJJTree() {
+	return jjtree;
+}
+  
+  
 
   static final public void Classe() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
