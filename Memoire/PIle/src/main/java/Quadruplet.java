@@ -24,7 +24,18 @@ public class Quadruplet {
             return nom;
         }
         
-
+        public void setGenre(Genre genre){
+            this.genre=genre;
+        }
+        
+        public void setIdent(String nom){
+            this.nom=nom;
+        }
+        
+        public void setType(Type type){
+            this.type=type;
+        }
+        
         public void setValue(Value_pile valeur){
             this.valeur = valeur;
         }
