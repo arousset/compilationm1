@@ -90,7 +90,7 @@ void Instrs() #void : {} {
      | <IF> <PAROUV> Adresse() <PARFERM> #If(1)
      | <GOTO> <PAROUV> Adresse() <PARFERM> #Goto(1)
      | <INC> <PAROUV> Ident() <PARFERM> #Inc(1)
-     | <AINC> <PAROUV> Ident() <PARFERM> #AInc
+     | <AINC> <PAROUV> Ident() <PARFERM> #AInc(1)
      | <NOP> #Nop
      | <JCSTOP> #JCStop
      | Oper()

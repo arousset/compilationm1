@@ -1,46 +1,23 @@
-/************************************************/
-/* Programme MiniJaja				*/
-/* Validation de toutes les instructions	*/
-/************************************************/
-
 class C {
-  int x;
-  int y = 10;
-  boolean b1 = false;
-  boolean b2 = false;
+ 
+   main
+   {
+        int x = 2;
+        int y = 10;
+        int res;
+        int i;
+       int t[2];
 
-  int  somme( int max) {
-  	int t = 5;
 
-	while ( max > 0) { 
-		t += max;
-		max = max - 1;
-	};
-	return t;
-   };
 
-   boolean test(int a, int b) {
-	return a > b;
-   };
+       res = x+y;
+       i = 0;
+ t[0] = res;
+ while(i < 2)
+ {
+  t[i] = i;
+  i++;
+ };
 
-   void f(int z){
-   	x = y * z;
-	x = x / z;
-	x++;
-   };
-   
-   main {
-
-   int tableau1[5];
-   boolean tableau2[4];
-   
-   tableau1[0]=1;
-   tableau1[2]=15;
-   tableau1[3]=13;
-   tableau2[0]=true;
-   tableau2[3]=false;
-   tableau2[2]=b1;
-	}
+    }
 }
-
-	

@@ -549,7 +549,13 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
       
       if (node.jjtGetChild(0).toString().equals("tab")){
           ident_affecation = ""+node.jjtGetChild(0).jjtGetChild(0).jjtAccept(this, data);
+
           String case_tab = ""+node.jjtGetChild(0).jjtGetChild(1).jjtAccept(this, data);
+          
+          if (pile.estpresent(case_tab)){
+              case_tab = ""+pile.searchident(case_tab).getQuad().getValeur();
+          }
+          
           int case_tab_int = Integer.parseInt(case_tab);
           
           

@@ -268,7 +268,7 @@ public class CompilateurMinijajaVisitor implements MiniJajaVisitor {
       String retour = "";
 
       // push(w)
-      retour += cmpadd.getAddress() + " push();\n";
+      retour += cmpadd.getAddress() + " push(0);\n";
       cmpadd.addAdress(1);
       return retour;
   }
@@ -511,7 +511,11 @@ public class CompilateurMinijajaVisitor implements MiniJajaVisitor {
     	  cmpadd.addAdress(1);
     	  // ainc
     	  retour += cmpadd.getAddress();
-    	  retour += " ainc(" + ((ASTident)node.jjtGetChild(0)).getValeur() + ");\n";
+          
+          String tmp = ""+((ASTident)node.jjtGetChild(0).jjtGetChild(0)).getValeur();
+          System.out.println(tmp);
+          
+    	  retour += " ainc(" + tmp + ");\n";;
     	  cmpadd.addAdress(1);
       }
 
