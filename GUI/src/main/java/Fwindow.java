@@ -8,7 +8,7 @@
  *
  * Created on Nov 17, 2011, 7:34:55 AM
  */
-
+// VOIR POUR CHANGER LA PILE ET LA METTRE DANS LE BON SENS ! 
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -245,20 +245,24 @@ public class Fwindow extends javax.swing.JFrame {
         
         if(taln.jta.getText().isEmpty()){
             aff_sortie("Debut de l'interpretation");
+            aff_sortie("--> pas de code MiniJaja");
             aff_sortie("Fin de l'interpretation");
-          // Merci de laisser le code !
+
+            // Merci de laisser le code !
             //ImageIcon icon = createImageIcon("icons/Stop2.png", "sa marche de la foluieeeee");
             //label1 = new JLabel("Image and Text", icon, JLabel.CENTER);
           // Fin de merci de laisser le code
         } else {
             aff_sortie("Debut de l'interpretation");
-            try {
+           // try {
                 Vector<String> pilev = new Vector<String>();
                 Vector<String> tas = new Vector<String>();
 
                 // Permet d'instancier le parser et l'interpreteur
-                Inter interminijaja = new Inter();
-                interminijaja.parse(pathFile);
+                Inter interminijaja = new Inter(pathFile);
+                //interminijaja.parse(pathFile);
+                Thread th_minijaja = new Thread(interminijaja);
+                th_minijaja.start();
 
                 // On recupere la pile une premiere fois
                 tas = interminijaja.tas.get_Tas();
@@ -272,14 +276,14 @@ public class Fwindow extends javax.swing.JFrame {
                         pilemjj.add(pilev.elementAt(i).toString());
                     }
                                        
-
+/*
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ParseException ex) {
                 Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
             } catch (MiniJajaVisitorException ex) {
                 Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
         }
 
         jList1.updateUI();
