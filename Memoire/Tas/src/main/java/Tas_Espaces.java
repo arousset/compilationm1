@@ -1,93 +1,136 @@
 
+/**
+ * Classe Tas_Espaces: Represente un tableau dans le tas.
+ * 				   Permet de recuperer les informations sur le tableau 
+ * 			       pour le retrouver dans le tas et la pile.
+ */
 
 public class Tas_Espaces {
-		int addrTab;		//	entier contenant l'adresse de la premiere case du tableau dans le tas
-		String genre;			//  entier indiquant le type de variable stockées
-		Object[] tableau;		
-		String nom; 		//  chaîne contenant le nom du tableau
-		int espace, occupe; // choix de ne pas avoir a se balader dans les tableaux a verifier tout d'abord si le type de la premiere case est "Tas_Vide" et ensuite dans le cas contraire verifier s'il contient des espaces vide
+		/** Entier contenant l'adresse de la premiere case du tableau dans le tas. */
+		private int addrTas;	
+		/** Entier contenant le nombre de references faites au tableau. */
+		private int nbRef;
+		/** Entier contenant la taille du tableau. */
+		private int taille;			
+		/** Chaine indiquant le type de variable stockee. */
+		private String genre;	
+		/** Chaine contenant le nom du tableau. */
+		private String nom; 	
 		
-				
-		
-		//Constructeur par defaut
 
-		
-		
-		public Tas_Espaces(int espace){
-			tableau = new Object[espace];
-			for(int i =0; i<espace; i++){
-				this.tableau[i]= new Tas_Vide();
-			}
-			this.espace = espace;														// Définit la taille totale de l'espace ( multiple de 2 )
-			this.occupe = 0;
-                        this.nom = "non alloue";
-                        this.genre = "-";
-		}
-
-	/*	public Tas_Espaces(int espace, Object[] tab){
-			tableau = new Object[tab.length];
-			Espace_remplissageTableau(tab);
-			for(int i =tab.length; i<espace; i++){
-				this.tableau[i]= new Tas_Vide();
-			}
-		}*/
-		
-		public void Espace_affecterValeur(int index, Object val){
-			this.tableau[index]=val;								
-		}
-		
-		public void Espace_allouerTableau(String nom, String genre, int taille){
+		/**
+		 * Constructeur par initialisation : initialise tous les attributs d'un Tas_Espaces occupe
+		 * @param aT : L'adresse dans le tas.
+		 * @param nbRef : Le nombre de references au tableau. 
+		 * @param t  : La taille du tableau.
+		 * @param genre : Le genre des variables du tableau.
+		 * @param nom : Le nom du tableau.
+		 */
+		public Tas_Espaces(int aT, int nbRef, int taille, String genre, String nom){
+			this.addrTas = aT;
+			this.nbRef = nbRef;
+			this.taille = taille;
+			this.genre = genre;
 			this.nom = nom;
-			this.genre= genre;
-			this.occupe= taille;
-		}
-				
-		public Object[] Espace_getTableau(int addrTab, int taille ){
-			return this.tableau;
 		}
 		
-		public boolean Espace_verifTabLibre(){
-			return (this.tableau[0] instanceof Tas_Vide);
-		}
-		
-		public void Espace_viderTableau (int addrTab, int taille, int[] tas){
-			for(int i = addrTab; i<taille; i++){
-				tas[i]=0;
-			}
-		}
-		
-		public int Espace_verifEspaceFragmente(){ 
-			return (this.espace-this.occupe);
-		}
-		
-		public void Espace_ajusterTableau(){
-			Object[] tabjuste = new Object[this.occupe];
-				for(int i = 0; i< this.occupe; i++){
-					tabjuste[i] = this.tableau[i];
-					}
-				this.espace=this.occupe;
-				this.tableau=null;						// Free l'espace anciennement alloué pour les données
-				this.tableau=tabjuste;					// Ajuste le tableau à la taille des données contenues
-				
-		}
-		
-                public Object Espace_recupValeur(int index){
-                        return this.tableau[index];
-            
-                }
-                
-                
-                
-        public String toString(){
-            String retour="["+genre+"] "+"@"+nom+ " : [";
-            for(int i =0; i<this.tableau.length; i++){
-                if (i==this.tableau.length -1){
-                    retour += this.tableau[i]+"] \n";
-                }
-                else retour += this.tableau[i] +", ";
-            }
-            return retour;
-        }
+		/**
+		 * Constructeur par initialisation : initialise tous les attributs d'un Tas_Espaces libre
+		 * @param aT : L'adresse dans le tas.
+		 * @param t  : La taille du tableau.
+		 */
+		public Tas_Espaces(int aT, int taille){
+			this.addrTas = aT;
+			this.taille = taille;
 
-	}
+		}
+		
+		/**
+		 * M�thode getAddrTas : Recupere la valeur de l'adresse dans le tas.
+		 * @return : L'adresse du tas de l'instance courante.
+		 */
+		public int getAddrTas() {
+			return addrTas;
+		}
 
+		/**
+		 * Methode setAddrTas : Change l'attribut <addrTas>.
+		 * @param addrTas : Change la valeur de l'adresse du tableau dans le tas de l'instance courante.
+		 */
+		public void setAddrTas(int addrTas) {
+			this.addrTas = addrTas;
+		}
+		
+		/**
+		 * M�thode getnbRef : Recupere le nombre de references du tableau.
+		 * @return : Le nombre de references du tableau de l'instance courante.
+		 */
+		public int getnbRef() {
+			return nbRef;
+		}
+
+		/**
+		 * Methode setnbRef : Change l'attribut <nbRef>.
+		 * @param nbRef : Change le nombre de references du tableau dans le tas de l'instance courante.
+		 */
+		public void setnbRef(int nbRef) {
+			this.nbRef = nbRef;
+		}
+		
+		/**
+		 * Methode getTaille : Recupere la valeur de la taille du tableau.
+		 * @return : La taille du tableau de l'instance courante.
+		 */
+		public int getTaille() {
+			return taille;
+		}
+
+		/**
+		 * Methode setTaille: Change l'attribut <taille>.
+		 * @param taille : Change la valeur de la taille d'un tableau de l'instance courante.
+		 */
+		public void setTaille(int taille) {
+			this.taille = taille;
+		}
+
+		/**
+		 * Methode getGenre : Recupere le genre du tableau.
+		 * @return : Le genre du tableau de l'instance courante.
+		 */
+		public String getGenre() {
+			return genre;
+		}
+
+		/**
+		 * Methode setGenre: Change l'attribut <genre>.
+		 * @param genre : Change le genre d'un tableau de l'instance courante.
+		 */
+		public void setGenre(String genre) {
+			this.genre = genre;
+		}
+
+		/**
+		 * Methode getNom : Recupere le nom du tableau.
+		 * @return : Le nom du tableau de l'instance courante.
+		 */
+		public String getNom() {
+			return nom;
+		}
+
+		/**
+		 * Methode setNom: Change l'attribut <nom>.
+		 * @param nom : Change le nom d'un tableau de l'instance courante.
+		 */
+		public void setNom(String nom) {
+			this.nom = nom;
+		}
+
+		/**
+		 * Methode toString: Affiche les informations d'un Tas_Espaces
+		 */
+		public String toString(){
+			String retour="("+taille+")" + "["+genre+"] "+"@"+nom+ " : ";
+
+			return retour;
+		}
+}
