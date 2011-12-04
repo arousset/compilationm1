@@ -39,7 +39,7 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
      pile.getPile().push(new ClassPile(name, new ClassValue("w"), new GenreClass(), new TypeClass(), name));
 
       System.out.println(pile.AfficherPile());
-      
+     
       node.jjtGetChild(1).jjtAccept(this, data);
       node.jjtGetChild(2).jjtAccept(this, data);
       
@@ -56,7 +56,7 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
       
       
       
-     System.out.println("hahaha" + tas.toString());
+     System.out.println("hahaha" + tas.get_Tas());
      System.out.println("hahaha" + pile.AfficherPile());
       
       return "";
@@ -179,7 +179,7 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
       System.out.println("type tab : " + type_tab + " ident tab " + iden_tab + " nombre de case " + nombre_de_case_tab);
       
       System.out.println(pile.AfficherPile());
-      System.out.println(tas.toString());
+      System.out.println(tas.get_Tas());
       return "";
   }
 
@@ -572,13 +572,13 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
         
      System.out.println("ADRESSE DU TABLEAU : " + ident_affecation +" CASETAB " + case_tab_int + " EVAL AFFECTATION "+ eval_affectation);   
      
-
-         tas.Tas_affecterValeur(ident_affecation, case_tab_int, eval_affectation);    
+         int value_tab = pile.searchident(ident_affecation).getQuad().getValeur();
+         tas.Tas_affecterValeur(value_tab, case_tab_int, eval_affectation);    
 
        
    
        System.out.println(pile.AfficherPile());
-       System.out.println(tas.toString());
+       System.out.println(tas.get_Tas());
           
           
           
@@ -766,8 +766,9 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
       
       String ident_tableau = ""+node.jjtGetChild(0).jjtAccept(this, data);
       int index_tableau = Integer.parseInt(""+node.jjtGetChild(1).jjtAccept(this, data));
-      
-      String s = ""+tas.Tas_recupValeur(ident_tableau, index_tableau);
+    
+      int value_tab = pile.searchident(ident_tableau).getQuad().getValeur();
+      String s = ""+tas.Tas_recupValeur(value_tab, index_tableau);
       return s;
   }
 

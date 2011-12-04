@@ -144,15 +144,17 @@
              System.out.println(type_new + ident_new);
              ElementMemoire em = pile.getPile().pop();
              
+             int adresse_tab = tas.Tas_allouerTableau(ident_new, type_new,em.getQuad().getValeur());
+             
              if (type_new.equalsIgnoreCase("entier")){               
-                  pile.getPile().push(new TabPile(ident_new,new TabValue(em.getQuad().getValeur()),new GenreTab(),new TypeEntier(),""));
+                  pile.getPile().push(new TabPile(ident_new,new TabValue(adresse_tab),new GenreTab(),new TypeEntier(),""));
              }
              
              if (type_new.equalsIgnoreCase("booleen")){
-                  pile.getPile().push(new TabPile(ident_new,new TabValue(em.getQuad().getValeur()),new GenreTab(),new TypeBoolean(),""));  
+                  pile.getPile().push(new TabPile(ident_new,new TabValue(adresse_tab),new GenreTab(),new TypeBoolean(),""));  
              }
              
-             tas.Tas_allouerTableau(ident_new, type_new,em.getQuad().getValeur());
+             
       
              
            //  pile.getPile().push(null)
@@ -160,7 +162,7 @@
        //      System.out.println(ident_new + " : " + type_new + " : " + sorte_new + " : " + valeur_new);
              System.out.println("----------nouvelle-----------");
              System.out.println(pile.AfficherPile());             
-             System.out.println(tas.toString());
+             System.out.println(tas.get_Tas());
              
              
       return true;
@@ -262,11 +264,21 @@
   public Object visit(ASTPop node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTPop");
       
+
+      ElementMemoire em = pile.getPile().peek();
+      String s = em.getQuad().getGenre();
+      
+      if (s.equals("tab")){
+          int adresse = pile.searchident(em.getQuad().getIdent()).getQuad().getValeur();
+          tas.Tas_supprimerTableau(adresse); 
+      } 
       pile.getPile().pop();
-      
-      
+
                    System.out.println("----------nouvelle-----------");
-             System.out.println(pile.AfficherPile());       
+             System.out.println(pile.AfficherPile());  
+             System.out.println(tas.get_Tas());
+             System.out.println(tas.Tas_verifEspaceLibre());  
+             
       
       return true;
   };
@@ -298,17 +310,17 @@
       String a_load = ""+node.jjtGetChild(0).jjtAccept(this, data);
       int index = pile.getPile().pop().getQuad().getValeur();
       if (pile.searchident(a_load).getQuad().getType().equalsIgnoreCase("Entier")){          
-          pile.getPile().push(new EntierPile("w",new EntierValue(""+tas.Tas_recupValeur(a_load,index)),new GenreCst(),new TypeEntier(),""));
+          pile.getPile().push(new EntierPile("w",new EntierValue(""+tas.Tas_recupValeur(pile.searchident(a_load).getQuad().getValeur(),index)),new GenreCst(),new TypeEntier(),""));
       }
       if (pile.searchident(a_load).getQuad().getType().equalsIgnoreCase("Boolean")){
-          pile.getPile().push(new BooleenPile("w",new BooleanValue(""+tas.Tas_recupValeur(a_load,index)),new GenreCst(),new TypeBoolean(),""));          
+          pile.getPile().push(new BooleenPile("w",new BooleanValue(""+tas.Tas_recupValeur(pile.searchident(a_load).getQuad().getValeur(),index)),new GenreCst(),new TypeBoolean(),""));          
       }               
                    
                    
       System.out.println("----------LOAD-----------");
       System.out.println(pile.AfficherPile());    
-         System.out.println(tas.toString());
-      
+         System.out.println(tas.get_Tas());
+        System.out.println(tas.Tas_verifEspaceLibre());        
       
       return true;
   };
@@ -356,13 +368,13 @@
       
       String ident_store = ""+node.jjtGetChild(0).jjtAccept(this, data);
       
-      tas.Tas_affecterValeur(ident_store, indice_tab, valeur_tab);    
+      tas.Tas_affecterValeur(pile.searchident(ident_store).getQuad().getValeur(), indice_tab, valeur_tab);    
       
          
              System.out.println("----------nouvelle-----------");
              System.out.println(pile.AfficherPile());     
-                System.out.println(tas.toString());
-   
+                System.out.println(tas.get_Tas());
+    System.out.println(tas.Tas_verifEspaceLibre());  
       
       return true;
   };
@@ -427,14 +439,15 @@
 
       int  inc1 = pile.getPile().pop().getQuad().getValeur();
       int indice = pile.getPile().pop().getQuad().getValeur();
+      String nom_tab = ""+node.jjtGetChild(0).jjtAccept(this, data);
       
-      int ancienne_valeur = Integer.parseInt(""+tas.Tas_recupValeur((""+node.jjtGetChild(0).jjtAccept(this, data)),indice));
+      int ancienne_valeur = Integer.parseInt(""+tas.Tas_recupValeur(pile.searchident(nom_tab).getQuad().getValeur(),indice));
       int nouvelle_valeur = ancienne_valeur + inc1;
       
-     tas.Tas_affecterValeur(""+node.jjtGetChild(0).jjtAccept(this, data), indice, ""+nouvelle_valeur);   
+     tas.Tas_affecterValeur(pile.searchident(nom_tab).getQuad().getValeur(), indice, ""+nouvelle_valeur);   
      System.out.println("----------nouvelle-----------");
      System.out.println(pile.AfficherPile());  
-     System.out.println(tas.toString());
+     System.out.println(tas.get_Tas());
      
      
       return true;

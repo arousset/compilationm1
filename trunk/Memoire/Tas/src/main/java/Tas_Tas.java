@@ -72,6 +72,10 @@ public class Tas_Tas {
 		return -2;
 	}
 	
+        public Object Tas_recupValeur(int addr, int index){
+            return this.tas[this.espacesOccupes.get(addr).getAddrTas() + index];
+        }
+        
 	public int Tas_allouerTableau(String nom, String genre, int taille){
 		int aT = Tas_selectionnerIndex(taille);
 		if(aT>=0){
@@ -121,6 +125,17 @@ public class Tas_Tas {
 	//	System.out.println(this.tas[]);
 	}
 	
+        
+        
+        public void Tas_supprimerTableau(int addr){
+            for(int i =this.espacesOccupes.get(addr).getAddrTas(); i<this.espacesOccupes.get(addr).getAddrTas()+this.espacesOccupes.get(addr).getTaille(); i++){
+            this.tas[i]= this.vide;
+            }
+            this.espaceLibre += this.espacesOccupes.get(addr).getTaille();
+            this.espacesOccupes.remove(addr);
+        }
+        
+        
 	public void Tas_subdivisionEspacesLibres(int aT, int t, boolean incr){								// Fonction de subdivision de l'espace disponible
 		int taille, pouissance ;
 		if (incr){
@@ -146,24 +161,33 @@ public class Tas_Tas {
 		
 	}
 	
-	public void Tas_garbageCollector(){
-		if(!this.espacesOccupes.isEmpty()){
-			for (int i = 0; i<this.espacesOccupes.size(); i++){
-				if(this.espacesOccupes.get(i).getnbRef()==0){
-					this.espaceLibre += this.espacesOccupes.get(i).getTaille();
-					this.espacesOccupes.remove(i);
-				}
-			}
-			Tas_reorganiserTas();
-			
-		}
-		for (int i = 0; i<this.espacesVides.size(); i++){
-			this.espacesVides.get(i).clear();
-		}
+        public void Tas_garbageCollector(){
+            if(!this.espacesOccupes.isEmpty()){
+            for (int i = 0; i<this.espacesOccupes.size(); i++){
+            if(this.espacesOccupes.get(i).getnbRef()==0){
+            Tas_supprimerTableau(i);
+            }
+            }
+            Tas_reorganiserTas();
 
-		
-	}
+            }
+            for (int i = 0; i<this.espacesVides.size(); i++){
+            this.espacesVides.get(i).clear();
+            }
+        }
 	
+        
+        public int Tas_incrementerNbref(int addr){
+            
+        if (this.espacesOccupes.get(addr)!=null){
+            this.espacesOccupes.get(addr).setnbRef(this.espacesOccupes.get(addr).getnbRef()+1);
+            return 0;
+        }
+            return -2;
+        }
+        
+        
+        
 	public int Tas_verifIndexOccupe(int index){
 		for(int i=0; i<this.espacesOccupes.size(); i++){
 	//		System.out.println("index de la case qu'on veut récup : "+index);
