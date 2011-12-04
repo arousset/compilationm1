@@ -1,199 +1,222 @@
-
+import java.util.ArrayList;
 import java.util.Vector;
 
 
+
 public class Tas_Tas {
+	public final static int TT = 256;
+	
 	int tailleTas ;
-	int espaceFragmente;
-	int espaceDefragmente;
-	int espaceTotal;
-	boolean plein; 
-	int nbTab;	
-	Tas_Espaces[] tas;
-	
-
-	//TODO rendre les trucs privÃ©s :) // faire avec un switch les diffï¿½rents types de tableaux, faire les espaces vides d'un type particulier
-	
-
+	int espaceLibre;
+	Object[] tas;
+	private ArrayList<Tas_Espaces>espacesOccupes;
+	private ArrayList<ArrayList<Tas_Espaces>>espacesVides;
+	private Tas_Vide vide;
 	
 	public Tas_Tas(){ // rendre unique :s
-		this.tailleTas = 32;
-		this.espaceTotal = this.tailleTas;
-		this.espaceDefragmente = this.espaceTotal;
-		this.espaceFragmente = 0;
-		this.tas = new Tas_Espaces[this.tailleTas];
-		this.nbTab=0;
-		this.Tas_subdivisionEspacesTotal();
+		this.tailleTas = 31; // = TT
+		this.espaceLibre = this.tailleTas;
+		vide = new Tas_Vide();
+		tas = new Object[tailleTas];
+		espacesOccupes = new ArrayList<Tas_Espaces>();
+		espacesVides = new ArrayList<ArrayList<Tas_Espaces>>();
+		espacesVides = Tas_arrayList();
+		Tas_subdivisionEspacesLibres(tailleTas,espaceLibre,false);
+		for(int i =0; i<tailleTas; i++){
+			this.tas[i]= vide;
+		}
 	}
 	
-	public boolean Tas_verifIndexTasDispo(int index){	// VÃ©rifie si l'indexe dans le tas n'est pas utilisÃ©
-		if(this.tas[index]!=null){
-			return false;
+	
+	public boolean Tas_verifCaseLibre(int index){
+		return (this.tas[index] instanceof Tas_Vide);
+	}
+
+	public int Tas_verifEspaceLibre(){
+		int k = 0;
+		for(int i=0; i<tailleTas; i++){
+			System.out.println("("+i+") ->" +tas[i]);
+			if(Tas_verifCaseLibre(i)){
+				k++;
+			}
 		}
-		else return true;
+		for (int j=0; j<espacesVides.size(); j++){
+			System.out.println("Espaces vides de la taille de 2 puissance "+j);
+			for (int f=0; f<espacesVides.get(j).size(); f++){
+				System.out.println("Espace numéro :" +f + " contient " + espacesVides.get(j).size() +" tableaux");
+				System.out.println("Addresse dans le tas : " +espacesVides.get(j).get(f).getAddrTas());
+				System.out.println("Taille dans le tas : " +espacesVides.get(j).get(f).getTaille());
+			}
+
+		}
+		System.out.println("\n");
+		for (int j=0; j<espacesOccupes.size(); j++){
+		System.out.println("Nombre d'espaces occupes : "+espacesOccupes.size());
+			System.out.println("Espace numéro :" +j + " contient " + espacesOccupes.get(j).getTaille() +" donnees");
+			System.out.println("Addresse dans le tas : " +espacesOccupes.get(j).getAddrTas());
+		}
+		System.out.println("\n" +k);
+		return k;
 	}
 	
 	public int Tas_selectionnerIndex(int taille){
-		for (int i =(this.nbTab)-1; i>=0; i--){
-			if(!Tas_verifIndexTasDispo(i) && this.tas[i].Espace_verifTabLibre()){
-				if ((this.tas[i].tableau.length>=taille) && (this.tas[i].Espace_verifTabLibre())){
-					return i;
-				}
+		int index = Tas_pouissance(taille,false);
+		if(taille<this.espaceLibre){
+			if(!espacesVides.get(index).isEmpty()){
+				return index;
+			}
+			else {
+				return -1;
 			}
 		}
-		return -1;
-	}
-	
-	public int Tas_selectionnerTableau(String nom){
-		for(int i =0; i<this.tailleTas; i++){
-			if(!Tas_verifIndexTasDispo(i)){
-				if(this.tas[i].nom.equals(nom))
-					return i;
-			}
-		}
-	return -1;
-}
-	
-	public void Tas_verifEspaceOccupe(){
-		this.espaceFragmente = 0;
-		for (int i=0; i<this.tailleTas; i++){
-			if(!Tas_verifIndexTasDispo(i) && !this.tas[i].Espace_verifTabLibre()){
-				this.espaceTotal -= this.tas[i].tableau.length;
-			}
-		}
-		this.espaceFragmente = this.espaceTotal;
-		
-	}
-	
-	public void Tas_verifEspaceLibre(){
-		this.espaceFragmente = 0;
-		for(int i=0; i<this.tailleTas; i++){
-			if(!Tas_verifIndexTasDispo(i) && this.tas[i].Espace_verifTabLibre()){
-					this.espaceFragmente += this.tas[i].tableau.length;			// Une fonction aurait pu ï¿½tre crï¿½ï¿½e pour visiter case par case et vï¿½rifier combien sont libres
-				
-			}
-			
-		}
-		this.espaceTotal = this.espaceFragmente + this.espaceDefragmente;
-	}
-		
-	public int Tas_verifGarbage(int taille){							// VÃ©rifie si l'espace ciblÃ© est libre et de la taille nÃ©cessaire et renvoie l'indexe 
-		if(this.espaceTotal>= taille){
-			if(Math.pow(2,Tas_pouissance(this.espaceTotal,true)) >=taille){   // verifier chaque tableau et retourner le plus grand pour ï¿½viter 4*4*4*4 et dire qu'il y a 16 de place alors qu'en fait pas
-				return Tas_selectionnerIndex(taille);
-			}
-		else{
-			 return -2;
-		}
-	}
-	return-1; 
+		return -2;
 	}
 	
 	public int Tas_allouerTableau(String nom, String genre, int taille){
-		int addrTab = Tas_verifGarbage(taille);
-		if(addrTab>=0){
-			this.tas[addrTab].Espace_allouerTableau(nom, genre, taille);
-			Tas_subdivisionEspaces(addrTab);
+		int aT = Tas_selectionnerIndex(taille);
+		if(aT>=0){
+			int indexv = (this.espacesVides.get(aT).size() - 1) ; 		// selectionne le dernier element d'une arraylist d'une puissance donnee
+			//System.out.println("LAAAAAAAAA"+ this.espacesVides.get(aT).size());
+			//System.out.println("ICIIIIIIII" +this.espacesVides.get(4).get(0).getTaille());
+			this.espacesOccupes.add(this.espacesVides.get(aT).get(indexv));
+			//System.out.println("diff de taille" +(this.espacesVides.get(aT).get(indexv).getTaille() - taille));
+			//System.out.println("addrTas>>>"+ this.espacesVides.get(aT).get(indexv).getAddrTas());
+			//System.out.println("addr de début de subdiv" +( this.espacesVides.get(aT).get(indexv).getAddrTas() + taille));
+			Tas_subdivisionEspacesLibres ( this.espacesVides.get(aT).get(indexv).getAddrTas() + taille,(this.espacesVides.get(aT).get(indexv).getTaille()) - taille, true ); 	// soustrait de la taille de lespace vide lespace utilise et subdivise en sous tableaux
+			this.espaceLibre -= taille;
+			this.espacesVides.get(aT).remove(indexv);
+			int indexo = this.espacesOccupes.size() - 1;
+			this.espacesOccupes.get(indexo).setGenre(genre);
+			this.espacesOccupes.get(indexo).setNom(nom);
+			this.espacesOccupes.get(indexo).setnbRef(1);
+			this.espacesOccupes.get(indexo).setTaille(taille); 
+			//this.espacesOccupes.add(aT, new Tas_Espaces(aT, 1, taille, genre, nom));
+			//Tas_verifEspaceLibre();
+		}
+		
+		else if(aT==-1){
+			Tas_garbageCollector();
+			aT = this.espaceLibre - taille;
+			this.espaceLibre -= taille;
+			this.espacesOccupes.add(new Tas_Espaces(aT, 1, taille, genre, nom));
+			Tas_subdivisionEspacesLibres ( aT,this.espaceLibre, false ); 	// soustrait de la taille de lespace vide lespace utilise et subdivise en sous tableaux
+			int indexo = this.espacesOccupes.size() - 1;
+			this.espacesOccupes.get(indexo).setGenre(genre);
+			this.espacesOccupes.get(indexo).setNom(nom);
+			this.espacesOccupes.get(indexo).setnbRef(1);
+			this.espacesOccupes.get(indexo).setTaille(taille); 
 
 		}
-		else if(addrTab==-2){
-			Tas_refonteEspace();
-			addrTab= nbTab-1;												//hash func
-			tas[addrTab] = new Tas_Espaces(taille);
-			this.tas[addrTab].Espace_allouerTableau(nom, genre, taille);
-			this.espaceDefragmente-=taille;
-			this.nbTab++;
-			Tas_verifEspaceLibre();
-			System.out.println(this.espaceDefragmente);
-			Tas_subdivisionEspacesTotal();
-			System.out.println("CIAO BAMBINO");
-		}
-                
-                Tas_verifEspaceLibre();
-                return addrTab;
-	}
-	
-	public void Tas_affecterValeur(String nom, int index, Object val){		// TODO : ajouter des exceptions lors de modification de genre int bool sur un meme tableau
-		this.tas[Tas_selectionnerTableau(nom)].Espace_affecterValeur(index, val);
-	}
-	
-	public void Tas_supprimerTableau(int index){
-		this.tas[index]=null;
-	}
-	
-/*	public int Tas_verifTailleEspace(int taille){			// trololol
-		int i = 0;									// Scan les tableaux en fonction de leur taille
-		if(Tas_verifEspaceOK(taille)!= -1){
 
-			i=Tas_pouissance(taille,false);
-		return i;
+		else if(aT==-2){
+			System.out.println(">>>>>>>> RED ALERT <<<<<<<<");
 		}
-		return -1;
-	}*/
-	
-	public void Tas_generationEspaces(){						// Fonction tÃ©moin
-		int taille=1;
-		for(int i = 0; i<nbTab; i++){
-			this.tas[i]= new Tas_Espaces(taille);
-			taille*=2;
-			this.nbTab++;
-		}
+		return this.espacesOccupes.size()-1;
 
 	}
 	
-	public void Tas_refonteEspace(){
-		for(int i = 0; i<this.tailleTas; i++){
-			if(!Tas_verifIndexTasDispo(i) && this.tas[i].Espace_verifTabLibre()){
-				this.espaceDefragmente+=tas[i].tableau.length;
-				Tas_supprimerTableau(i);
-				this.nbTab--;
+	public void Tas_affecterValeur(int addr, int index, Object val){							// TODO : ajouter des exceptions lors de modification de genre int bool sur un même tableau		
+		//if()																		tester les types
+		this.tas[(this.espacesOccupes.get(addr).getAddrTas() + index)] = val;
+	//	System.out.println(this.tas[]);
+	}
+	
+	public void Tas_subdivisionEspacesLibres(int aT, int t, boolean incr){								// Fonction de subdivision de l'espace disponible
+		int taille, pouissance ;
+		if (incr){
+			 taille =1;
+			while ( t > 0 ){	
+				pouissance = Tas_pouissance(t,true);
+				taille = (int)(Math.pow(2, pouissance));
+				this.espacesVides.get(pouissance).add(new Tas_Espaces( aT ,taille));
+				aT+=taille;
+				t -= taille;
+			}
+		}
+		else{
+				while ( t > 0 ){
 
+						pouissance = Tas_pouissance(t,true);
+						taille = (int)(Math.pow(2, pouissance));
+						aT-=taille;
+						this.espacesVides.get(pouissance).add(new Tas_Espaces( aT ,taille));
+						t -= taille;
 			}
 		}
 		
-		
 	}
 	
-	public void Tas_subdivisionEspaces(int index){
-		int i=0,x =this.tas[index].Espace_verifEspaceFragmente();
-		int pouissance= Tas_pouissance(x, true);
-		if(	x!=0){
-			this.tas[index].Espace_ajusterTableau();
-			while(x>0){
-				if(Tas_verifIndexTasDispo(i)){
-
-					int taille = (int)(Math.pow(2, pouissance));
-					this.tas[i]= new Tas_Espaces(taille);
-					x-=taille;
-					pouissance = Tas_pouissance(x,true);
-					this.espaceFragmente+=taille;
-					this.nbTab++;
-					
+	public void Tas_garbageCollector(){
+		if(!this.espacesOccupes.isEmpty()){
+			for (int i = 0; i<this.espacesOccupes.size(); i++){
+				if(this.espacesOccupes.get(i).getnbRef()==0){
+					this.espaceLibre += this.espacesOccupes.get(i).getTaille();
+					this.espacesOccupes.remove(i);
 				}
-				i++;
+			}
+			Tas_reorganiserTas();
+			
+		}
+		for (int i = 0; i<this.espacesVides.size(); i++){
+			this.espacesVides.get(i).clear();
+		}
+
+		
+	}
+	
+	public int Tas_verifIndexOccupe(int index){
+		for(int i=0; i<this.espacesOccupes.size(); i++){
+	//		System.out.println("index de la case qu'on veut récup : "+index);
+	//		System.out.println("index à la con := " + (this.espacesOccupes.get(i).getAddrTas() + this.espacesOccupes.get(i).getTaille()) + " a pour i : " +i);
+			if( (this.espacesOccupes.get(i).getAddrTas() + this.espacesOccupes.get(i).getTaille() -1 ) == index){
+				return i;
 			}
 		}
-	
+		return -2;
 	}
 	
-	public void Tas_subdivisionEspacesTotal(){					// Fonction de subdivision de l'espace disponible TODO : virer la diminution d'espaceDisop
-		int i=0,pouissance= Tas_pouissance(this.espaceDefragmente, true);
-		while ( this.espaceDefragmente>0){
-			if(Tas_verifIndexTasDispo(i)){
-				int taille = (int)(Math.pow(2, pouissance));
-				this.tas[i]= new Tas_Espaces(taille);
-				this.espaceDefragmente -= taille;
-				pouissance = Tas_pouissance(this.espaceDefragmente, true);
-				this.espaceFragmente +=taille;
-				this.nbTab++; 
-			}
-			i++;
+	public void Tas_reorganiserTas(){
+		int add, j=0, taille, debut, nbtab = this.espacesOccupes.size(), i=this.tailleTas-1;
+		while(nbtab>0 && i>=0){
+			//System.out.println("i ->" +i);
+			//System.out.println("j ->" +j);
 			
-		}	
- 
+			if(Tas_verifCaseLibre(i)){
+				j++;
+				
+			}
+			else if(j>0){
+				add = Tas_verifIndexOccupe(i);
+		//		System.out.println(add);
+				taille =  this.espacesOccupes.get(add).getTaille();
+				debut = this.espacesOccupes.get(add).getAddrTas();
+		//		System.out.println("debut : "+debut + " à " + (debut+j));
+				Tas_transfertTableau(debut,debut + j,taille);
+				this.espacesOccupes.get(add).setAddrTas(debut+j);
+			
+				nbtab--;
+				j=0;
+				}
+			i--;
+		}
 	}
 	
-																			//System.out.println("L'adresse du tableau ï¿½ remplir : " +addrTab);
+	public void Tas_transfertTableau(int aT1, int aT2, int taille){
+		for(int i = taille -1; i>=0; i--){
+	//	System.out.println("tas arrivée : " + tas[aT2+i] + "\n tas depart : " + tas[aT1+i] );
+			tas[aT2+i]=tas[aT1+i];
+			tas[aT1+i]=this.vide;
+		}
+	}
+	
+	public ArrayList<ArrayList <Tas_Espaces>> Tas_arrayList(){ 			// creation de l'arraylist espacesvides
+		int pouissance= Tas_pouissance(this.espaceLibre, false);
+		for (int i=0; i<pouissance; i++){
+			espacesVides.add(i, new ArrayList<Tas_Espaces>());
+		}
+		return espacesVides;
+	}
+	
 	public int Tas_pouissance(int val, boolean inf){   		// tester que i est bien <10 pour la puissance voulue
 		int i;
 		if(!inf){
@@ -213,53 +236,49 @@ public class Tas_Tas {
 		return i;
 	}
 	
-    public String toString(){
-        if(this.tas!=null){
-            String retour= "Taille du tas : " + this.tailleTas + " \n" + "Espace mï¿½moire utilisï¿½ : " + (this.tailleTas-this.espaceTotal) + " \n" + "Espace mï¿½moire disponible total : " + this.espaceTotal + " \n" + "Espace mï¿½moire fragmentï¿½ : " + this.espaceFragmente + " \n"+ "Espace mï¿½moire non fragmentï¿½ : " + this.espaceDefragmente + " \n" + "Nombre d'espace mï¿½moires existants : " + this.nbTab + " \n" ;
-            for(int i=0; i<this.tailleTas; i++){
-                if(!Tas_verifIndexTasDispo(i)){
-                    retour +=this.tas[i].toString()+"   // \n";
-                }
-            }
-            return retour;
-        }
-        else return "Pas de tas a afficher";
-    }
-       
-    
-    public Vector<String> get_Tas(){
-        Vector<String> vs = new Vector<String>();
-        if(this.tas!=null){
-            //String retour= "Taille du tas : " + this.tailleTas + " \n" + "Espace memoire utilise : " + (this.tailleTas-this.espaceTotal) + " \n" + "Espace memoire disponible total : " + this.espaceTotal + " \n" + "Espace memoire fragmente : " + this.espaceFragmente + " \n"+ "Espace memoire non fragmente : " + this.espaceDefragmente + " \n" + "Nombre d'espaces memoires existants : " + this.nbTab + " \n" ;
-            for(int i=0; i<this.tailleTas; i++){
-                if(!Tas_verifIndexTasDispo(i)){
-                    if (this.tas[i].genre != "-"){
-                    vs.add (this.tas[i].toString());
-                    }
-                }
-            }        
-        }
-        else{
-            vs.add("Tas vide");
-        }
-        return vs;
-    }
-    
-    
-    
-        public Object Tas_recupValeur(String nom, int index){
-            Object x;
-            return this.tas[Tas_selectionnerTableau(nom)].Espace_recupValeur(index);
-        }
-        
-        
-        
-        public void Tas_dump(){
-            for(int i=0; i<this.tailleTas; i++){
-                if(!Tas_verifIndexTasDispo(i)){
-                    Tas_supprimerTableau(i);
-                }
-            }
-            this.tas=null;
-        }
+	public void Tas_dump(){
+		for(int i=0; i<this.espacesVides.size(); i++){
+			espacesVides.get(i).clear();
+			}
+		this.espacesOccupes.clear();
+		this.vide = null;
+		this.tas=null;
+	}
+	
+	public Vector<String> get_Tas(){
+		Vector<String> vs = new Vector<String>();
+		if(this.tas!=null){
+			int debut,fin;
+			String retour= "\nTaille du tas : " + this.tailleTas + " \n" + "Espaces memoire utilises : " + (this.tailleTas-this.espaceLibre) + " \n" + "Espace memoire disponible total : " + this.espaceLibre + " \n" + "Nombre de tableaux existants : " + this.espacesOccupes.size()  + " \n" ;
+			vs.add(retour);
+			
+			for(int i=0; i<this.espacesOccupes.size(); i++){
+				 vs.add (this.espacesOccupes.get(i).toString());
+				 debut = this.espacesOccupes.get(i).getAddrTas();
+				 fin = debut + this.espacesOccupes.get(i).getTaille();
+				
+				for(int j = debut; j < fin; j++){
+					vs.add(tas[j].toString());
+				}
+				vs.add("\n");
+			}
+			for (int i=0; i<this.espacesVides.size(); i++){
+				for (int j=0; j<this.espacesVides.get(i).size(); j++){
+					 vs.add(this.espacesVides.get(i).get(j).toString());
+					 debut = this.espacesVides.get(i).get(j).getAddrTas();
+					 fin = debut + this.espacesVides.get(i).get(j).getTaille();
+
+					for(int k = debut; k < fin; k++){
+						vs.add(tas[k].toString());
+
+					}
+					vs.add("\n");
+				}
+			}
+		}
+		else{
+			vs.add("Tas vide");
+		}
+		return vs;
+	}
 }
