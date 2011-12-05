@@ -22,6 +22,21 @@ public class Symbole {
         this.portee=portee;
     }
 
+public Symbole(String nom,  String genre, String type, String conteneur, String portee){
+        this.nom=nom;
+        this.genre=genre;
+        this.type=type;
+        this.conteneur=conteneur;
+        this.portee=portee;
+    }
+
+public Symbole(String nom,  String genre, String type, String portee){
+        this.nom=nom;
+        this.genre=genre;
+        this.type=type;
+        this.portee=portee;
+    }
+
     public boolean compNom(String nom){
         return this.nom.equals(nom);
 
