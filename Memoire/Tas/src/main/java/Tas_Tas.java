@@ -43,7 +43,7 @@ public class Tas_Tas {
 		for (int j=0; j<espacesVides.size(); j++){
 			System.out.println("Espaces vides de la taille de 2 puissance "+j);
 			for (int f=0; f<espacesVides.get(j).size(); f++){
-				System.out.println("Espace numéro :" +f + " contient " + espacesVides.get(j).size() +" tableaux");
+				System.out.println("Espace numero :" +f + " contient " + espacesVides.get(j).size() +" tableaux");
 				System.out.println("Addresse dans le tas : " +espacesVides.get(j).get(f).getAddrTas());
 				System.out.println("Taille dans le tas : " +espacesVides.get(j).get(f).getTaille());
 			}
@@ -52,7 +52,7 @@ public class Tas_Tas {
 		System.out.println("\n");
 		for (int j=0; j<espacesOccupes.size(); j++){
 		System.out.println("Nombre d'espaces occupes : "+espacesOccupes.size());
-			System.out.println("Espace numéro :" +j + " contient " + espacesOccupes.get(j).getTaille() +" donnees");
+			System.out.println("Espace numero :" +j + " contient " + espacesOccupes.get(j).getTaille() +" donnees");
 			System.out.println("Addresse dans le tas : " +espacesOccupes.get(j).getAddrTas());
 		}
 		System.out.println("\n" +k);
@@ -85,7 +85,7 @@ public class Tas_Tas {
 			this.espacesOccupes.add(this.espacesVides.get(aT).get(indexv));
 			//System.out.println("diff de taille" +(this.espacesVides.get(aT).get(indexv).getTaille() - taille));
 			//System.out.println("addrTas>>>"+ this.espacesVides.get(aT).get(indexv).getAddrTas());
-			//System.out.println("addr de début de subdiv" +( this.espacesVides.get(aT).get(indexv).getAddrTas() + taille));
+			//System.out.println("addr de debut de subdiv" +( this.espacesVides.get(aT).get(indexv).getAddrTas() + taille));
 			Tas_subdivisionEspacesLibres ( this.espacesVides.get(aT).get(indexv).getAddrTas() + taille,(this.espacesVides.get(aT).get(indexv).getTaille()) - taille, true ); 	// soustrait de la taille de lespace vide lespace utilise et subdivise en sous tableaux
 			this.espaceLibre -= taille;
 			this.espacesVides.get(aT).remove(indexv);
@@ -119,7 +119,7 @@ public class Tas_Tas {
 
 	}
 	
-	public void Tas_affecterValeur(int addr, int index, Object val){							// TODO : ajouter des exceptions lors de modification de genre int bool sur un même tableau		
+	public void Tas_affecterValeur(int addr, int index, Object val){							// TODO : ajouter des exceptions lors de modification de genre int bool sur un meme tableau		
 		//if()																		tester les types
 		this.tas[(this.espacesOccupes.get(addr).getAddrTas() + index)] = val;
 	//	System.out.println(this.tas[]);
@@ -190,8 +190,8 @@ public class Tas_Tas {
         
 	public int Tas_verifIndexOccupe(int index){
 		for(int i=0; i<this.espacesOccupes.size(); i++){
-	//		System.out.println("index de la case qu'on veut récup : "+index);
-	//		System.out.println("index à la con := " + (this.espacesOccupes.get(i).getAddrTas() + this.espacesOccupes.get(i).getTaille()) + " a pour i : " +i);
+	//		System.out.println("index de la case qu'on veut recup : "+index);
+	//		System.out.println("index e la con := " + (this.espacesOccupes.get(i).getAddrTas() + this.espacesOccupes.get(i).getTaille()) + " a pour i : " +i);
 			if( (this.espacesOccupes.get(i).getAddrTas() + this.espacesOccupes.get(i).getTaille() -1 ) == index){
 				return i;
 			}
@@ -214,7 +214,7 @@ public class Tas_Tas {
 		//		System.out.println(add);
 				taille =  this.espacesOccupes.get(add).getTaille();
 				debut = this.espacesOccupes.get(add).getAddrTas();
-		//		System.out.println("debut : "+debut + " à " + (debut+j));
+		//		System.out.println("debut : "+debut + " e " + (debut+j));
 				Tas_transfertTableau(debut,debut + j,taille);
 				this.espacesOccupes.get(add).setAddrTas(debut+j);
 			
@@ -227,7 +227,7 @@ public class Tas_Tas {
 	
 	public void Tas_transfertTableau(int aT1, int aT2, int taille){
 		for(int i = taille -1; i>=0; i--){
-	//	System.out.println("tas arrivée : " + tas[aT2+i] + "\n tas depart : " + tas[aT1+i] );
+	//	System.out.println("tas arrivee : " + tas[aT2+i] + "\n tas depart : " + tas[aT1+i] );
 			tas[aT2+i]=tas[aT1+i];
 			tas[aT1+i]=this.vide;
 		}

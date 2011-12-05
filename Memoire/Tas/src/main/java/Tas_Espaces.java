@@ -46,7 +46,7 @@ public class Tas_Espaces {
 		}
 		
 		/**
-		 * Méthode getAddrTas : Recupere la valeur de l'adresse dans le tas.
+		 * Methode getAddrTas : Recupere la valeur de l'adresse dans le tas.
 		 * @return : L'adresse du tas de l'instance courante.
 		 */
 		public int getAddrTas() {
@@ -62,7 +62,7 @@ public class Tas_Espaces {
 		}
 		
 		/**
-		 * Méthode getnbRef : Recupere le nombre de references du tableau.
+		 * Methode getnbRef : Recupere le nombre de references du tableau.
 		 * @return : Le nombre de references du tableau de l'instance courante.
 		 */
 		public int getnbRef() {

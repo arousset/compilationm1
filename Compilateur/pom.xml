@@ -16,6 +16,13 @@
 				<groupId>compilationm1_G4</groupId>
 				<artifactId>Anal_minijaja</artifactId>
 				<version>1.0.0</version>
+				<type>jar</type>
+			</dependency>	
+			<dependency>
+				<groupId>compilationm1_G4</groupId>
+				<artifactId>ControleType</artifactId>
+				<version>1.0.0</version>
+				<type>jar</type>
 			</dependency>	
 		</dependencies>
 </project>
