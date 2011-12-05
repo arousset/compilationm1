@@ -33,6 +33,15 @@ public class Compilateur_minijaja {
         return this.ASA.jjtAccept(visitor, data);
     }
 
+    public void controleType() throws MiniJajaControleurTypeException {
+        ControlerTypeData ctdata = new ControlerTypeData();
+        try {
+            boolean ret = (Boolean)this.executeVisitor(new ControlerTypeVisitor(), ctdata);
+        }catch(MiniJajaVisitorException e) {
+            throw new MiniJajaControleurTypeException(e.toString());
+        }
+    }
+
     public void parse() throws MiniJajaParseurException {
         try {
             MiniJaja mjj = new MiniJaja(this.minijaja);
@@ -67,6 +76,7 @@ public class Compilateur_minijaja {
     public void compile_MiniJaja() throws MiniJajaVisitorException {
         try {
             this.parse();
+            this.controleType();
             this.compile();
         }catch(MiniJajaVisitorException ex) {
             throw new MiniJajaCompilationProcessusException(ex.toString());
