@@ -31,11 +31,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.tree.TreeModel;
 
-
-/**
- *
- * @author ubuntu1
- */
  
 public class Fwindow extends javax.swing.JFrame {
     
@@ -111,7 +106,7 @@ boolean firstParser = true;
         jList2.setListData(tasjjc);
         jList3.setListData(pilemjj);
         jList4.setListData(tasmjj);*/
-        interminijaja = new Interpreteur(jList3,jList4);
+        interminijaja = new Interpreteur(jList3,jList4, textSortie, textErreurs);
     }
 
 
@@ -365,7 +360,6 @@ boolean firstParser = true;
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
     // TODO add your handling code here:
         ProchaineInstruction();
-        interminijaja.next();
     }
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -395,7 +389,9 @@ boolean firstParser = true;
     }
     
     private void aff_erreurs(String message) {
-        textSortie.append(message+"\n");
+        GregorianCalendar heure = new GregorianCalendar();
+        textErreurs.append("[Erreur] [" + heure.getTime().getHours() + ":" + heure.getTime().getMinutes()+ "] : " + message+"\n");
+        textErreurs.updateUI();
     }
      
 
@@ -409,6 +405,7 @@ boolean firstParser = true;
     void ProchaineInstruction()
     {
         taln.ProchaineInstruction();
+        interminijaja.next();
     }
     
     private void compiler()
