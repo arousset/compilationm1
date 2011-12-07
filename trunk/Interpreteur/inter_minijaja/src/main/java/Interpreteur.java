@@ -2,10 +2,12 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JList;
+import javax.swing.JTextArea;
 
 
 
@@ -27,6 +29,8 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
          
          Vector<String> tmp1;
     Vector<String> tmp2;
+    JTextArea sortie;
+    JTextArea erreurs;
     
     
     
@@ -49,7 +53,8 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
             try {
                 parser.classe();
             } catch (ParseException ex) {
-                Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+                aff_erreurs(ex.getMessage());
             }
             
 	    // Recuperation de la racine de l'AST (Abstract Syntax Tree).
@@ -58,7 +63,8 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
                 // on instancie tt le bordel et donc les visiteurs
                 ((SimpleNode) racine).jjtAccept(this, null);
             } catch (MiniJajaVisitorException ex) {
-                Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+                aff_erreurs(ex.getMessage());
             }
 
             // Affichage de l'ASA.
@@ -76,7 +82,19 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
                     
                     
        // throw new UnsupportedOperationException("Not supported yet.");
-    }       
+    }      
+  
+  private void aff_sortie(String message) {
+        GregorianCalendar heure = new GregorianCalendar();
+        sortie.append("[Infos] [" + heure.getTime().getHours() + ":" + heure.getTime().getMinutes()+ "] : " + message+"\n");
+        sortie.updateUI();
+    }
+    
+    private void aff_erreurs(String message) {
+        GregorianCalendar heure = new GregorianCalendar();
+        erreurs.append("[Erreur] [" + heure.getTime().getHours() + ":" + heure.getTime().getMinutes()+ "] : " + message+"\n");
+        erreurs.updateUI();
+    }
      
 
     public void setSettings(String file, boolean firstParser)
@@ -88,18 +106,20 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
             else
                 parser.ReInit(new FileReader(new File(file_parsec)));
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+            aff_erreurs(ex.getMessage());
         }
     }
  
   
-      public Interpreteur(JList pilelist, JList taslist) {
+      public Interpreteur(JList pilelist, JList taslist, JTextArea s, JTextArea e) {
              
         // on declare la memoire
             pile = new Pile();
             tas = new Tas_Tas();
             listpilemjj = pilelist;
             listtasmjj = taslist;
+            sortie = s;
+            erreurs = e;
             
              tmp1 = new Vector<String>();
         tmp2 = new Vector<String>();
@@ -124,7 +144,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
   
   public void MAJgui()
   {
-      
+      aff_sortie("Pause dans l'interpretation");
       System.out.println("ON ET RENTRER");
                 Vector<String> pilev = new Vector<String>();
                 Vector<String> tasv = new Vector<String>();
