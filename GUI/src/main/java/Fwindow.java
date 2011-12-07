@@ -40,7 +40,7 @@ public class Fwindow extends javax.swing.JFrame {
     private boolean fileExists = false;
     private String pathFile = "";
     private File currentFile = null;
-
+Interpreteur interminijaja;
     // Delcaration de la memoire
     Pile pile;
     Tas_Tas tas;
@@ -93,15 +93,15 @@ public class Fwindow extends javax.swing.JFrame {
         jPanel2.add(taln.jsp);
 
 
-        pilemjj = new Vector<String>();
+       /* pilemjj = new Vector<String>();
         tasmjj = new Vector<String>();
         pilejjc = new Vector<String>();
-        tasjjc = new Vector<String>();
+        tasjjc = new Vector<String>();*/
 
-        jList1.setListData(pilejjc);
+       /* jList1.setListData(pilejjc);
         jList2.setListData(tasjjc);
         jList3.setListData(pilemjj);
-        jList4.setListData(tasmjj);
+        jList4.setListData(tasmjj);*/
     }
 
 
@@ -259,10 +259,11 @@ public class Fwindow extends javax.swing.JFrame {
                 Vector<String> tas = new Vector<String>();
 
                 // Permet d'instancier le parser et l'interpreteur
-                Inter interminijaja = new Inter(pathFile);
+                 interminijaja = new Interpreteur(pathFile, jList3,jList4);
                 //interminijaja.parse(pathFile);
-                Thread th_minijaja = new Thread(interminijaja);
-                th_minijaja.start();
+                //Thread th_minijaja = new Thread(interminijaja);
+                //th_minijaja.start();
+                interminijaja.start();
 
                 // On recupere la pile une premiere fois
                 tas = interminijaja.tas.get_Tas();
@@ -348,6 +349,7 @@ public class Fwindow extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
     // TODO add your handling code here:
         ProchaineInstruction();
+        interminijaja.next();
     }
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {

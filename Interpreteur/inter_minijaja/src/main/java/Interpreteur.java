@@ -1,6 +1,11 @@
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JList;
 
 
 
@@ -12,30 +17,126 @@ import java.util.logging.Logger;
 
 
 
-public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
-	MiniJaja Asa_Minijaja;
-	Pile pile;
-        Tas_Tas tas;
+public class Interpreteur extends Thread implements MiniJajaVisitor {
+         Pile pile;
+         Tas_Tas tas;
+         MiniJaja parser;
+         String file_parsec;
+         JList listpilemjj;
+         JList listtasmjj;
+         
+         Vector<String> tmp1;
+    Vector<String> tmp2;
+    
+    
+    
+    
+
         boolean pause = true;
-        Inter interpretor;
+
     // Permet de gerer le pas a pas.
   //  Boolean thread_sleep = false;
-           
+  @Override         
+  public void run(){
+        System.out.println("Debut du fred");
         
+        
+            MiniJaja parser = null;
+            try {
+                parser = new MiniJaja(new FileReader(new File(file_parsec)));
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            try {
+                parser.classe();
+            } catch (ParseException ex) {
+                Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+	    // Recuperation de la racine de l'AST (Abstract Syntax Tree).
+	    Node racine = parser.getJJTree().rootNode();
+            try {
+                // on instancie tt le bordel et donc les visiteurs
+                ((SimpleNode) racine).jjtAccept(this, null);
+            } catch (MiniJajaVisitorException ex) {
+                Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            // Affichage de l'ASA.
+	    System.out.println("Debut arbre");
+            ((SimpleNode) racine).dump(" > ");
+	    System.out.println("Fin arbre");
+            System.out.println("Fin du fred");
+            
+                Vector<String> pilev = new Vector<String>();
+                Vector<String> tasv = new Vector<String>();
+                tasv = tas.get_Tas();
+                pilev = pile.get_PileV();                                 
+                    listpilemjj.updateUI();
+                    listtasmjj.updateUI();
+                    
+       // throw new UnsupportedOperationException("Not supported yet.");
+    }       
      
 
 
-  public InterpreteurVisitorMinijaja(Pile pile, Tas_Tas tas, MiniJaja Asa_Minijaja, Inter interpretor) {
-
-		this. Asa_Minijaja = Asa_Minijaja;
-		this.tas = tas;
-		this.pile = pile; 
-                this.interpretor = interpretor;
-        System.out.println("on instancie l'InterperteurVisitorMiniJaja");
+ 
+  
+      public Interpreteur(String file_parse, JList pilelist, JList taslist) {
+        // on declare la memoire
+            pile = new Pile();
+            tas = new Tas_Tas();
+            file_parsec = file_parse;
+            listpilemjj = pilelist;
+            listtasmjj = taslist;
+            
+             tmp1 = new Vector<String>();
+        tmp2 = new Vector<String>();
+        listpilemjj.setListData(tmp1);
+        listtasmjj.setListData(tmp2);
+            System.out.println("on instancie l'InterperteurVisitorMiniJaja");
+    }
+  
+  
+  
+  public synchronized void pauseInter(){
+     if (pause == true){
+            try {
+                this.wait();
+                MAJgui();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(InterpreteurVisitorMinijaja.class.getName()).log(Level.SEVERE, null, ex);
+            }
+      } 
   }
   
-  public void next(){
-    pause = false;
+  public void MAJgui()
+  {
+      
+      System.out.println("ON ET RENTRER");
+                Vector<String> pilev = new Vector<String>();
+                Vector<String> tasv = new Vector<String>();
+                tasv = tas.get_Tas();
+                pilev = pile.get_PileV();  
+                
+                  for (int i=0; i< tasv.size(); i++) {
+                        tmp2.add(tasv.elementAt(i).toString());
+                    }
+                
+                    for (int i=0; i< pilev.size(); i++) {
+                        tmp1.add(pilev.elementAt(i).toString());
+                    }
+                
+                
+                    listpilemjj.updateUI();
+                    listtasmjj.updateUI();
+  }
+  
+  
+  public synchronized void next(){
+    this.notify();   
+   // pause = false;  
   }    
   
   public Object visit(SimpleNode node, Object data) throws MiniJajaVisitorException {
@@ -49,13 +150,7 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
   public Object visit(ASTclasse node, Object data) throws MiniJajaVisitorException {
 
       System.out.println("on est content");
-      if (pause == true){
-            try {
-                interpretor.sleep(300);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(InterpreteurVisitorMinijaja.class.getName()).log(Level.SEVERE, null, ex);
-            }
-      } 
+        pauseInter();
         System.out.println("on est joyeux");  
           
       System.out.println("On passe par ASTCLASSE");
@@ -103,6 +198,11 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
   }
 
   public Object visit(ASTdecls node, Object data) throws MiniJajaVisitorException {
+      
+            System.out.println("on est content");
+        pauseInter();
+        System.out.println("on est joyeux");  
+      
       System.out.println("On passe par ASTDecls");
       int i=0;
       while (i <node.jjtGetNumChildren()) {
@@ -155,6 +255,8 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
 
   
   public Object visit(ASTtableau node, Object data) throws MiniJajaVisitorException {
+      
+      
       System.out.println("On passe par ASTtableau");
       
       
@@ -780,6 +882,10 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
 
   public Object visit(ASTincrement node, Object data) throws MiniJajaVisitorException{
 
+            System.out.println("on est content");
+        pauseInter();
+        System.out.println("on est joyeux");  
+      
       System.out.println("On passe par ASTinc");
       
       String ident_affecation = (String) node.jjtGetChild(0).jjtAccept(this, data);
