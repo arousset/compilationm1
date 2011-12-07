@@ -17,7 +17,7 @@ public class Quadruplet {
 	}
 	
 	public String toString(){
-		return ("<" + nom + "," + valeur + "," + genre + "," + type  + ">" + "a pour conteneur : " + conteneur);
+		return ("<" + nom + "," + valeur + "," + genre + "," + type  + ">");// + "a pour conteneur : " + conteneur);
 	}
 	
         public String getIdent(){

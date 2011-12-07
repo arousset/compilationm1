@@ -4,6 +4,8 @@ import java.util.Vector;
 
 public class Pile {
 
+        public boolean change = false;
+    
 	private Stack <ElementMemoire> pile;
 	
 	

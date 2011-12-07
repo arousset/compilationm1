@@ -40,13 +40,11 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
   public void run(){
         System.out.println("Debut du fred");
         
-        
-            MiniJaja parser = null;
-            try {
+            /* try {
                 parser = new MiniJaja(new FileReader(new File(file_parsec)));
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
 
             try {
                 parser.classe();
@@ -76,18 +74,30 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
                     listpilemjj.updateUI();
                     listtasmjj.updateUI();
                     
+                    
        // throw new UnsupportedOperationException("Not supported yet.");
     }       
      
 
-
+    public void setSettings(String file, boolean firstParser)
+    {
+        file_parsec = file;
+        try {
+            if(firstParser)
+                parser = new MiniJaja(new FileReader(new File(file_parsec)));
+            else
+                parser.ReInit(new FileReader(new File(file_parsec)));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
  
   
-      public Interpreteur(String file_parse, JList pilelist, JList taslist) {
+      public Interpreteur(JList pilelist, JList taslist) {
+             
         // on declare la memoire
             pile = new Pile();
             tas = new Tas_Tas();
-            file_parsec = file_parse;
             listpilemjj = pilelist;
             listtasmjj = taslist;
             
@@ -103,8 +113,9 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
   public synchronized void pauseInter(){
      if (pause == true){
             try {
-                this.wait();
                 MAJgui();
+                this.wait();
+                
             } catch (InterruptedException ex) {
                 Logger.getLogger(InterpreteurVisitorMinijaja.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -119,6 +130,9 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
                 Vector<String> tasv = new Vector<String>();
                 tasv = tas.get_Tas();
                 pilev = pile.get_PileV();  
+                
+                tmp2.clear();
+                tmp1.clear();
                 
                   for (int i=0; i< tasv.size(); i++) {
                         tmp2.add(tasv.elementAt(i).toString());
@@ -198,11 +212,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
   }
 
   public Object visit(ASTdecls node, Object data) throws MiniJajaVisitorException {
-      
-            System.out.println("on est content");
-        pauseInter();
-        System.out.println("on est joyeux");  
-      
+      pauseInter();
       System.out.println("On passe par ASTDecls");
       int i=0;
       while (i <node.jjtGetNumChildren()) {
@@ -365,6 +375,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
 
       String name;
       String value;
+      
 
      name = (String) node.jjtGetChild(1).jjtAccept(this, data);
      value = ""+ node.jjtGetChild(2).jjtAccept(this, data);
@@ -498,6 +509,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
   public Object visit(ASTinstrs node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTinstrs");
   
+      pauseInter();
           String retour1 = ""+node.jjtGetChild(0).jjtAccept(this, data);         
           String retour2 = ""+node.jjtGetChild(1).jjtAccept(this, data);
           

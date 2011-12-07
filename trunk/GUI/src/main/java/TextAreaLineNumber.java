@@ -21,6 +21,7 @@ public class TextAreaLineNumber extends JComponent implements MouseInputListener
         public JScrollPane jsp;
         public int breakPoint[];
         public int PointToPointPosition = 0;
+        public int nbBreakPoint = 0;
 
 	public TextAreaLineNumber(){
 		//super();
