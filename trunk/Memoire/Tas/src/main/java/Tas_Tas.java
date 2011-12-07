@@ -62,7 +62,7 @@ public class Tas_Tas {
 	public int Tas_selectionnerIndex(int taille){
 		int index = Tas_pouissance(taille,false);
 		if(taille<this.espaceLibre){
-			if(!espacesVides.get(index).isEmpty()){
+			if((index<espacesVides.size())&&(!espacesVides.get(index).isEmpty())){
 				return index;
 			}
 			else {
