@@ -2,19 +2,23 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JList;
 
 
 /**
  *
  * @author ROUSSET Alban & Lucas PERRONNE
  */
-class Inter implements Runnable {
+class Inter extends Thread {
          Pile pile;
          Tas_Tas tas;
          MiniJaja parser;
          String file_parsec;
+         JList listpilemjj;
+         JList listtasmjj;
 
 	/*public static void main(String args[]) throws ParseException, FileNotFoundException, MiniJajaVisitorException {
 	    // on declare la memoire
@@ -40,11 +44,13 @@ class Inter implements Runnable {
 
 
 	}*/
-    public Inter(String file_parse) {
+    public Inter(String file_parse, JList pilelist, JList taslist) {
         // on declare la memoire
             pile = new Pile();
             tas = new Tas_Tas();
             file_parsec = file_parse;
+            listpilemjj = pilelist;
+            listtasmjj = taslist;
     }
 
     public void parse(String file_parse) throws FileNotFoundException, ParseException, MiniJajaVisitorException {
@@ -54,7 +60,7 @@ class Inter implements Runnable {
 	    Node racine = parser.getJJTree().rootNode();
 
             // on instancie tt le bordel et donc les visiteurs
-            ((SimpleNode) racine).jjtAccept(new InterpreteurVisitorMinijaja(pile, tas, parser), null);
+            ((SimpleNode) racine).jjtAccept(new InterpreteurVisitorMinijaja(pile, tas, parser, this), null);
 
             // Affichage de l'ASA.
 	    System.out.println("Debut arbre");
@@ -83,7 +89,7 @@ class Inter implements Runnable {
 	    Node racine = parser.getJJTree().rootNode();
             try {
                 // on instancie tt le bordel et donc les visiteurs
-                ((SimpleNode) racine).jjtAccept(new InterpreteurVisitorMinijaja(pile, tas, parser), null);
+                ((SimpleNode) racine).jjtAccept(new InterpreteurVisitorMinijaja(pile, tas, parser,this), null);
             } catch (MiniJajaVisitorException ex) {
                 Logger.getLogger(Inter.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -93,7 +99,17 @@ class Inter implements Runnable {
             ((SimpleNode) racine).dump(" > ");
 	    System.out.println("Fin arbre");
             System.out.println("Fin du fred");
-        throw new UnsupportedOperationException("Not supported yet.");
+            
+             Vector<String> pilev = new Vector<String>();
+                Vector<String> tasv = new Vector<String>();
+                tasv = tas.get_Tas();
+                pilev = pile.get_PileV();                                 
+                    listpilemjj.setListData(pilev);
+                    listpilemjj.updateUI();
+                    listtasmjj.setListData(tasv);
+                    listtasmjj.updateUI();
+                    
+       // throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

@@ -273,8 +273,8 @@ public class Tas_Tas {
 		Vector<String> vs = new Vector<String>();
 		if(this.tas!=null){
 			int debut,fin;
-			String retour= "\nTaille du tas : " + this.tailleTas + " \n" + "Espaces memoire utilises : " + (this.tailleTas-this.espaceLibre) + " \n" + "Espace memoire disponible total : " + this.espaceLibre + " \n" + "Nombre de tableaux existants : " + this.espacesOccupes.size()  + " \n" ;
-			vs.add(retour);
+			//String retour= "\nTaille du tas : " + this.tailleTas + " \n" + "Espaces memoire utilises : " + (this.tailleTas-this.espaceLibre) + " \n" + "Espace memoire disponible total : " + this.espaceLibre + " \n" + "Nombre de tableaux existants : " + this.espacesOccupes.size()  + " \n" ;
+			//vs.add(retour);
 			
 			for(int i=0; i<this.espacesOccupes.size(); i++){
 				 vs.add (this.espacesOccupes.get(i).toString());
@@ -286,7 +286,7 @@ public class Tas_Tas {
 				}
 				vs.add("\n");
 			}
-			for (int i=0; i<this.espacesVides.size(); i++){
+			/*for (int i=0; i<this.espacesVides.size(); i++){
 				for (int j=0; j<this.espacesVides.get(i).size(); j++){
 					 vs.add(this.espacesVides.get(i).get(j).toString());
 					 debut = this.espacesVides.get(i).get(j).getAddrTas();
@@ -298,7 +298,7 @@ public class Tas_Tas {
 					}
 					vs.add("\n");
 				}
-			}
+			}*/
 		}
 		else{
 			vs.add("Tas vide");

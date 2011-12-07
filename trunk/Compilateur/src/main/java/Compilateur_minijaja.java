@@ -86,7 +86,8 @@ public class Compilateur_minijaja {
     /* A virer par la suite ! phase test */
     public static void main(String args[]) throws Exception {
         Compilateur_minijaja compilo;          
-        compilo = new Compilateur_minijaja(new FileReader("/home/ubuntu1/exemple.txt"));
+
+        compilo = new Compilateur_minijaja(new FileReader(new File("C:/Users/rhork/Desktop/compilationm1/Interpreteur/inter_jajacode/exemplemjj.txt")));
         try {
             compilo.compile_MiniJaja();
         } catch(MiniJajaVisitorException e) {
