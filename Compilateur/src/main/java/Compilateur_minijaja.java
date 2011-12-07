@@ -15,13 +15,16 @@ public class Compilateur_minijaja {
     public Node ASA;
     public Reader minijaja;
     public String output;
+    MiniJaja mjj;
 
-    public Compilateur_minijaja(Reader minijaja){
-		this.minijaja = minijaja;
+    public Compilateur_minijaja(){
 		ASA = null;
                 // Voir pour passer le nom du fichier en parametre ou sinon on garde le meme fichier que l'on ecrase. c'est brain ^^
 		output = "fichier_out.jjc";
+                //mjj = new MiniJaja(this.minijaja);
     }
+    
+    
 
     public Compilateur_minijaja(Reader minijaja, String output){
 	this.minijaja = minijaja;
@@ -44,7 +47,6 @@ public class Compilateur_minijaja {
 
     public void parse() throws MiniJajaParseurException {
         try {
-            MiniJaja mjj = new MiniJaja(this.minijaja);
             mjj.classe();
             ASA = mjj.getJJTree().rootNode();
         } catch (ParseException ex) {
@@ -52,47 +54,53 @@ public class Compilateur_minijaja {
         }
     }
 
-    public void compile() throws MiniJajaCompilateurException {
+    public String compile() throws MiniJajaCompilateurException {
         try {
             // On lance le compilation avec les visitor et et compilateur data qui gere les address.
             String lacompil = (String)this.executeVisitor((MiniJajaVisitor) new CompilateurMinijajaVisitor(),new Compilateur_address());
-
+               return lacompil;
             // On gere les flux de sortie dans le fichier
-            FileWriter out_flux = new FileWriter(this.output);
+            /*FileWriter out_flux = new FileWriter(this.output);
             BufferedWriter buff = new BufferedWriter(out_flux);
             buff.write(lacompil);
             // On oublie pas de vider !
             buff.flush();
             // On ferme
             buff.close();
-            out_flux.close();
-        }catch(IOException ex) {
-            throw new MiniJajaCompilateurException(ex.getMessage());
+            out_flux.close();*/
+       /* }catch(IOException ex) {
+            throw new MiniJajaCompilateurException(ex.getMessage());*/
         }catch(MiniJajaVisitorException e) {
             throw new MiniJajaCompilateurException(e.getMessage());
         }
     }
 
-    public void compile_MiniJaja() throws MiniJajaVisitorException {
+    public String compile_MiniJaja(Reader file, boolean firstParser) throws MiniJajaVisitorException {
+        this.minijaja = file;
+        if(firstParser)
+            mjj = new MiniJaja(this.minijaja);
+        else
+             mjj.ReInit(minijaja);
+
         try {
             this.parse();
-            this.controleType();
-            this.compile();
+            //this.controleType();
+            return this.compile();
         }catch(MiniJajaVisitorException ex) {
             throw new MiniJajaCompilationProcessusException(ex.toString());
         }
     }
 
     /* A virer par la suite ! phase test */
-    public static void main(String args[]) throws Exception {
+   /* public static void main(String args[]) throws Exception {
         Compilateur_minijaja compilo;          
 
-        compilo = new Compilateur_minijaja(new FileReader(new File("C:/Users/rhork/Desktop/compilationm1/Interpreteur/inter_jajacode/exemplemjj.txt")));
+        compilo = new Compilateur_minijaja(new FileReader(new File("C:/Users/Keiro/Documents/sample.txt")));
         try {
             compilo.compile_MiniJaja();
         } catch(MiniJajaVisitorException e) {
             System.err.println(e.toString());
         }
         System.out.println("On a fini le parsing");
-    }
+    }*/
 }

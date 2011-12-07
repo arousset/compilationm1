@@ -29,7 +29,7 @@
 				<groupId>compilationm1_G4</groupId>
 				<artifactId>Pile</artifactId>
 				<version>1.0.0</version>
-			</dependency>	
-		</dependencies>
+			</dependency>
+       </dependencies>
 </project>
 

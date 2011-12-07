@@ -15,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,6 +24,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -41,6 +43,8 @@ public class Fwindow extends javax.swing.JFrame {
     private String pathFile = "";
     private File currentFile = null;
 Interpreteur interminijaja;
+Compilateur_minijaja compilo  = new Compilateur_minijaja(); 
+boolean firstParser = true;
     // Delcaration de la memoire
     Pile pile;
     Tas_Tas tas;
@@ -51,6 +55,8 @@ Interpreteur interminijaja;
     Vector<String> tasmjj;
     Vector<String> pilejjc;
     Vector<String> tasjjc;
+    
+    
     
     /** Creates new form Fwindow */
     public Fwindow() {
@@ -78,6 +84,8 @@ Interpreteur interminijaja;
         jButton5.setIcon(new ImageIcon("src/main/java/icons/old-go-bottom.png"));
         jButton6.setIcon(new ImageIcon("src/main/java/icons/old-go-down.png"));
         jButton7.setIcon(new ImageIcon("src/main/java/icons/Stop.png"));
+        jButton8.setText("");
+        jButton8.setIcon(new ImageIcon("src/main/java/icons/Up.png"));
         
         jMenuItem2.setIcon(new ImageIcon("src/main/java/icons/New2.png"));
         jMenuItem1.setIcon(new ImageIcon("src/main/java/icons/Add2.png"));
@@ -86,6 +94,7 @@ Interpreteur interminijaja;
         jMenuItem5.setIcon(new ImageIcon("src/main/java/icons/old-go-bottom2.png"));
         jMenuItem6.setIcon(new ImageIcon("src/main/java/icons/old-go-down2.png"));
         jMenuItem7.setIcon(new ImageIcon("src/main/java/icons/Stop2.png"));
+        jMenuItem8.setIcon(new ImageIcon("src/main/java/icons/Up2.png"));
 
         taln = new TextAreaLineNumber();
         taln.jsp.setSize(jPanel2.getSize());
@@ -102,6 +111,7 @@ Interpreteur interminijaja;
         jList2.setListData(tasjjc);
         jList3.setListData(pilemjj);
         jList4.setListData(tasmjj);*/
+        interminijaja = new Interpreteur(jList3,jList4);
     }
 
 
@@ -231,7 +241,14 @@ Interpreteur interminijaja;
 
     public void executer()
     {
-        sauvegarder();
+       
+        
+        if(taln.jta.getText().isEmpty()){
+            aff_sortie("Debut de l'interpretation");
+            aff_sortie("Aucun fichier a interpreter");
+            aff_sortie("Fin de l'interpretation");
+        } else {
+             sauvegarder();
         jButton4.setEnabled(false);
         jMenuItem4.setEnabled(false);
 
@@ -242,31 +259,25 @@ Interpreteur interminijaja;
         jMenuItem5.setEnabled(true);
         jMenuItem6.setEnabled(true);
         jMenuItem7.setEnabled(true);
-        
-        if(taln.jta.getText().isEmpty()){
-            aff_sortie("Debut de l'interpretation");
-            aff_sortie("--> pas de code MiniJaja");
-            aff_sortie("Fin de l'interpretation");
-
-            // Merci de laisser le code !
-            //ImageIcon icon = createImageIcon("icons/Stop2.png", "sa marche de la foluieeeee");
-            //label1 = new JLabel("Image and Text", icon, JLabel.CENTER);
-          // Fin de merci de laisser le code
-        } else {
             aff_sortie("Debut de l'interpretation");
            // try {
                 Vector<String> pilev = new Vector<String>();
                 Vector<String> tas = new Vector<String>();
 
                 // Permet d'instancier le parser et l'interpreteur
-                 interminijaja = new Interpreteur(pathFile, jList3,jList4);
                 //interminijaja.parse(pathFile);
                 //Thread th_minijaja = new Thread(interminijaja);
                 //th_minijaja.start();
-                interminijaja.start();
+                 interminijaja.setSettings(pathFile, firstParser);
+                if(firstParser)
+                    interminijaja.start();
+                else
+                    interminijaja.run();
+                
+                 firstParser = false;
 
                 // On recupere la pile une premiere fois
-                tas = interminijaja.tas.get_Tas();
+               /* tas = interminijaja.tas.get_Tas();
                 pilev = interminijaja.pile.get_PileV();
                 
                     for (int i=0; i< tas.size(); i++) {
@@ -275,7 +286,7 @@ Interpreteur interminijaja;
                 
                     for (int i=0; i< pilev.size(); i++) {
                         pilemjj.add(pilev.elementAt(i).toString());
-                    }
+                    }*/
                                        
 /*
             } catch (FileNotFoundException ex) {
@@ -307,10 +318,15 @@ Interpreteur interminijaja;
         jMenuItem6.setEnabled(false);
         jMenuItem7.setEnabled(false);
 
-        pilemjj.clear();
-        tasmjj.clear();
-        pilejjc.clear();
-        tasjjc.clear();
+        jList1.clearSelection();
+        jList2.clearSelection();
+        jList3.clearSelection();
+        jList4.clearSelection();
+        
+        jList1.clearSelection();
+        jList2.clearSelection();
+        jList3.clearSelection();
+        jList4.clearSelection();
 
         jList1.updateUI();
         jList2.updateUI();
@@ -394,6 +410,27 @@ Interpreteur interminijaja;
     {
         taln.ProchaineInstruction();
     }
+    
+    private void compiler()
+    {
+        sauvegarder();
+        try {
+            //compilo = new Compilateur_minijaja(new FileReader(new File(pathFile)));
+            try {
+                String s;
+                s = compilo.compile_MiniJaja(new FileReader(new File(pathFile)), firstParser);
+                jTextArea1.setText(s);
+                
+                firstParser = false;
+            } catch(MiniJajaVisitorException e) {
+                System.err.println(e.toString());
+            }
+        } catch(FileNotFoundException ex) {
+            Logger.getLogger(Fwindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -406,8 +443,8 @@ Interpreteur interminijaja;
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        jButton8 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane3 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
@@ -422,6 +459,8 @@ Interpreteur interminijaja;
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -433,6 +472,7 @@ Interpreteur interminijaja;
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1062, 640));
@@ -524,7 +564,19 @@ Interpreteur interminijaja;
         jToolBar1.add(jButton7);
         jButton7.getAccessibleContext().setAccessibleDescription("");
 
-        jScrollPane1.setViewportView(jTree1);
+        jToolBar1.add(jSeparator3);
+
+        jButton8.setText("Compiler");
+        jButton8.setToolTipText("Compiler");
+        jButton8.setFocusable(false);
+        jButton8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton8.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton8);
 
         jTabbedPane1.setAutoscrolls(true);
 
@@ -558,12 +610,17 @@ Interpreteur interminijaja;
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 498, Short.MAX_VALUE)
+            .addGap(0, 496, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 365, Short.MAX_VALUE)
+            .addGap(0, 371, Short.MAX_VALUE)
         );
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setEditable(false);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         jMenu1.setText("Fichier");
 
@@ -633,6 +690,15 @@ Interpreteur interminijaja;
         });
         jMenu2.add(jMenuItem7);
 
+        jMenuItem8.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, 0));
+        jMenuItem8.setText("Compiler");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem8);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -643,10 +709,10 @@ Interpreteur interminijaja;
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -661,7 +727,7 @@ Interpreteur interminijaja;
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 1096, Short.MAX_VALUE)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 1112, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -670,32 +736,32 @@ Interpreteur interminijaja;
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                                 .addGap(7, 7, 7)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                                 .addGap(27, 27, 27)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
 
@@ -712,6 +778,16 @@ Interpreteur interminijaja;
         // TODO add your handling code here:
         ProchaineInstruction();
     }//GEN-LAST:event_ProchaineInstruction
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+        compiler();
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        // TODO add your handling code here:
+        compiler();
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -722,6 +798,7 @@ Interpreteur interminijaja;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -740,6 +817,7 @@ Interpreteur interminijaja;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
@@ -748,9 +826,10 @@ Interpreteur interminijaja;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 
 }
