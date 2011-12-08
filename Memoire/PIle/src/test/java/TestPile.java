@@ -77,4 +77,15 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
         } catch (ItemNotFoundException ex) {
             }
      }
+
+     public void testDump(){
+          Pile p = new Pile();
+        BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new TypeBoolean(), "a");
+
+        p.getPile().push(b);
+        p.getPile().push(new BooleenPile("b", new BooleanValue("true"), new GenreVar(), new TypeBoolean(), "b"));
+
+        p.dump();
+        Assert.assertTrue(p.getPile().empty());
+     }
 }
