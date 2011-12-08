@@ -20,7 +20,7 @@ class Inter extends Thread {
          JList listpilemjj;
          JList listtasmjj;
 
-	/*public static void main(String args[]) throws ParseException, FileNotFoundException, MiniJajaVisitorException {
+	public static void main(String args[]) throws ParseException, FileNotFoundException, MiniJajaVisitorException {
 	    // on declare la memoire
             Pile pile = new Pile();
             Tas_Tas tas = new Tas_Tas();        
@@ -38,12 +38,13 @@ class Inter extends Thread {
             ((SimpleNode) racine).dump(" > ");
 	    System.out.println("Fin arbre");
             
-            
+            JList pilelist=  new JList();
+            JList taslist =  new JList();
             // on instancie tt le bordel et donc les visiteurs
-            ((SimpleNode) racine).jjtAccept(new InterpreteurVisitorMinijaja(pile, tas, parser), null);
+            ((SimpleNode) racine).jjtAccept(new Interpreteur(pilelist,taslist), null);
 
 
-	}*/
+	}
     public Inter(String file_parse, JList pilelist, JList taslist) {
         // on declare la memoire
             pile = new Pile();

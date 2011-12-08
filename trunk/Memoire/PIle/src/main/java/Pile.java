@@ -42,7 +42,7 @@ public class Pile {
 
         public ElementMemoire searchident(String s){
         ElementMemoire retour=null;
-            for (int i = 0;i<pile.size();i++){
+            for (int i = pile.size();i>0;i--){
                 if (pile.get(i).getQuad().getIdent().equals(s)){                  
                     retour = pile.get(i);
                 }
