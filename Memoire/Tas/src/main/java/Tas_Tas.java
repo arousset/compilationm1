@@ -59,7 +59,7 @@ public class Tas_Tas {
 		return k;
 	}
 	
-	public int Tas_selectionnerIndex(int taille){
+	public int Tas_selectionnerIndex(int taille) throws Tas_ExceptionEspaceDispo {
 		int index = Tas_pouissance(taille,false);
 		if(taille<this.espaceLibre){
 			if((index<espacesVides.size())&&(!espacesVides.get(index).isEmpty())){
@@ -69,14 +69,14 @@ public class Tas_Tas {
 				return -1;
 			}
 		}
-		return -2;
+		throw new Tas_ExceptionEspaceDispo("Il n'y a pas assez d'espace disponible.");
 	}
 	
         public Object Tas_recupValeur(int addr, int index){
             return this.tas[this.espacesOccupes.get(addr).getAddrTas() + index];
         }
         
-	public int Tas_allouerTableau(String nom, String genre, int taille){
+	public int Tas_allouerTableau(String nom, String genre, int taille) throws Tas_ExceptionEspaceDispo{
 		int aT = Tas_selectionnerIndex(taille);
 		if(aT>=0){
 			int indexv = (this.espacesVides.get(aT).size() - 1) ; 		// selectionne le dernier element d'une arraylist d'une puissance donnee
@@ -113,7 +113,8 @@ public class Tas_Tas {
 		}
 
 		else if(aT==-2){
-			System.out.println(">>>>>>>> RED ALERT <<<<<<<<");
+                    	throw new Tas_ExceptionEspaceDispo("Il n'y a pas assez d'espace disponible.");
+			//System.out.println(">>>>>>>> RED ALERT <<<<<<<<");
 		}
 		return this.espacesOccupes.size()-1;
 
@@ -176,17 +177,17 @@ public class Tas_Tas {
             }
         }
 	//t=t1
-public int Tas_incrementerNbref(int addrt, String t, int addrt1, String t1){
+public int Tas_incrementerNbref(int addrt, String t, int addrt1, String t1) throws Tas_AdresseTableauInconnue{
     if (this.espacesOccupes.get(addrt1)!=null){
         this.espacesOccupes.get(addrt1).setnbRef(this.espacesOccupes.get(addrt1).getnbRef()+1);
         this.espacesOccupes.get(addrt1).setNom((String)this.espacesOccupes.get(addrt1).getNom() + t +"-");
         this.Tas_decrementerNbref(addrt, t);
         return 0;
     }
-    return -2;
+   throw new Tas_AdresseTableauInconnue("L'adresse du tableau est inconnue.");
 }
 
-public int Tas_decrementerNbref(int addrt, String t){
+public int Tas_decrementerNbref(int addrt, String t) throws Tas_AdresseTableauInconnue{
     if (this.espacesOccupes.get(addrt)!=null){
         this.espacesOccupes.get(addrt).setnbRef(this.espacesOccupes.get(addrt).getnbRef()-1);
         this.espacesOccupes.get(addrt).setNom((String)this.espacesOccupes.get(addrt).getNom().replace("-"+t+"-", "-"));
@@ -195,7 +196,7 @@ public int Tas_decrementerNbref(int addrt, String t){
         }
         return 0;
     }
-    return -2;
+    throw new Tas_AdresseTableauInconnue("L'adresse du tableau est inconnue.");
 }
 
     public void setEspaceLibre(int espaceLibre) {
