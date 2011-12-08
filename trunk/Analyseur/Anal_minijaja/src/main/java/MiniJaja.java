@@ -2,22 +2,14 @@
         import java.io.*;
 
 public class MiniJaja/*@bgen(jjtree)*/implements MiniJajaTreeConstants, MiniJajaConstants {/*@bgen(jjtree)*/
-  protected static JJTMiniJajaState jjtree = new JJTMiniJajaState();
-        public static void main (String arg[]) throws ParseException, FileNotFoundException {
-        //MiniJaja mjj = new MiniJaja(new FileReader(new File("/home/ubuntu1/exemple.txt")));
-        //mjj.classe();
+  protected JJTMiniJajaState jjtree = new JJTMiniJajaState();
 
-        //Node racine = mjj.jjtree.rootNode();
-        //((SimpleNode)racine).dump("-->");
-        //System.out.println("caillou l'hiboux du coup");
-        }
-
-public JJTMiniJajaState getJJTree() {
-	return jjtree;
-}
-
-// Regles syntaxicales
-  static final public void classe() throws ParseException {
+	public JJTMiniJajaState getJJTree() {
+		return jjtree;
+	}
+	
+  // Regles syntaxicales
+  final public void classe() throws ParseException {
                          /*@bgen(jjtree) classe */
   ASTclasse jjtn000 = new ASTclasse(JJTCLASSE);
   boolean jjtc000 = true;
@@ -51,7 +43,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void ident() throws ParseException {
+  final public void ident() throws ParseException {
                       /*@bgen(jjtree) ident */
   ASTident jjtn000 = new ASTident(JJTIDENT);
   boolean jjtc000 = true;
@@ -68,7 +60,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void decls() throws ParseException {
+  final public void decls() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BOOLEAN:
     case FINAL:
@@ -118,7 +110,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void decl() throws ParseException {
+  final public void decl() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case FINAL:
       jj_consume_token(FINAL);
@@ -163,7 +155,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void declbis() throws ParseException {
+  final public void declbis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LCROCH:
       jj_consume_token(LCROCH);
@@ -226,7 +218,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void vars() throws ParseException {
+  final public void vars() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BOOLEAN:
     case FINAL:
@@ -276,7 +268,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void var() throws ParseException {
+  final public void var() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case FINAL:
       jj_consume_token(FINAL);
@@ -321,7 +313,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void varbis() throws ParseException {
+  final public void varbis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LCROCH:
       jj_consume_token(LCROCH);
@@ -366,7 +358,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void vexp() throws ParseException {
+  final public void vexp() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ASSIGN:
       jj_consume_token(ASSIGN);
@@ -389,7 +381,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void methmain() throws ParseException {
+  final public void methmain() throws ParseException {
                             /*@bgen(jjtree) #main( 2) */
   ASTmain jjtn000 = new ASTmain(JJTMAIN);
   boolean jjtc000 = true;
@@ -421,7 +413,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void entetes() throws ParseException {
+  final public void entetes() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BOOLEAN:
     case INT:
@@ -468,7 +460,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void entetes2() throws ParseException {
+  final public void entetes2() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case VIRG:
       jj_consume_token(VIRG);
@@ -515,7 +507,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void entete() throws ParseException {
+  final public void entete() throws ParseException {
     type();
                  ASTentete jjtn001 = new ASTentete(JJTENTETE);
                  boolean jjtc001 = true;
@@ -543,7 +535,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void instrs() throws ParseException {
+  final public void instrs() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IF:
     case RETURN:
@@ -593,7 +585,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void instr() throws ParseException {
+  final public void instr() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case RETURN:
       jj_consume_token(RETURN);
@@ -684,7 +676,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void elseNode() throws ParseException {
+  final public void elseNode() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ELSE:
       jj_consume_token(ELSE);
@@ -709,7 +701,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void instrbis() throws ParseException {
+  final public void instrbis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LCROCH:
     case ASSIGN:
@@ -739,7 +731,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void instrbisbis() throws ParseException {
+  final public void instrbisbis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ASSIGN:
       jj_consume_token(ASSIGN);
@@ -814,7 +806,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void identbis() throws ParseException {
+  final public void identbis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LCROCH:
       jj_consume_token(LCROCH);
@@ -836,7 +828,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void listexp() throws ParseException {
+  final public void listexp() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case FALSE:
     case TRUE:
@@ -888,7 +880,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void listexpbis() throws ParseException {
+  final public void listexpbis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case VIRG:
       jj_consume_token(VIRG);
@@ -935,7 +927,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void exp() throws ParseException {
+  final public void exp() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BANG:
       jj_consume_token(BANG);
@@ -1006,7 +998,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void expbis() throws ParseException {
+  final public void expbis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case OR:
     case AND:
@@ -1079,12 +1071,12 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void exp1() throws ParseException {
+  final public void exp1() throws ParseException {
     exp2();
     exp1bis();
   }
 
-  static final public void exp1bis() throws ParseException {
+  final public void exp1bis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case EQ:
     case LT:
@@ -1183,12 +1175,12 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void exp2() throws ParseException {
+  final public void exp2() throws ParseException {
     terme();
     exp2bis();
   }
 
-  static final public void exp2bis() throws ParseException {
+  final public void exp2bis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PLUS:
     case MINUS:
@@ -1259,12 +1251,12 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void terme() throws ParseException {
+  final public void terme() throws ParseException {
     fact();
     termebis();
   }
 
-  static final public void termebis() throws ParseException {
+  final public void termebis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case STAR:
     case SLASH:
@@ -1337,7 +1329,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void fact() throws ParseException {
+  final public void fact() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case TRUE:
           ASTvrai jjtn001 = new ASTvrai(JJTVRAI);
@@ -1382,7 +1374,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void factbis() throws ParseException {
+  final public void factbis() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAREN:
           ASTappelE jjtn001 = new ASTappelE(JJTAPPELE);
@@ -1418,7 +1410,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void nbre() throws ParseException {
+  final public void nbre() throws ParseException {
                      /*@bgen(jjtree) nbre */
                      ASTnbre jjtn000 = new ASTnbre(JJTNBRE);
                      boolean jjtc000 = true;
@@ -1440,7 +1432,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void typemeth() throws ParseException {
+  final public void typemeth() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case VOID:
           ASTrien jjtn001 = new ASTrien(JJTRIEN);
@@ -1465,7 +1457,7 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static final public void type() throws ParseException {
+  final public void type() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INT:
           ASTentier jjtn001 = new ASTentier(JJTENTIER);
@@ -1498,17 +1490,16 @@ public JJTMiniJajaState getJJTree() {
     }
   }
 
-  static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
-  static public MiniJajaTokenManager token_source;
-  static SimpleCharStream jj_input_stream;
+  public MiniJajaTokenManager token_source;
+  SimpleCharStream jj_input_stream;
   /** Current token. */
-  static public Token token;
+  public Token token;
   /** Next token. */
-  static public Token jj_nt;
-  static private int jj_ntk;
-  static private int jj_gen;
-  static final private int[] jj_la1 = new int[30];
+  public Token jj_nt;
+  private int jj_ntk;
+  private int jj_gen;
+  final private int[] jj_la1 = new int[30];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -1528,13 +1519,6 @@ public JJTMiniJajaState getJJTree() {
   }
   /** Constructor with InputStream and supplied encoding */
   public MiniJaja(java.io.InputStream stream, String encoding) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser.  ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new MiniJajaTokenManager(jj_input_stream);
     token = new Token();
@@ -1544,11 +1528,11 @@ public JJTMiniJajaState getJJTree() {
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream) {
+  public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream, String encoding) {
+  public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
     token = new Token();
@@ -1560,13 +1544,6 @@ public JJTMiniJajaState getJJTree() {
 
   /** Constructor. */
   public MiniJaja(java.io.Reader stream) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser. ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new MiniJajaTokenManager(jj_input_stream);
     token = new Token();
@@ -1576,7 +1553,7 @@ public JJTMiniJajaState getJJTree() {
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.Reader stream) {
+  public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
     token = new Token();
@@ -1588,13 +1565,6 @@ public JJTMiniJajaState getJJTree() {
 
   /** Constructor with generated Token Manager. */
   public MiniJaja(MiniJajaTokenManager tm) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser. ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     token_source = tm;
     token = new Token();
     jj_ntk = -1;
@@ -1612,7 +1582,7 @@ public JJTMiniJajaState getJJTree() {
     for (int i = 0; i < 30; i++) jj_la1[i] = -1;
   }
 
-  static private Token jj_consume_token(int kind) throws ParseException {
+  private Token jj_consume_token(int kind) throws ParseException {
     Token oldToken;
     if ((oldToken = token).next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -1628,7 +1598,7 @@ public JJTMiniJajaState getJJTree() {
 
 
 /** Get the next Token. */
-  static final public Token getNextToken() {
+  final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
     jj_ntk = -1;
@@ -1637,7 +1607,7 @@ public JJTMiniJajaState getJJTree() {
   }
 
 /** Get the specific Token. */
-  static final public Token getToken(int index) {
+  final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
@@ -1646,19 +1616,19 @@ public JJTMiniJajaState getJJTree() {
     return t;
   }
 
-  static private int jj_ntk() {
+  private int jj_ntk() {
     if ((jj_nt=token.next) == null)
       return (jj_ntk = (token.next=token_source.getNextToken()).kind);
     else
       return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
-  static private int[] jj_expentry;
-  static private int jj_kind = -1;
+  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  private int[] jj_expentry;
+  private int jj_kind = -1;
 
   /** Generate ParseException. */
-  static public ParseException generateParseException() {
+  public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[42];
     if (jj_kind >= 0) {
@@ -1692,11 +1662,11 @@ public JJTMiniJajaState getJJTree() {
   }
 
   /** Enable tracing. */
-  static final public void enable_tracing() {
+  final public void enable_tracing() {
   }
 
   /** Disable tracing. */
-  static final public void disable_tracing() {
+  final public void disable_tracing() {
   }
 
-}
+                      }

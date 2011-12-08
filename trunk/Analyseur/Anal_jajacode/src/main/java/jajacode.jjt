@@ -6,20 +6,13 @@
 options {
   MULTI=true;
   VISITOR=true;
+  STATIC=false;
   VISITOR_EXCEPTION="JajaCodeVisitorException";
 }
 
 PARSER_BEGIN(JajaCode)
 
-	public class JajaCode {
-	  public static void main (String arg[]) throws ParseException {
-      JajaCode jjc = new JajaCode(System.in) ;
-        jjc.Classe() ;
-        
-        Node racine = jjc.jjtree.rootNode();
-    	((SimpleNode)racine).dump("-->");
-      }
-	}
+	public class JajaCode {}
 PARSER_END(JajaCode)
 
 /** ----------------- Regles lexicales ------------------------ */
