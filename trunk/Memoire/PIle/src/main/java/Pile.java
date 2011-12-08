@@ -50,7 +50,12 @@ public class Pile {
             }
         return retour;
         }
-        
+
+        public void dump(){
+            for (int i = pile.size();i>0;i--){
+                pile.pop();
+            }
+        }
         
         public boolean estpresent(String s){
         
