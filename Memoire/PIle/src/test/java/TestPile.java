@@ -26,7 +26,7 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
    
     }
     
-    /*
+    
     public void testSearchident(){
         Pile p = new Pile();
         BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new TypeBoolean(), "a");
@@ -35,7 +35,7 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
         p.getPile().push(new BooleenPile("b", new BooleanValue("true"), new GenreVar(), new TypeBoolean(), "b"));
 
         Assert.assertEquals(p.searchident("a"),b);
-    }*/
+    }
      
      public void testEstPresent(){
         Pile p = new Pile();
@@ -61,7 +61,7 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
           Assert.assertFalse(p.estpresent(t.quadruplet.getIdent()));
 
      }
-/*
+
      public void testGetIndex(){
           Pile p = new Pile();
          Tas_Tas tas= new Tas_Tas();
@@ -76,5 +76,5 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
             Assert.assertEquals(p.getIndex("s"), c);
         } catch (ItemNotFoundException ex) {
             }
-     }*/
+     }
 }
