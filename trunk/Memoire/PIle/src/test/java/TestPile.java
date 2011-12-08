@@ -26,7 +26,7 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
    
     }
     
-    /*
+    
     public void testSearchident(){
         Pile p = new Pile();
         BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new TypeBoolean(), "a");
@@ -60,7 +60,7 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
           p.supprimer(t.quadruplet.getIdent(), tas);
           Assert.assertFalse(p.estpresent(t.quadruplet.getIdent()));
 
-     }*/
+     }
 
      public void testGetIndex(){
           Pile p = new Pile();
