@@ -123,7 +123,7 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
       
      name = (String) node.jjtGetChild(1).jjtAccept(this, data);
      value = (String) node.jjtGetChild(2).jjtAccept(this, data);
-
+     
      
      
       Node n = node.jjtGetParent();

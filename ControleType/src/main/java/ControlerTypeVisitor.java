@@ -33,23 +33,25 @@ public class ControlerTypeVisitor implements MiniJajaVisitor {
 	 * @param node Noeud a traiter
 	 * @param data Table des symboles
 	 */
+        
 	public Object visit(ASTident node, Object data) throws MiniJajaVisitorException {
 		ControlerTypeData ctdata = (ControlerTypeData)data;
 		if(ctdata.isInEvalType()){
 			//try {
-				if(ctdata.isInEvalType()){
+				if(ctdata.getEvalGenre()!=null){
 					return ctdata.ts.rechercheType(node.getValeur(),ctdata.getEvalGenre(),ctdata.getPortee());
 				}else{
 					return ctdata.ts.rechercheType(node.getValeur(),"var",ctdata.getPortee());
 				}
-			/*}catch(PileException e){
-				throw new SymboleNotExistException(e.toString());
-			}*/
+			//}catch(PileException e){
+			//	throw new SymboleNotExistException(e.toString());
+			//}
 		}else{
 			return node.getValeur();
 		}
 	}
 
+     
 	/**
 	 * Effectue le controle de type pour le noeud courant, en utilisant une table des symboles
 	 * @param node Noeud a traiter
@@ -359,6 +361,8 @@ public class ControlerTypeVisitor implements MiniJajaVisitor {
 		String sorte2 = (String)node.jjtGetChild(1).jjtAccept(this, data);
 		ctdata.unsetEvalType();
 
+                
+                System.out.println(" SORTE1 : " + sorte1 + " SORTE2 : " + sorte2 );
 		if(!sorte1.equals(sorte2)){
 			throw new TypeIncompatibleException("dans <" + ctdata.getPortee() + ">, operation <affectation> impossible entre <" + sorte1 + "> et <"+ sorte2 + "> ");
 		}

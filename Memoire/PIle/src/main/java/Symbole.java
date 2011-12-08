@@ -47,19 +47,19 @@ public Symbole(String nom,  String genre, String type, String portee){
     }
 
     public boolean compType(String type){
-        return this.valeur.equals(type);
+        return this.type.equals(type);
     }
 
     public boolean compConteneur(String cont){
-        return this.valeur.equals(cont);
+        return this.conteneur.equals(cont);
     }
 
     public boolean compPortee(String port){
-        return this.valeur.equals(port);
+        return this.portee.equals(port);
     }
 
     public boolean compGenre(String genre){
-        return this.valeur.equals(genre);
+        return this.genre.equals(genre);
     }
 
     @Override

@@ -91,7 +91,7 @@ public class Tas_Tas {
 			this.espacesVides.get(aT).remove(indexv);
 			int indexo = this.espacesOccupes.size() - 1;
 			this.espacesOccupes.get(indexo).setGenre(genre);
-			this.espacesOccupes.get(indexo).setNom(nom);
+			this.espacesOccupes.get(indexo).setNom("-"+nom+"-");
 			this.espacesOccupes.get(indexo).setnbRef(1);
 			this.espacesOccupes.get(indexo).setTaille(taille); 
 			//this.espacesOccupes.add(aT, new Tas_Espaces(aT, 1, taille, genre, nom));
@@ -106,7 +106,7 @@ public class Tas_Tas {
 			Tas_subdivisionEspacesLibres ( aT,this.espaceLibre, false ); 	// soustrait de la taille de lespace vide lespace utilise et subdivise en sous tableaux
 			int indexo = this.espacesOccupes.size() - 1;
 			this.espacesOccupes.get(indexo).setGenre(genre);
-			this.espacesOccupes.get(indexo).setNom(nom);
+                        this.espacesOccupes.get(indexo).setNom("-"+nom+"-");
 			this.espacesOccupes.get(indexo).setnbRef(1);
 			this.espacesOccupes.get(indexo).setTaille(taille); 
 
@@ -176,15 +176,33 @@ public class Tas_Tas {
             }
         }
 	
+public int Tas_incrementerNbref(int addrt, String t, int addrt1, String t1){
+if (this.espacesOccupes.get(addrt1)!=null){
+this.espacesOccupes.get(addrt1).setnbRef(this.espacesOccupes.get(addrt1).getnbRef()+1);
+this.espacesOccupes.get(addrt1).setNom((String)this.espacesOccupes.get(addrt1).getNom() + t +"-");
+this.Tas_decrementerNbref(addrt, t);
+return 0;
+}
+return -2;
+}
+
+public int Tas_decrementerNbref(int addrt, String t){
+if (this.espacesOccupes.get(addrt)!=null){
+this.espacesOccupes.get(addrt).setnbRef(this.espacesOccupes.get(addrt).getnbRef()-1);
+this.espacesOccupes.get(addrt).setNom((String)this.espacesOccupes.get(addrt).getNom().replace("-"+t+"-", "-"));
+if (this.espacesOccupes.get(addrt).getnbRef()==0){
+this.espacesOccupes.get(addrt).setNom("<Unreferenced>");
+}
+return 0;
+}
+return -2;
+}
+
+    public void setEspaceLibre(int espaceLibre) {
+        this.espaceLibre = espaceLibre;
+    }
+
         
-        public int Tas_incrementerNbref(int addr){
-            
-        if (this.espacesOccupes.get(addr)!=null){
-            this.espacesOccupes.get(addr).setnbRef(this.espacesOccupes.get(addr).getnbRef()+1);
-            return 0;
-        }
-            return -2;
-        }
         
         
         
@@ -199,6 +217,15 @@ public class Tas_Tas {
 		return -2;
 	}
 	
+        public int Tas_decrementerNbref(int addr){
+            if (this.espacesOccupes.get(addr)!=null){
+               this.espacesOccupes.get(addr).setnbRef(this.espacesOccupes.get(addr).getnbRef()-1);
+               return 0;
+            }
+            return -2;
+        }
+        
+        
 	public void Tas_reorganiserTas(){
 		int add, j=0, taille, debut, nbtab = this.espacesOccupes.size(), i=this.tailleTas-1;
 		while(nbtab>0 && i>=0){

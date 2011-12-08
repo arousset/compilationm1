@@ -38,8 +38,10 @@ public class Compilateur_minijaja {
 
     public void controleType() throws MiniJajaControleurTypeException {
         ControlerTypeData ctdata = new ControlerTypeData();
+        System.out.println("ON EST ICI");
         try {
             boolean ret = (Boolean)this.executeVisitor(new ControlerTypeVisitor(), ctdata);
+                    System.out.println(ret);
         }catch(MiniJajaVisitorException e) {
             throw new MiniJajaControleurTypeException(e.toString());
         }
@@ -49,6 +51,14 @@ public class Compilateur_minijaja {
         try {
             mjj.classe();
             ASA = mjj.getJJTree().rootNode();
+            
+            
+            System.out.println("Debut arbre");
+            ((SimpleNode) ASA).dump(" > ");
+	    System.out.println("Fin arbre");
+            
+            
+            
         } catch (ParseException ex) {
             throw new MiniJajaParseurException(ex.getMessage());
         }
@@ -82,9 +92,9 @@ public class Compilateur_minijaja {
         else
              mjj.ReInit(minijaja);
 
-        try {
+        try {       
             this.parse();
-            //this.controleType();
+            this.controleType();
             return this.compile();
         }catch(MiniJajaVisitorException ex) {
             throw new MiniJajaCompilationProcessusException(ex.toString());
@@ -103,4 +113,7 @@ public class Compilateur_minijaja {
         }
         System.out.println("On a fini le parsing");
     }*/
+    
+ 
+    
 }

@@ -36,7 +36,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
     
     
 
-        boolean pause = true;
+        boolean pause = false;
 
     // Permet de gerer le pas a pas.
   //  Boolean thread_sleep = false;
@@ -59,6 +59,15 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
             
 	    // Recuperation de la racine de l'AST (Abstract Syntax Tree).
 	    Node racine = parser.getJJTree().rootNode();
+            
+            
+                        // Affichage de l'ASA.
+	    System.out.println("Debut arbre");
+            ((SimpleNode) racine).dump(" > ");
+	    System.out.println("Fin arbre");
+            System.out.println("Fin du fred");
+            
+            
             try {
                 // on instancie tt le bordel et donc les visiteurs
                 ((SimpleNode) racine).jjtAccept(this, null);
@@ -67,11 +76,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
                 aff_erreurs(ex.getMessage());
             }
 
-            // Affichage de l'ASA.
-	    System.out.println("Debut arbre");
-            ((SimpleNode) racine).dump(" > ");
-	    System.out.println("Fin arbre");
-            System.out.println("Fin du fred");
+
             
                 Vector<String> pilev = new Vector<String>();
                 Vector<String> tasv = new Vector<String>();
@@ -251,10 +256,10 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       String name;
       String value;
       
-     name = (String) node.jjtGetChild(1).jjtAccept(this, data);
-     value = (String) node.jjtGetChild(2).jjtAccept(this, data);
-
-     
+     name = ""+ node.jjtGetChild(1).jjtAccept(this, data);
+     value = ""+ node.jjtGetChild(2).jjtAccept(this, data);
+    
+     System.out.println(" VALUE ASTCST : "+ value);
      
       Node n = node.jjtGetParent();
       while (n.toString() != "classe" && n.toString() != "methode" && n.toString() != "main" ){
@@ -274,10 +279,19 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       }
      
       if(node.jjtGetChild(0).toString() == "booleen") {
-          pile.getPile().push(new BooleenPile(name, new BooleanValue(value), new GenreCst(), new TypeBoolean(), ident_conteneur));
+          
+          if (value.equals("w")){
+                pile.getPile().push(new BooleenPile(name, new BooleanValue("false"), new GenreCst(), new TypeBoolean(), ident_conteneur));                          
+          }else{
+                pile.getPile().push(new BooleenPile(name, new BooleanValue(value), new GenreCst(), new TypeBoolean(), ident_conteneur));             
+          }
       } else if (node.jjtGetChild(0).toString() == "entier") {
-          pile.getPile().push(new EntierPile(name, new EntierValue(value), new GenreCst(), new TypeEntier(), ident_conteneur));
-      }
+                    if (value.equals("w")){
+                 pile.getPile().push(new EntierPile(name, new EntierValue("0"), new GenreCst(), new TypeEntier(), ident_conteneur));                          
+          }else{
+                pile.getPile().push(new EntierPile(name, new EntierValue(value), new GenreCst(), new TypeEntier(), ident_conteneur));
+            }
+        }
 
       System.out.println(pile.AfficherPile());
       return "";
@@ -303,6 +317,9 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       String iden_tab = ""+node.jjtGetChild(1).jjtAccept(this, data);
       String nombre_de_case_tab = ""+ node.jjtGetChild(2).jjtAccept(this, data);
       
+      if (pile.estpresent(nombre_de_case_tab)){
+          nombre_de_case_tab = ""+pile.searchident(nombre_de_case_tab).getQuad().getValeurMethode();
+      }
       
       
       int adressetas = tas.Tas_allouerTableau(iden_tab, type_tab, Integer.parseInt(nombre_de_case_tab));
@@ -397,7 +414,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       String value;
       
 
-     name = (String) node.jjtGetChild(1).jjtAccept(this, data);
+     name = ""+ node.jjtGetChild(1).jjtAccept(this, data);
      value = ""+ node.jjtGetChild(2).jjtAccept(this, data);
 
      
@@ -409,10 +426,10 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       }
       
       String ident_conteneur;
-      if (n.toString() == "classe" ){
+      if (n.toString().equals("classe")){
           ident_conteneur = ""+n.jjtGetChild(0).jjtAccept(this, data);
       }else{
-          if (n.toString() == "methode" ){
+          if (n.toString().equals("methode")){
               ident_conteneur = ""+n.jjtGetChild(1).jjtAccept(this, data);
           }
           else{
@@ -423,10 +440,32 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
     
      
      
-      if(node.jjtGetChild(0).toString() == "booleen") {
-          pile.getPile().push(new BooleenPile(name, new BooleanValue(value), new GenreVar(), new TypeBoolean(),ident_conteneur));
-      } else if (node.jjtGetChild(0).toString() == "entier") {
-          pile.getPile().push(new EntierPile(name, new EntierValue(value), new GenreVar(), new TypeEntier(), ident_conteneur));
+      if(node.jjtGetChild(0).toString().equals( "booleen")) {
+          
+          if (value.equals("w")){
+            pile.getPile().push(new BooleenPile(name, new BooleanValue("false"), new GenreVar(), new TypeBoolean(),ident_conteneur));              
+          }else{
+              if (pile.estpresent(value)){ 
+                    pile.getPile().push(new BooleenPile(name, new BooleanValue(""+pile.searchident(value).getQuad().getValeurMethode()), new GenreVar(), new TypeBoolean(),ident_conteneur));   
+              }    
+              else{
+                    pile.getPile().push(new BooleenPile(name, new BooleanValue(value), new GenreVar(), new TypeBoolean(),ident_conteneur));                
+              }
+          }
+      } else if (node.jjtGetChild(0).toString().equals("entier")) {
+          
+          if (value.equals("w")){
+          pile.getPile().push(new EntierPile(name, new EntierValue("0"), new GenreVar(), new TypeEntier(), ident_conteneur));           
+          }else{
+              
+              if (pile.estpresent(value)){                         
+                    pile.getPile().push(new EntierPile(name, new EntierValue(""+pile.searchident(value).getQuad().getValeur()), new GenreVar(), new TypeEntier(), ident_conteneur));  
+              }
+              else{            
+                    pile.getPile().push(new EntierPile(name, new EntierValue(value), new GenreVar(), new TypeEntier(), ident_conteneur));
+              }
+          }
+
       }
 
       System.out.println(pile.AfficherPile());
@@ -575,6 +614,11 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
 
                 System.out.println("RETOUR : " + retour1 + "" + retour2 ); 
       
+                
+                       System.out.println(pile.AfficherPile());
+                        System.out.println(tas.get_Tas());
+                
+                
       return "" + retour1 + retour2;
 
 
@@ -607,9 +651,10 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
   public Object visit(ASTsi node, Object data) throws MiniJajaVisitorException{
       
       System.out.println("On passe par ASTSI");
-
       
-     if  (node.jjtGetChild(0).jjtAccept(this, data).equals(true) || node.jjtGetChild(0).jjtAccept(this, data).equals("true")){         
+        Object temp = node.jjtGetChild(0).jjtAccept(this, data);
+      
+     if  (temp.equals(true) || temp.equals("true")){         
          return node.jjtGetChild(1).jjtAccept(this, data);
      }
      else 
@@ -637,6 +682,11 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       
       System.out.println("nombre_de_nouvelles_valeurs = "+(taille_apres_decl - taille_avant_decl));
       
+      
+      
+        if (node.jjtGetChild(1).toString() != "exnil"){
+      
+      
       ASTlistexp o = (ASTlistexp) node.jjtGetChild(1);
       
       
@@ -646,23 +696,37 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       
       for (int i=taille_avant_decl;i<taille_apres_decl;i++){     
                   
+          System.out.println("cest la grosse zoubida" + o.jjtGetChild(0).jjtAccept(this, data) );
           
-          if ( o.jjtGetChild(0).toString() == "ident"){
-              ElementMemoire em = pile.searchident(""+o.jjtGetChild(0).jjtAccept(this, data));
-              String em_type = em.getQuad().getType(); 
-              String value_param = (String) em.getQuad().getValeurMethode();
-              if (em_type == "Entier"){
+          if ( o.jjtGetChild(0).toString().equals("ident")){
+                        System.out.println("cest la grosse zoubida2" + o.jjtGetChild(0).jjtAccept(this, data) );
+                        
+              String nom = ""+o.jjtGetChild(0).jjtAccept(this, data);
+                        
+              ElementMemoire em = pile.searchident(nom);
+              
+              System.out.println("LELEMENTMEMOIRE : " + em);
+              String em_type = em.getQuad().getType();
+              
+              
+              String value_param = ""+em.getQuad().getValeurMethode();
+              if (em_type.equals("Entier")){
+                            System.out.println("cest la grosse zoubida3" + o.jjtGetChild(0).jjtAccept(this, data) + "zoubizoubida " + value_param);
                   pile.getPile().get(i).getQuad().setValue(new EntierValue(value_param));
               }
-              if (em_type == "Boolean"){
+              if (em_type.equals("Boolean")){
+                            System.out.println("cest la grosse zoubida4" + o.jjtGetChild(0).jjtAccept(this, data) );
                   pile.getPile().get(i).getQuad().setValue(new BooleanValue(value_param));                    
               }
           }
-          else{           
-              if (pile.getPile().get(i).getQuad().getType() == "Entier"){
+          else{    
+                        System.out.println("cest la grosse zoubida5" + o.jjtGetChild(0).jjtAccept(this, data) );
+              System.out.println("EXECPTION" + o.jjtGetChild(0).toString());
+              if (o.jjtGetChild(0).toString().equals("nbre")){
                   pile.getPile().get(i).getQuad().setValue(new EntierValue(""+o.jjtGetChild(0).jjtAccept(this, data)));
               }
-              if (pile.getPile().get(i).getQuad().getType() == "Boolean"){
+              if ( o.jjtGetChild(0).toString().equals("vrai") || o.jjtGetChild(0).toString().equals("faux") ){
+                  System.out.println("EXECPTION");
                   pile.getPile().get(i).getQuad().setValue(new BooleanValue(""+o.jjtGetChild(0).jjtAccept(this, data)));                    
               }
                        
@@ -672,7 +736,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
            o=  (ASTlistexp) o.jjtGetChild(1); 
         }        
       }
-      
+        }
       
       System.out.println("avant " + taille_avant_decl + " apres " + taille_apres_decl);
       
@@ -692,6 +756,8 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
 
        n.jjtGetChild(4).jjtAccept(this, data);
        
+       
+       
        // ENLEVER LE COMMENTAIRE SUIVANT   
        
        // pile.supprimer(ident_fonction,tas);
@@ -709,7 +775,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       String eval_affectation;
 
       
-      
+     
       if (node.jjtGetChild(0).toString().equals("tab")){
           ident_affecation = ""+node.jjtGetChild(0).jjtGetChild(0).jjtAccept(this, data);
 
@@ -724,14 +790,14 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
           
           eval_affectation = ""+node.jjtGetChild(1).jjtAccept(this, data); 
           
-          if (node.jjtGetChild(1).toString() == "ident"){                    
+          if (node.jjtGetChild(1).toString().equals("ident")){                    
               eval_affectation = (""+pile.searchident(eval_affectation).getQuad().getValeurMethode());
           }
               
           //(String) node.jjtGetChild(1).jjtAccept(this, data);
    
 
-    System.out.println("EVALUATION DE LAFFECTATION :      -----   "+ eval_affectation);
+    System.out.println("EVALUATION DE LAFFECTATION :   TAB   -----   "+ eval_affectation);
         
      System.out.println("ADRESSE DU TABLEAU : " + ident_affecation +" CASETAB " + case_tab_int + " EVAL AFFECTATION "+ eval_affectation);   
      
@@ -761,7 +827,26 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
 
    
     if(node.jjtGetChild(1).toString() == "ident") {
-       pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(""+eval(eval_affectation)));
+        
+        System.out.println("on passe par en haut");
+        
+        if (pile.estpresent(eval_affectation)){
+            
+            System.out.println("on passe par en la");
+            if (pile.searchident(eval_affectation).getQuad().getGenre().equals("tab")){
+                int ancienne_adresse = pile.searchident(ident_affecation).getQuad().getValeur();                
+                 tas.Tas_incrementerNbref(ancienne_adresse, ident_affecation ,pile.searchident(eval_affectation).getQuad().getValeur(),eval_affectation );
+                 pile.searchident(ident_affecation).getQuad().setValue(new TabValue(pile.searchident(eval_affectation).getQuad().getValeur()));              
+            }
+            else{      
+                pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(""+pile.searchident(eval_affectation).getQuad().getValeur()));  
+            }
+        }
+        else{
+            
+            System.out.println("on passe par en ici");
+           pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(eval_affectation)); 
+        }              
     }
     
     
@@ -769,6 +854,20 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
        pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(eval_affectation));
     }
     
+     if(node.jjtGetChild(1).toString() == "tab") {
+         
+         
+         if(pile.searchident(""+node.jjtGetChild(1).jjtGetChild(0).jjtAccept(this, data)).getQuad().getType().equals("Boolean")){
+                  pile.searchident(ident_affecation).getQuad().setValue(new BooleanValue(eval_affectation));  
+         }
+         
+         if(pile.searchident(""+node.jjtGetChild(1).jjtGetChild(0).jjtAccept(this, data)).getQuad().getType().equals("Entier")){
+                  pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(eval_affectation));            
+         }
+              
+
+       pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(eval_affectation));
+    }   
     
     if(node.jjtGetChild(1).toString() == "boolean") {
        pile.searchident(ident_affecation).getQuad().setValue(new BooleanValue(eval_affectation));
@@ -823,7 +922,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
     
     
      System.out.println(pile.AfficherPile());
-     
+       System.out.println(tas.get_Tas());
     return "";
     
   }
@@ -921,7 +1020,15 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       System.out.println("On passe par ASTinc");
       
       String ident_affecation = (String) node.jjtGetChild(0).jjtAccept(this, data);
+      
+      
+      
+      
       int nouvelleval = pile.searchident(ident_affecation).getQuad().getValeur()+1;
+      
+      
+      
+      
       String eval_affectation = ""+nouvelleval;
       pile.searchident(ident_affecation).getQuad().setValue(new EntierValue(eval_affectation));
       System.out.println(pile.AfficherPile());
@@ -932,8 +1039,16 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
   public Object visit(ASTtab node, Object data) throws MiniJajaVisitorException{
       
       String ident_tableau = ""+node.jjtGetChild(0).jjtAccept(this, data);
-      int index_tableau = Integer.parseInt(""+node.jjtGetChild(1).jjtAccept(this, data));
+      
+      
+      
+      
+      String index_tableau_string  = ""+node.jjtGetChild(1).jjtAccept(this, data);
+      if (pile.estpresent(index_tableau_string)){
+          index_tableau_string = ""+pile.searchident(index_tableau_string).getQuad().getValeurMethode();
+      }
     
+      int index_tableau = Integer.parseInt(index_tableau_string);
       int value_tab = pile.searchident(ident_tableau).getQuad().getValeur();
       String s = ""+tas.Tas_recupValeur(value_tab, index_tableau);
       return s;
@@ -990,8 +1105,10 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
   public Object visit(ASTet node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTet");
              
-       
-      if ((node.jjtGetChild(0).jjtAccept(this, data).equals(true) || node.jjtGetChild(0).jjtAccept(this, data).equals("true")  ) && (node.jjtGetChild(1).jjtAccept(this, data).equals(true) || node.jjtGetChild(1).jjtAccept(this, data).equals("true")  )){
+               Object temp = node.jjtGetChild(0).jjtAccept(this, data);
+               Object temp2 = node.jjtGetChild(1).jjtAccept(this, data);
+      
+      if ((temp.equals(true) || temp.equals("true")  ) && (temp2.equals(true) || temp2.equals("true")  )){
           return true;
       }
       else{
@@ -1005,7 +1122,11 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
   public Object visit(ASTou node, Object data) throws MiniJajaVisitorException{
       System.out.println("On passe par ASTou");
       
-      if (node.jjtGetChild(0).jjtAccept(this, data).equals(true) || node.jjtGetChild(1).jjtAccept(this, data).equals(true)){
+          
+     Object temp = node.jjtGetChild(0).jjtAccept(this, data);
+     Object temp2 = node.jjtGetChild(1).jjtAccept(this, data);
+      
+      if ((temp.equals(true) || temp.equals("true")  ) || (temp2.equals(true) || temp2.equals("true")  )){
           return true;
       }
       else{
@@ -1026,7 +1147,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       }
       
       if (pile.estpresent(operateur2)){
-          operateur1 = ""+pile.searchident(operateur2).getQuad().getValeurMethode();
+          operateur2 = ""+pile.searchident(operateur2).getQuad().getValeurMethode();
       }
       
       System.out.println( operateur1 + " CACACACACACACACA "+operateur2);
@@ -1291,12 +1412,24 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
   }
 
   public Object visit(ASTappelE node, Object data) throws MiniJajaVisitorException{
-      System.out.println("On passe par ASTappelE");
-
-           String ident_fonction = (String) node.jjtGetChild(0).jjtAccept(this, data);
+      System.out.println("On passe par ASTappelE **********");
+             
+           String ident_fonction = (String) node.jjtGetChild(0).jjtAccept(this, data);                           
       ElementMemoire e = pile.searchident(ident_fonction);
       ASTmethode n  = (ASTmethode) e.getQuad().getValeurMethode();
+      int compteur = 0;
       
+      Node tmp = node.jjtGetChild(1);
+                System.out.println("LE COMPPPPPPPPTEUR AP "+tmp.toString());
+
+          
+          while (tmp.toString().equals("listexp")){
+                  tmp = tmp.jjtGetChild(1);
+                  compteur++;
+                 System.out.println("LE COUNTER AP ");
+          }
+      
+          System.out.println("LE COMPPPPPPPPTEUR AP "+compteur);
 
       
       int taille_avant_decl = pile.getPile().size();
@@ -1315,10 +1448,13 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       for (int i=taille_avant_decl;i<taille_apres_decl;i++){     
                   
           
-          if ( o.jjtGetChild(0).toString() == "ident"){
+          if ( o.jjtGetChild(0).toString().equals("ident")){
               ElementMemoire em = pile.searchident(""+o.jjtGetChild(0).jjtAccept(this, data));
               String em_type = em.getQuad().getType(); 
               String value_param = (String) em.getQuad().getValeurMethode();
+              
+              System.out.println("VALEUR DU PARAM : " + value_param);
+              
               if (em_type == "Entier"){
                   pile.getPile().get(i).getQuad().setValue(new EntierValue(value_param));
               }
@@ -1327,13 +1463,21 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
               }
           }
           else{           
-              if (pile.getPile().get(i).getQuad().getType() == "Entier"){
+              
+              System.out.println("EXECPTION" + o.jjtGetChild(0).toString());
+              if (o.jjtGetChild(0).toString().equals("nbre")){
                   pile.getPile().get(i).getQuad().setValue(new EntierValue(""+o.jjtGetChild(0).jjtAccept(this, data)));
               }
-              if (pile.getPile().get(i).getQuad().getType() == "Boolean"){
+              if ( o.jjtGetChild(0).toString().equals("vrai") || o.jjtGetChild(0).toString().equals("faux") ){
+                  System.out.println("EXECPTION");
                   pile.getPile().get(i).getQuad().setValue(new BooleanValue(""+o.jjtGetChild(0).jjtAccept(this, data)));                    
               }
-                       
+                try {
+                    throw new ParametreInvalideException("le parametre ne peut pas etre une operation");
+                } catch (ParametreInvalideException ex) {
+                    Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                  
           }
 
         if (o.jjtGetChild(1).toString() != "exnil"){
