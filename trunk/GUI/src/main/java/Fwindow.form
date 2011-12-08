@@ -124,7 +124,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem11">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Passer &#xe0; l&apos;instruction suivante"/>
+                <Property name="text" type="java.lang.String" value="Passer a l&apos;instruction suivante"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </MenuItem>
