@@ -97,13 +97,14 @@ public class Pile {
         }
 
         public int getIndex(String s) throws ItemNotFoundException{
-            ElementMemoire e=searchident(s);
-            if(e.getQuad().getGenre().equals("tab")){
-                return e.getQuad().getValeur();
-            }
+            ElementMemoire e=this.searchident(s);
+            System.out.println(e);
+        if(!(e.getQuad().getGenre().toString().equals("tab"))){
+             
             throw new ItemNotFoundException("le tableau n'existe pas");
         }
-	
+	   return e.getQuad().getValeur();
+        }
 }
 
 
