@@ -812,7 +812,7 @@ boolean firstParser = true;
         jMenuItem10.setEnabled(false);
         jMenu2.add(jMenuItem10);
 
-        jMenuItem11.setText("Passer à l'instruction suivante");
+        jMenuItem11.setText("Passer a l'instruction suivante");
         jMenuItem11.setEnabled(false);
         jMenu2.add(jMenuItem11);
 
