@@ -35,7 +35,7 @@ public class Tas_Tas {
 	public int Tas_verifEspaceLibre(){
 		int k = 0;
 		for(int i=0; i<tailleTas; i++){
-			System.out.println("("+i+") ->" +tas[i]);
+			//System.out.println("("+i+") ->" +tas[i]);
 			if(Tas_verifCaseLibre(i)){
 				k++;
 			}
@@ -163,16 +163,16 @@ public class Tas_Tas {
 	
         public void Tas_garbageCollector(){
             if(!this.espacesOccupes.isEmpty()){
-            for (int i = 0; i<this.espacesOccupes.size(); i++){
-            if(this.espacesOccupes.get(i).getnbRef()==0){
-            Tas_supprimerTableau(i);
-            }
-            }
-            Tas_reorganiserTas();
+                for (int i = 0; i<this.espacesOccupes.size(); i++){
+                    if(this.espacesOccupes.get(i).getnbRef()==0){
+                       Tas_supprimerTableau(i);
+                    }
+                }
+                Tas_reorganiserTas();
 
             }
             for (int i = 0; i<this.espacesVides.size(); i++){
-            this.espacesVides.get(i).clear();
+                this.espacesVides.get(i).clear();
             }
         }
 	
@@ -332,4 +332,10 @@ return -2;
 		}
 		return vs;
 	}
+
+    public ArrayList<ArrayList<Tas_Espaces>> getEspacesVides() {
+        return espacesVides;
+    }
+
+
 }
