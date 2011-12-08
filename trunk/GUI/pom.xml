@@ -30,7 +30,12 @@
             <version>1.0.0</version>
             <type>jar</type>
         </dependency>
-		
+        <dependency>
+            <groupId>compilationm1_G4</groupId>
+            <artifactId>inter_jajacode</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>
 		 <dependency>
             <groupId>compilationm1_G4</groupId>
             <artifactId>Compilateur</artifactId>
