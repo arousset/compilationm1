@@ -14,6 +14,7 @@ public class Pile {
 	}
 
 
+
 	public Stack<ElementMemoire> getPile() {
 		return pile;
 	}
@@ -23,9 +24,16 @@ public class Pile {
 		this.pile = pile;
 	}
 	
-	public void swap(){
-		ElementMemoire tmp = pile.peek();
+	public void swap() throws PileVideException{
+		
+                if(pile.empty()){
+                     throw new PileVideException("pile vide, swap impossible");
+                }
+                ElementMemoire tmp = pile.peek();
 		pile.pop();
+                if(pile.empty()){
+                     throw new PileVideException("pile vide, swap impossible");
+                }
 		ElementMemoire tmp2 = pile.peek();
 		pile.pop();
 		pile.push(tmp);
