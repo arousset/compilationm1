@@ -12,7 +12,7 @@ import junit.framework.TestCase;
  * @author anais
  */
 public class TestTas extends TestCase{
-
+/*
     public void testVerifEspaceLibre(){
         Tas_Tas tas = new Tas_Tas();
         Object[] c={1,2},d={3,4,4};
@@ -111,5 +111,22 @@ public class TestTas extends TestCase{
            tas.Tas_subdivisionEspacesLibres(tas.tailleTas, tas.espaceLibre, false);
            int n=tas.Tas_pouissance(tas.tailleTas, false);
            Assert.assertTrue(tas.getEspacesVides().size()== n);
-       }
+       }*/
+    public void testIncrementerref(){
+           Tas_Tas tas = new Tas_Tas();
+            Object[] t={1,2},t1={3,4,4};
+            int a = tas.Tas_allouerTableau("t", "entier", 2);
+            for(int i=0;i<2;i++){
+                tas.Tas_affecterValeur(a, i, t[i]);
+            }
+
+            int b = tas.Tas_allouerTableau("t1", "entier", 3);
+            for(int i=0;i<3;i++){
+                tas.Tas_affecterValeur(b, i, t1[i]);
+            }
+            tas.Tas_incrementerNbref(a, "t", b, "t1");
+            a=b;
+            Assert.assertEquals(tas.Tas_recupValeur(a, 0),tas.Tas_recupValeur(b, 0));
+
+    }
 }

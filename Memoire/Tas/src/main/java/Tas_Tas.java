@@ -175,27 +175,27 @@ public class Tas_Tas {
                 this.espacesVides.get(i).clear();
             }
         }
-	
+	//t=t1
 public int Tas_incrementerNbref(int addrt, String t, int addrt1, String t1){
-if (this.espacesOccupes.get(addrt1)!=null){
-this.espacesOccupes.get(addrt1).setnbRef(this.espacesOccupes.get(addrt1).getnbRef()+1);
-this.espacesOccupes.get(addrt1).setNom((String)this.espacesOccupes.get(addrt1).getNom() + t +"-");
-this.Tas_decrementerNbref(addrt, t);
-return 0;
-}
-return -2;
+    if (this.espacesOccupes.get(addrt1)!=null){
+        this.espacesOccupes.get(addrt1).setnbRef(this.espacesOccupes.get(addrt1).getnbRef()+1);
+        this.espacesOccupes.get(addrt1).setNom((String)this.espacesOccupes.get(addrt1).getNom() + t +"-");
+        this.Tas_decrementerNbref(addrt, t);
+        return 0;
+    }
+    return -2;
 }
 
 public int Tas_decrementerNbref(int addrt, String t){
-if (this.espacesOccupes.get(addrt)!=null){
-this.espacesOccupes.get(addrt).setnbRef(this.espacesOccupes.get(addrt).getnbRef()-1);
-this.espacesOccupes.get(addrt).setNom((String)this.espacesOccupes.get(addrt).getNom().replace("-"+t+"-", "-"));
-if (this.espacesOccupes.get(addrt).getnbRef()==0){
-this.espacesOccupes.get(addrt).setNom("<Unreferenced>");
-}
-return 0;
-}
-return -2;
+    if (this.espacesOccupes.get(addrt)!=null){
+        this.espacesOccupes.get(addrt).setnbRef(this.espacesOccupes.get(addrt).getnbRef()-1);
+        this.espacesOccupes.get(addrt).setNom((String)this.espacesOccupes.get(addrt).getNom().replace("-"+t+"-", "-"));
+        if (this.espacesOccupes.get(addrt).getnbRef()==0){
+            this.espacesOccupes.get(addrt).setNom("<Unreferenced>");
+        }
+        return 0;
+    }
+    return -2;
 }
 
     public void setEspaceLibre(int espaceLibre) {
