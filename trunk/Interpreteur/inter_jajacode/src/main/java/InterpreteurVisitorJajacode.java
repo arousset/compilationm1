@@ -136,43 +136,31 @@ import java.util.logging.Logger;
   };
   
 
+    @Override
   public Object visit(ASTNewArray node, Object data) throws JajaCodeVisitorException{
-      System.out.println("On passe par ASTNewArray");
-
-      
-      
-             String ident_new = ""+node.jjtGetChild(0).jjtAccept(this, data);
-             String type_new = ""+node.jjtGetChild(1).jjtAccept(this, data);
-             
-          //   String valeur_new =""+pile.getPile().get(pile.getPile().size()-Integer.parseInt(adresse_new)-1).getQuad().getValeurMethode();
-       //      pile.getPile().remove(pile.getPile().size()-Integer.parseInt(adresse_new)-1);
-             
-             
-             System.out.println(type_new + ident_new);
-             ElementMemoire em = pile.getPile().pop();
-             
-             int adresse_tab = tas.Tas_allouerTableau(ident_new, type_new,em.getQuad().getValeur());
-             
-             if (type_new.equalsIgnoreCase("entier")){               
-                  pile.getPile().push(new TabPile(ident_new,new TabValue(adresse_tab),new GenreTab(),new TypeEntier(),""));
-             }
-             
-             if (type_new.equalsIgnoreCase("booleen")){
-                  pile.getPile().push(new TabPile(ident_new,new TabValue(adresse_tab),new GenreTab(),new TypeBoolean(),""));  
-             }
-             
-             
-      
-             
-           //  pile.getPile().push(null)
-             
-       //      System.out.println(ident_new + " : " + type_new + " : " + sorte_new + " : " + valeur_new);
-             System.out.println("----------nouvelle-----------");
-             System.out.println(pile.AfficherPile());             
-             System.out.println(tas.get_Tas());
-             
-             
-      return true;
+        try {
+            System.out.println("On passe par ASTNewArray");
+            String ident_new = "" + node.jjtGetChild(0).jjtAccept(this, data);
+            String type_new = "" + node.jjtGetChild(1).jjtAccept(this, data);
+            //   String valeur_new =""+pile.getPile().get(pile.getPile().size()-Integer.parseInt(adresse_new)-1).getQuad().getValeurMethode();
+            //      pile.getPile().remove(pile.getPile().size()-Integer.parseInt(adresse_new)-1);
+            System.out.println(type_new + ident_new);
+            ElementMemoire em = pile.getPile().pop();
+            int adresse_tab = tas.Tas_allouerTableau(ident_new, type_new, em.getQuad().getValeur());
+            if (type_new.equalsIgnoreCase("entier")) {
+                pile.getPile().push(new TabPile(ident_new, new TabValue(adresse_tab), new GenreTab(), new TypeEntier(), ""));
+            }
+            if (type_new.equalsIgnoreCase("booleen")) {
+                pile.getPile().push(new TabPile(ident_new, new TabValue(adresse_tab), new GenreTab(), new TypeBoolean(), ""));
+            }
+            //      System.out.println(ident_new + " : " + type_new + " : " + sorte_new + " : " + valeur_new);
+            System.out.println("----------nouvelle-----------");
+            System.out.println(pile.AfficherPile());
+            System.out.println(tas.get_Tas());
+            return true;
+        } catch (Tas_ExceptionEspaceDispo ex) {
+            return null;
+            }
       
       
       
