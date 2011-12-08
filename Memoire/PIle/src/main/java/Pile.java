@@ -1,5 +1,7 @@
 import java.util.Stack;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Pile {
@@ -72,9 +74,11 @@ public class Pile {
                     
                   if (pile.get(i).getQuad().getConteneur().equals(s)){
                       if (pile.get(i).getQuad().getGenre().equals("tab")){        
-                          
-                          // A TESTER
-                          t.Tas_decrementerNbref(pile.get(i).getQuad().getValeur(), pile.get(i).getQuad().getIdent());                                                 
+                    try {
+                        // A TESTER
+                        t.Tas_decrementerNbref(pile.get(i).getQuad().getValeur(), pile.get(i).getQuad().getIdent());
+                    } catch (Tas_AdresseTableauInconnue ex) {
+                       }
                       }
                       pile.remove(i);
                       i--;

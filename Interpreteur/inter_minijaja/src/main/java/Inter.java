@@ -28,7 +28,7 @@ class Inter extends Thread {
             
             
             // On instancie le parser MiniJaja
-            MiniJaja parser = new MiniJaja(new FileReader(new File("C:/Users/rhork/Desktop/compilationm1/Interpreteur/inter_minijaja/exemple.txt")));
+            MiniJaja parser = new MiniJaja(new FileReader(new File("\\home\\anais\\NetBeansProjects\\trunk\\InterpreteurInter_minijaja\\src\\main\\java\\testClass.txt")));
 	    parser.classe();
 	    // Recuperation de la racine de l'AST (Abstract Syntax Tree).
 	    Node racine = parser.getJJTree().rootNode();
@@ -79,6 +79,7 @@ class Inter extends Thread {
         System.out.println("Debut du fred");
             MiniJaja parser = null;
             try {
+             //   file_parsec="./testClass.txt";
                 parser = new MiniJaja(new FileReader(new File(file_parsec)));
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Inter.class.getName()).log(Level.SEVERE, null, ex);

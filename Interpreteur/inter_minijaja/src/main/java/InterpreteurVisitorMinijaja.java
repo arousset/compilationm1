@@ -154,62 +154,48 @@ public class InterpreteurVisitorMinijaja implements MiniJajaVisitor {
   }
 
   
+    @Override
   public Object visit(ASTtableau node, Object data) throws MiniJajaVisitorException {
-      System.out.println("On passe par ASTtableau");
-      
-      
-      String type_tab;
-      
-      
-      if (node.jjtGetChild(0).toString().equals("entier")){
-          type_tab = "entier";
-      }
-      else{
-         type_tab = "booleen"; 
-      }
-      
-      String iden_tab = ""+node.jjtGetChild(1).jjtAccept(this, data);
-      String nombre_de_case_tab = ""+ node.jjtGetChild(2).jjtAccept(this, data);
-      
-      
-      
-      int adressetas = tas.Tas_allouerTableau(iden_tab, type_tab, Integer.parseInt(nombre_de_case_tab));
-
-        
-      
-      Node n = node.jjtGetParent();
-      while (n.toString() != "classe" && n.toString() != "methode" && n.toString() != "main" ){
-          n=n.jjtGetParent();
-      }
-      
-      String ident_conteneur;
-      if (n.toString() == "classe" ){
-          ident_conteneur = ""+n.jjtGetChild(0).jjtAccept(this, data);
-      }else{
-          if (n.toString() == "methode" ){
-              ident_conteneur = ""+n.jjtGetChild(1).jjtAccept(this, data);
-          }
-          else{
-              ident_conteneur = "main";
-          }
-      }
-        
-        
-      if (type_tab == "entier"){
-          System.out.println( " ONESTBON " );
-        pile.getPile().push(new TabPile(iden_tab,new TabValue(adressetas),new GenreTab(),new TypeEntier(), ident_conteneur ));                          
-      }   
-      if (type_tab == "booleen"){
-          System.out.println( " 2159198199819581 " );
-        pile.getPile().push(new TabPile(iden_tab,new TabValue(adressetas),new GenreTab(),new TypeBoolean(), ident_conteneur ));                          
-      }       
-      
-      
-      System.out.println("type tab : " + type_tab + " ident tab " + iden_tab + " nombre de case " + nombre_de_case_tab);
-      
-      System.out.println(pile.AfficherPile());
-      System.out.println(tas.get_Tas());
-      return "";
+        try {
+            System.out.println("On passe par ASTtableau");
+            String type_tab;
+            if (node.jjtGetChild(0).toString().equals("entier")) {
+                type_tab = "entier";
+            } else {
+                type_tab = "booleen";
+            }
+            String iden_tab = "" + node.jjtGetChild(1).jjtAccept(this, data);
+            String nombre_de_case_tab = "" + node.jjtGetChild(2).jjtAccept(this, data);
+            int adressetas = tas.Tas_allouerTableau(iden_tab, type_tab, Integer.parseInt(nombre_de_case_tab));
+            Node n = node.jjtGetParent();
+            while (n.toString() != "classe" && n.toString() != "methode" && n.toString() != "main") {
+                n = n.jjtGetParent();
+            }
+            String ident_conteneur;
+            if (n.toString() == "classe") {
+                ident_conteneur = "" + n.jjtGetChild(0).jjtAccept(this, data);
+            } else {
+                if (n.toString() == "methode") {
+                    ident_conteneur = "" + n.jjtGetChild(1).jjtAccept(this, data);
+                } else {
+                    ident_conteneur = "main";
+                }
+            }
+            if (type_tab == "entier") {
+                System.out.println(" ONESTBON ");
+                pile.getPile().push(new TabPile(iden_tab, new TabValue(adressetas), new GenreTab(), new TypeEntier(), ident_conteneur));
+            }
+            if (type_tab == "booleen") {
+                System.out.println(" 2159198199819581 ");
+                pile.getPile().push(new TabPile(iden_tab, new TabValue(adressetas), new GenreTab(), new TypeBoolean(), ident_conteneur));
+            }
+            System.out.println("type tab : " + type_tab + " ident tab " + iden_tab + " nombre de case " + nombre_de_case_tab);
+            System.out.println(pile.AfficherPile());
+            System.out.println(tas.get_Tas());
+            return "";
+        } catch (Tas_ExceptionEspaceDispo ex) {
+            return null;
+            }
   }
 
   public Object visit(ASTmethode node, Object data) throws MiniJajaVisitorException{
