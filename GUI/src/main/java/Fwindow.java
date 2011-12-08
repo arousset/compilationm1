@@ -74,23 +74,35 @@ boolean firstParser = true;
         panel2.getViewport().add(textErreurs);
         
         jButton1.setIcon(new ImageIcon("src/main/java/icons/New.png"));
-        jButton2.setIcon(new ImageIcon("src/main/java/icons/Add.png"));
+        jButton2.setIcon(new ImageIcon("src/main/java/icons/Addmjj.png"));
         jButton3.setIcon(new ImageIcon("src/main/java/icons/Save.png"));
-        jButton4.setIcon(new ImageIcon("src/main/java/icons/Play.png"));
-        jButton5.setIcon(new ImageIcon("src/main/java/icons/old-go-bottom.png"));
-        jButton6.setIcon(new ImageIcon("src/main/java/icons/old-go-down.png"));
-        jButton7.setIcon(new ImageIcon("src/main/java/icons/Stop.png"));
+        jButton4.setIcon(new ImageIcon("src/main/java/icons/Playmjj.png"));
+        jButton5.setIcon(new ImageIcon("src/main/java/icons/old-go-bottommjj.png"));
+        jButton6.setIcon(new ImageIcon("src/main/java/icons/old-go-downmjj.png"));
+        jButton7.setIcon(new ImageIcon("src/main/java/icons/Stopmjj.png"));
         jButton8.setText("");
         jButton8.setIcon(new ImageIcon("src/main/java/icons/Up.png"));
+        jButton9.setText("");
+        jButton9.setIcon(new ImageIcon("src/main/java/icons/Playjjc.png"));
+        jButton10.setText("");
+        jButton10.setIcon(new ImageIcon("src/main/java/icons/old-go-bottomjjc.png"));
+        jButton11.setText("");
+        jButton11.setIcon(new ImageIcon("src/main/java/icons/old-go-downjjc.png"));
+        jButton12.setText("");
+        jButton12.setIcon(new ImageIcon("src/main/java/icons/Stopjjc.png"));
         
         jMenuItem2.setIcon(new ImageIcon("src/main/java/icons/New2.png"));
-        jMenuItem1.setIcon(new ImageIcon("src/main/java/icons/Add2.png"));
+        jMenuItem1.setIcon(new ImageIcon("src/main/java/icons/Add2mjj.png"));
         jMenuItem3.setIcon(new ImageIcon("src/main/java/icons/Save2.png"));
-        jMenuItem4.setIcon(new ImageIcon("src/main/java/icons/Play2.png"));
-        jMenuItem5.setIcon(new ImageIcon("src/main/java/icons/old-go-bottom2.png"));
-        jMenuItem6.setIcon(new ImageIcon("src/main/java/icons/old-go-down2.png"));
-        jMenuItem7.setIcon(new ImageIcon("src/main/java/icons/Stop2.png"));
+        jMenuItem4.setIcon(new ImageIcon("src/main/java/icons/Play2mjj.png"));
+        jMenuItem5.setIcon(new ImageIcon("src/main/java/icons/old-go-bottom2mjj.png"));
+        jMenuItem6.setIcon(new ImageIcon("src/main/java/icons/old-go-down2mjj.png"));
+        jMenuItem7.setIcon(new ImageIcon("src/main/java/icons/Stop2mjj.png"));
         jMenuItem8.setIcon(new ImageIcon("src/main/java/icons/Up2.png"));
+        jMenuItem9.setIcon(new ImageIcon("src/main/java/icons/Play2jjc.png"));
+        jMenuItem10.setIcon(new ImageIcon("src/main/java/icons/old-go-bottom2jjc.png"));
+        jMenuItem11.setIcon(new ImageIcon("src/main/java/icons/old-go-down2jjc.png"));
+        jMenuItem12.setIcon(new ImageIcon("src/main/java/icons/Stop2jjc.png"));
 
         taln = new TextAreaLineNumber();
         taln.jsp.setSize(jPanel2.getSize());
@@ -108,6 +120,7 @@ boolean firstParser = true;
         jList3.setListData(pilemjj);
         jList4.setListData(tasmjj);*/
         interminijaja = new Interpreteur(jList3,jList4, textSortie, textErreurs);
+        interjajacode = new Interpreteur_Jajacode(jList1,jList2, textSortie, textErreurs);
     }
 
 
@@ -315,6 +328,35 @@ boolean firstParser = true;
         jList3.updateUI();
         jList4.updateUI();
     }
+    
+    private void executerjjc()
+    {
+         if(taln.jta.getText().isEmpty()){
+            aff_sortie("Debut de l'interpretation");
+            aff_sortie("Aucun fichier a interpreter");
+            aff_sortie("Fin de l'interpretation");
+        } else {
+             sauvegarder();
+        jButton9.setEnabled(false);
+       jMenuItem9.setEnabled(false);
+
+        jButton10.setEnabled(true);
+        jButton11.setEnabled(true);
+        jButton12.setEnabled(true);
+
+        jMenuItem10.setEnabled(true);
+        jMenuItem11.setEnabled(true);
+        jMenuItem12.setEnabled(true);
+         interjajacode.setSettings(pathFile, firstParser);
+                if(firstParser)
+                    interjajacode.start();
+                else
+                    interjajacode.run();
+
+                 firstParser = false;
+        
+         }
+    }
 
     public void stop()
     {
@@ -460,6 +502,11 @@ boolean firstParser = true;
         jButton7 = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         jButton8 = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JToolBar.Separator();
+        jButton9 = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane3 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
@@ -483,11 +530,16 @@ boolean firstParser = true;
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
-        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItem8 = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
+        jMenuItem12 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1062, 640));
@@ -592,6 +644,39 @@ boolean firstParser = true;
             }
         });
         jToolBar1.add(jButton8);
+        jToolBar1.add(jSeparator4);
+
+        jButton9.setText("jButton9");
+        jButton9.setFocusable(false);
+        jButton9.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton9.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton9);
+
+        jButton10.setText("jButton10");
+        jButton10.setEnabled(false);
+        jButton10.setFocusable(false);
+        jButton10.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton10.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton10);
+
+        jButton11.setText("jButton11");
+        jButton11.setEnabled(false);
+        jButton11.setFocusable(false);
+        jButton11.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton11.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton11);
+
+        jButton12.setText("jButton12");
+        jButton12.setEnabled(false);
+        jButton12.setFocusable(false);
+        jButton12.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton12.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jButton12);
 
         jTabbedPane1.setAutoscrolls(true);
 
@@ -671,14 +756,13 @@ boolean firstParser = true;
         jMenu2.setText("Executer");
 
         jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
-        jMenuItem4.setText("Executer");
+        jMenuItem4.setText("Executer le code Minijaja");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
             }
         });
         jMenu2.add(jMenuItem4);
-        jMenu2.add(jSeparator2);
 
         jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
         jMenuItem5.setText("Continuer jusqu'au prochain point d'arret");
@@ -704,6 +788,7 @@ boolean firstParser = true;
             }
         });
         jMenu2.add(jMenuItem7);
+        jMenu2.add(jSeparator2);
 
         jMenuItem8.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, 0));
         jMenuItem8.setText("Compiler");
@@ -713,6 +798,27 @@ boolean firstParser = true;
             }
         });
         jMenu2.add(jMenuItem8);
+        jMenu2.add(jSeparator5);
+
+        jMenuItem9.setText("Executer le code Jajacode");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem9);
+
+        jMenuItem10.setText("Continuer jusqu'au prochain point d'arret");
+        jMenuItem10.setEnabled(false);
+        jMenu2.add(jMenuItem10);
+
+        jMenuItem11.setText("Passer à l'instruction suivante");
+        jMenuItem11.setEnabled(false);
+        jMenu2.add(jMenuItem11);
+
+        jMenuItem12.setText("Arreter l'execution");
+        jMenuItem12.setEnabled(false);
+        jMenu2.add(jMenuItem12);
 
         jMenuBar1.add(jMenu2);
 
@@ -803,10 +909,23 @@ boolean firstParser = true;
         // TODO add your handling code here:
         compiler();
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        // TODO add your handling code here:
+        executerjjc();
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        // TODO add your handling code here:
+        executerjjc();
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -814,6 +933,7 @@ boolean firstParser = true;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -826,6 +946,9 @@ boolean firstParser = true;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -833,6 +956,7 @@ boolean firstParser = true;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
@@ -842,6 +966,8 @@ boolean firstParser = true;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JToolBar.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToolBar jToolBar1;
