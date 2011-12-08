@@ -1298,7 +1298,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
          
       
       if (node.jjtGetChild(0).toString().equals("ident")){
-        operateur1 = eval((String)node.jjtGetChild(0).jjtAccept(this, data));
+        operateur1 = eval(""+node.jjtGetChild(0).jjtAccept(this, data));
       }
       else{
         if (node.jjtGetChild(0).toString().equals("nbre")){
@@ -1323,6 +1323,8 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       }
       
       
+      
+      System.out.println(operateur1 + "uçohohiuohiu" + operateur2);
 
       return  (int)operateur1-operateur2;
   }
@@ -1470,18 +1472,25 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
               
               System.out.println("EXECPTION" + o.jjtGetChild(0).toString());
               if (o.jjtGetChild(0).toString().equals("nbre")){
+                  
+                  System.out.println("EXECPTION GATEAU" );
+                  
                   pile.getPile().get(i).getQuad().setValue(new EntierValue(""+o.jjtGetChild(0).jjtAccept(this, data)));
               }
+              else{
               if ( o.jjtGetChild(0).toString().equals("vrai") || o.jjtGetChild(0).toString().equals("faux") ){
-                  System.out.println("EXECPTION");
+                  System.out.println("EXECPTION PD");
                   pile.getPile().get(i).getQuad().setValue(new BooleanValue(""+o.jjtGetChild(0).jjtAccept(this, data)));                    
               }
+              else{
                 try {
+                     System.out.println("EXECPTION PJUID");
                     throw new ParametreInvalideException("le parametre ne peut pas etre une operation");
                 } catch (ParametreInvalideException ex) {
                     Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                  
+              }  
+          }
           }
 
         if (o.jjtGetChild(1).toString() != "exnil"){
