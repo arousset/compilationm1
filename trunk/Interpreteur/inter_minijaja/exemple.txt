@@ -41,7 +41,7 @@ class quicksort{
             pivot=partition(debut,fini); 
 			pivotmoinsun=pivot-1;
 			pivotplusun=pivot+1;
-            trirapide(debuttemp,pivotmoinsun); 
+            trirapide(debutemp,pivotmoinsun); 
             trirapide(pivotplusun,finitemp); 
         }; 
     }; 

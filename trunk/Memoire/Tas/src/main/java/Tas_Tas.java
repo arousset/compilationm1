@@ -216,15 +216,7 @@ return -2;
 		}
 		return -2;
 	}
-	
-        public int Tas_decrementerNbref(int addr){
-            if (this.espacesOccupes.get(addr)!=null){
-               this.espacesOccupes.get(addr).setnbRef(this.espacesOccupes.get(addr).getnbRef()-1);
-               return 0;
-            }
-            return -2;
-        }
-        
+	      
         
 	public void Tas_reorganiserTas(){
 		int add, j=0, taille, debut, nbtab = this.espacesOccupes.size(), i=this.tailleTas-1;

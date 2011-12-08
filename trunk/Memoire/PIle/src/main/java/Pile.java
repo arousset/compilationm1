@@ -66,8 +66,10 @@ public class Pile {
                 for (int i = 0;i<pile.size();i++){
                     
                   if (pile.get(i).getQuad().getConteneur().equals(s)){
-                      if (pile.get(i).getQuad().getGenre().equals("tab")){                        
-                          t.Tas_supprimerTableau(pile.get(i).getQuad().getValeur());                                                 
+                      if (pile.get(i).getQuad().getGenre().equals("tab")){        
+                          
+                          // A TESTER
+                          t.Tas_decrementerNbref(pile.get(i).getQuad().getValeur(), pile.get(i).getQuad().getIdent());                                                 
                       }
                       pile.remove(i);
                       i--;
