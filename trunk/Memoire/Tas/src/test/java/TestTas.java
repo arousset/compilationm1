@@ -1,6 +1,4 @@
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -28,7 +26,7 @@ public class TestTas extends TestCase{
             for (int i = 0; i < 3; i++) {
                 tas.Tas_affecterValeur(b, i, d[i]);
             }
-            Assert.assertFalse(tas.Tas_verifEspaceLibre() == tas.tailleTas);
+            Assert.assertFalse(tas.Tas_verifEspaceLibre() == tas.getTailleTas());
         } catch (Tas_ExceptionEspaceDispo ex) {
            }
     }
@@ -127,8 +125,8 @@ public class TestTas extends TestCase{
        public void testSubdivisionEspacesLibres(){
            Tas_Tas tas = new Tas_Tas();
            tas.Tas_garbageCollector();
-           tas.Tas_subdivisionEspacesLibres(tas.tailleTas, tas.espaceLibre, false);
-           int n=tas.Tas_pouissance(tas.tailleTas, false);
+           tas.Tas_subdivisionEspacesLibres(tas.getTailleTas(), tas.getEspaceLibre(), false);
+           int n=tas.Tas_pouissance(tas.getTailleTas(), false);
            Assert.assertTrue(tas.getEspacesVides().size()== n);
        }
     public void testIncrementerref(){
