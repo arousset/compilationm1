@@ -38,6 +38,7 @@ public class Fwindow extends javax.swing.JFrame {
     private String pathFile = "";
     private File currentFile = null;
 Interpreteur interminijaja;
+Interpreteur_Jajacode interjajacode;
 Compilateur_minijaja compilo  = new Compilateur_minijaja(); 
 boolean firstParser = true;
     // Delcaration de la memoire
@@ -263,13 +264,29 @@ boolean firstParser = true;
                 //interminijaja.parse(pathFile);
                 //Thread th_minijaja = new Thread(interminijaja);
                 //th_minijaja.start();
-                 interminijaja.setSettings(pathFile, firstParser);
+
+
+
+                  interminijaja.setSettings(pathFile, firstParser);
                 if(firstParser)
                     interminijaja.start();
                 else
                     interminijaja.run();
                 
                  firstParser = false;
+
+                 // Partie pour Jajacode !!!!
+              /*  System.out.println("PATH : "+pathFile);
+                    interjajacode.setSettings(pathFile, firstParser);
+                if(firstParser)
+                    interjajacode.start();
+                else
+                    interjajacode.run();
+
+                 firstParser = false;*/
+
+
+                 // Fin de partie pour Jajacode !
 
                 // On recupere la pile une premiere fois
                /* tas = interminijaja.tas.get_Tas();
@@ -419,6 +436,7 @@ boolean firstParser = true;
                 jTextArea1.setText(s);
                 
                 firstParser = false;
+                
             } catch(MiniJajaVisitorException e) {
                 System.err.println(e.toString());
             }
