@@ -44,7 +44,7 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
         p.getPile().push(b);
         p.getPile().push(new BooleenPile("b", new BooleanValue("true"), new GenreVar(), new TypeBoolean(), "b"));
 
-        Assert.assertEquals(p.estpresent(b.quadruplet.getIdent()),true);
+        Assert.assertTrue(p.estpresent(b.quadruplet.getIdent()));
     }
 
      public void testSupprimer(){
@@ -92,5 +92,24 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
 
         p.dump();
         Assert.assertTrue(p.getPile().empty());
+     }
+     
+     public void testSetPile(){
+        Pile p = new Pile();
+        BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new TypeBoolean(), "a");
+        p.getPile().push(b);
+
+        Pile pi= new Pile();
+        pi.setPile(p.getPile());
+
+        Assert.assertEquals(p.getPile(),pi.getPile());
+     }
+
+     public void testAfficherPile(){
+          Pile p = new Pile();
+        BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new TypeBoolean(), "a");
+        p.getPile().push(b);
+
+        Assert.assertEquals(p.AfficherPile(),b.toString()+"\n");
      }
 }
