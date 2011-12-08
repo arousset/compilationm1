@@ -6,22 +6,15 @@
 options{
 	MULTI=true;
 	VISITOR=true;
+	STATIC=false;
 	VISITOR_EXCEPTION="MiniJajaVisitorException";
 }
 
 PARSER_BEGIN(MiniJaja)
 	import java.io.*;
 	
-public class MiniJaja{
+public class MiniJaja{}	
 
-	public static void main (String arg[]) throws Exception {
-		MiniJaja mjj = new MiniJaja(new FileReader(new File("exemple.txt")));
-    	mjj.classe();
-    	
-    	Node racine = mjj.jjtree.rootNode();
-    	((SimpleNode)racine).dump("-->");
-  	}
-}	
 PARSER_END(MiniJaja)
 
 // Définition des élements à sauter

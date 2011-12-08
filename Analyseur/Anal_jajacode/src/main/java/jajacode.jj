@@ -7,23 +7,16 @@
 options {
              
                
+  STATIC=false;
                                                
 }
 
 PARSER_BEGIN(JajaCode)
 
 	public class JajaCode/*@bgen(jjtree)*/implements JajaCodeTreeConstants/*@egen*/ {/*@bgen(jjtree)*/
-  protected static JJTJajaCodeState jjtree = new JJTJajaCodeState();
+  protected JJTJajaCodeState jjtree = new JJTJajaCodeState();
 
-/*@egen*/
-	  public static void main (String arg[]) throws ParseException {
-      JajaCode jjc = new JajaCode(System.in) ;
-        jjc.Classe() ;
-        
-        Node racine = jjc.jjtree.rootNode();
-    	((SimpleNode)racine).dump("-->");
-      }
-	}
+/*@egen*/}
 PARSER_END(JajaCode)
 
 /** ----------------- Regles lexicales ------------------------ */

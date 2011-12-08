@@ -7,6 +7,7 @@
 options{
 	           
 	             
+	STATIC=false;
 	                                             
 }
 
@@ -14,18 +15,10 @@ PARSER_BEGIN(MiniJaja)
 	import java.io.*;
 	
 public class MiniJaja/*@bgen(jjtree)*/implements MiniJajaTreeConstants/*@egen*/{/*@bgen(jjtree)*/
-  protected static JJTMiniJajaState jjtree = new JJTMiniJajaState();
+  protected JJTMiniJajaState jjtree = new JJTMiniJajaState();
 
-/*@egen*/
+/*@egen*/}	
 
-	public static void main (String arg[]) throws Exception {
-		MiniJaja mjj = new MiniJaja(new FileReader(new File("exemple.txt")));
-    	mjj.classe();
-    	
-    	Node racine = mjj.jjtree.rootNode();
-    	((SimpleNode)racine).dump("-->");
-  	}
-}	
 PARSER_END(MiniJaja)
 
 // D\u00e9finition des \u00e9lements \u00e0 sauter
