@@ -6,6 +6,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JList;
+import javax.swing.JTextArea;
 
 
 /**
@@ -40,8 +41,11 @@ class Inter extends Thread {
             
             JList pilelist=  new JList();
             JList taslist =  new JList();
+            JTextArea s = new JTextArea();
+            JTextArea e =  new JTextArea();
+                    
             // on instancie tt le bordel et donc les visiteurs
-            ((SimpleNode) racine).jjtAccept(new Interpreteur(pilelist,taslist), null);
+            ((SimpleNode) racine).jjtAccept(new Interpreteur(pilelist,taslist,s,e), null);
 
 
 	}

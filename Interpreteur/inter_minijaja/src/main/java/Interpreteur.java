@@ -703,9 +703,10 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
                         
               String nom = ""+o.jjtGetChild(0).jjtAccept(this, data);
                         
+              boolean b = pile.estpresent(nom);
               ElementMemoire em = pile.searchident(nom);
               
-              System.out.println("LELEMENTMEMOIRE : " + em);
+              System.out.println("LELEMENTMEMOIRE : "+ nom + " + + + "+ em + b);
               String em_type = em.getQuad().getType();
               
               
@@ -1211,11 +1212,11 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
          
       
       if (node.jjtGetChild(0).toString().equals("ident")){
-        operateur1 = eval((String)node.jjtGetChild(0).jjtAccept(this, data));
+        operateur1 = eval(""+node.jjtGetChild(0).jjtAccept(this, data));
       }
       else{
         if (node.jjtGetChild(0).toString().equals("nbre")){
-            operateur1 = Integer.parseInt((String)node.jjtGetChild(0).jjtAccept(this, data)); 
+            operateur1 = Integer.parseInt(""+node.jjtGetChild(0).jjtAccept(this, data)); 
         }
         else{
             operateur1 = Integer.parseInt(""+node.jjtGetChild(0).jjtAccept(this, data));
@@ -1224,16 +1225,19 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       
       
       if (node.jjtGetChild(1).toString().equals("ident")){
-        operateur2 = eval((String)node.jjtGetChild(1).jjtAccept(this, data));
+        operateur2 = eval(""+node.jjtGetChild(1).jjtAccept(this, data));
       }
       else{   
         if (node.jjtGetChild(1).toString().equals("nbre")){
-            operateur2 = Integer.parseInt((String)node.jjtGetChild(1).jjtAccept(this, data)); 
+            operateur2 = Integer.parseInt(""+node.jjtGetChild(1).jjtAccept(this, data)); 
         }
         else{
             operateur2 = Integer.parseInt(""+node.jjtGetChild(1).jjtAccept(this, data));
         }
       }
+      
+      
+      System.out.println(operateur1 + " : " + operateur2);      
       
       if (operateur1 > operateur2 ){
           return true;
