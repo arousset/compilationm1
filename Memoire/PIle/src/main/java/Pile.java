@@ -24,16 +24,16 @@ public class Pile {
 		this.pile = pile;
 	}
 	
-	public void swap() {//throws PileVideException{
+	public void swap() throws PileVideException{
 		
-              /*  if(pile.empty()){
+               if(pile.empty()){
                      throw new PileVideException("pile vide, swap impossible");
-                }*/
+                }
                 ElementMemoire tmp = pile.peek();
 		pile.pop();
-               /* if(pile.empty()){
+               if(pile.empty()){
                      throw new PileVideException("pile vide, swap impossible");
-                }*/
+                }
 		ElementMemoire tmp2 = pile.peek();
 		pile.pop();
 		pile.push(tmp);
@@ -94,6 +94,14 @@ public class Pile {
                 i++;
             }
             return vs;
+        }
+
+        public int getIndex(String s) throws ItemNotFoundException{
+            ElementMemoire e=searchident(s);
+            if(e.getQuad().getGenre().equals("tab")){
+                return e.getQuad().getValeur();
+            }
+            throw new ItemNotFoundException("le tableau n'existe pas");
         }
 	
 }

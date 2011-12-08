@@ -59,4 +59,17 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
           Assert.assertFalse(p.estpresent(t.quadruplet.getIdent()));
 
      }
+
+     public void testGetIndex(){
+          Pile p = new Pile();
+         Tas_Tas tas= new Tas_Tas();
+          TabPile t=new TabPile("s",new TabValue(2),new GenreTab(),new TypeBoolean(), "2" );
+         System.out.println(t.getQuad().getGenre().toString());
+          int c=tas.Tas_allouerTableau(t.quadruplet.getIdent(), "bool", 20);
+
+         try {
+            Assert.assertEquals(p.getIndex("s"), c);
+        } catch (ItemNotFoundException ex) {
+            }
+     }
 }
