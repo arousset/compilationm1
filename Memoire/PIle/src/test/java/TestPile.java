@@ -1,4 +1,6 @@
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -14,7 +16,11 @@ BooleenPile b=new BooleenPile("a", new BooleanValue("true"), new GenreVar(), new
 
     p.getPile().push(b);
     p.getPile().push(new BooleenPile("b", new BooleanValue("true"), new GenreVar(), new TypeBoolean(), "b"));
-    p.swap();
+        try {
+            p.swap();
+        } catch (PileVideException ex) {
+           
+        }
     Assert.assertTrue(p.getPile().peek().equals(b));
    
     }
