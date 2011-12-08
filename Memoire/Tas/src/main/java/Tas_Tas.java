@@ -5,9 +5,10 @@ import java.util.Vector;
 
 public class Tas_Tas {
 	public final static int TT = 256;
+
 	
-	int tailleTas ;
-	int espaceLibre;
+	private int tailleTas ;
+	private int espaceLibre;
 	Object[] tas;
 	private ArrayList<Tas_Espaces>espacesOccupes;
 	private ArrayList<ArrayList<Tas_Espaces>>espacesVides;
@@ -326,6 +327,15 @@ public int Tas_decrementerNbref(int addrt, String t) throws Tas_AdresseTableauIn
 		return vs;
 	}
 
+
+    public int getEspaceLibre() {
+            return espaceLibre;
+    }
+
+    public int getTailleTas() {
+        return tailleTas;
+    }
+    
     public ArrayList<ArrayList<Tas_Espaces>> getEspacesVides() {
         return espacesVides;
     }
