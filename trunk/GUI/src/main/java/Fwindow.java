@@ -120,7 +120,7 @@ boolean firstParser = true;
         jList2.setListData(tasjjc);
         jList3.setListData(pilemjj);
         jList4.setListData(tasmjj);*/
-        interminijaja = new Interpreteur(jList3,jList4, textSortie, textErreurs);
+       // interminijaja = new Interpreteur(jList3,jList4, textSortie, textErreurs);
         interjajacode = new Interpreteur_Jajacode(jList1,jList2, textSortie, textErreurs);
     }
 
@@ -280,12 +280,10 @@ boolean firstParser = true;
                 //th_minijaja.start();
 
 
-
+                  interminijaja = new Interpreteur(jList3,jList4, textSortie, textErreurs);
                   interminijaja.setSettings(pathFile, firstParser);
-                if(firstParser)
+                  interminijaja.pause = true;
                     interminijaja.start();
-                else
-                    interminijaja.run();
                 
                  firstParser = false;
 
@@ -362,6 +360,7 @@ boolean firstParser = true;
     public void stop()
     {
         aff_sortie("Fin de l'interpretation");
+        interminijaja.stopp();
         jButton4.setEnabled(true);
         jMenuItem4.setEnabled(true);
 
@@ -464,7 +463,7 @@ boolean firstParser = true;
     
     void ProchaineInstruction()
     {
-        taln.ProchaineInstruction();
+        //taln.ProchaineInstruction();
         interminijaja.next();
     }
     
