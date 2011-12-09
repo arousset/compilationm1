@@ -30,7 +30,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
     Vector<String> tmp2;
     JTextArea sortie;
     JTextArea erreurs;
-    boolean pause = false;
+    public boolean pause = true;
 
     // Permet de gerer le pas a pas.
   //  Boolean thread_sleep = false;
@@ -49,6 +49,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
 	    Node racine = parser.getJJTree().rootNode();
             pile.dump();
             tas.Tas_reinit();
+            pause = true;
 
             
             // Affichage de l'ASA.
@@ -140,6 +141,12 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
                // Logger.getLogger(InterpreteurVisitorMinijaja.class.getName()).log(Level.SEVERE, null, ex);
             }
       } 
+  }
+  
+  public void stopp()
+  {
+      pause = false;
+      next();
   }
   
   public void MAJgui()
