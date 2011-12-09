@@ -51,6 +51,7 @@ boolean firstParser = true;
     Vector<String> tasmjj;
     Vector<String> pilejjc;
     Vector<String> tasjjc;
+
     
     
     
@@ -201,6 +202,8 @@ boolean firstParser = true;
         }
     }
 
+   
+
     public void sauvegarder()
     {
       if(fileExists)
@@ -250,8 +253,6 @@ boolean firstParser = true;
 
     public void executer()
     {
-       
-        
         if(taln.jta.getText().isEmpty()){
             aff_sortie("Debut de l'interpretation");
             aff_sortie("Aucun fichier a interpreter");
