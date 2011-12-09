@@ -29,7 +29,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
     Vector<String> tmp2;
     JTextArea sortie;
     JTextArea erreurs;
-    boolean pause = false;
+    boolean pause = true;
 
   @Override
   public void run(){
@@ -59,6 +59,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
             } catch (JajaCodeVisitorException ex) {
                 //Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
                // aff_erreurs(ex.getMessage());
+                System.out.println(ex.getMessage());
             }
 
             MAJgui();
@@ -167,12 +168,19 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
                     listpilemjj.updateUI();
                     listtasmjj.updateUI();
   }
+  
+  public void stopp()
+  {
+      pause = false;
+      next();
+  }
 
 
   public synchronized void next(){
     this.notify();
    // pause = false;
   }
+
 
   public Object visit(SimpleNode node, Object data) throws JajaCodeVisitorException{
             System.out.println("On passe par SimpleNode");
@@ -181,22 +189,23 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
       return true;
-  };
+  }
 
   public Object visit(ASTJajaCode node, Object data) throws JajaCodeVisitorException{
             System.out.println("On passe par ASTJajaCode");
+            pauseInter();
                          for (int i=0;i<node.jjtGetNumChildren();i++){
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
       return true;
-  };
+  }
 
 
 
   public Object visit(ASTJCNil node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTJCNil");
       return true;
-  };
+  }
 
 
   public Object visit(ASTInit node, Object data) throws JajaCodeVisitorException{
@@ -205,7 +214,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
         node.jjtGetChild(i).jjtAccept(this, data);
       }
       return true;
-  };
+  }
 
 
   public Object visit(ASTSwap node, Object data) throws JajaCodeVisitorException{
@@ -221,7 +230,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTNew node, Object data) throws JajaCodeVisitorException{
@@ -285,7 +294,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTNewArray node, Object data) throws JajaCodeVisitorException{
@@ -316,7 +325,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
          return true;
 
 
-  };
+  }
 
   public Object visit(ASTInvoke node, Object data) throws JajaCodeVisitorException{
 
@@ -351,7 +360,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
       return true;
 
 
-  };
+  }
 
 
   public Object visit(ASTReturn node, Object data) throws JajaCodeVisitorException{
@@ -373,7 +382,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
       sn.jjtAccept(this, data);
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTPush node, Object data) throws JajaCodeVisitorException{
@@ -404,7 +413,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
        System.out.println(pile.AfficherPile());
       return true;
-  };
+  }
 
 
   public Object visit(ASTPop node, Object data) throws JajaCodeVisitorException{
@@ -427,7 +436,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTLoad node, Object data) throws JajaCodeVisitorException{
@@ -446,7 +455,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
       System.out.println(pile.AfficherPile());
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTALoad node, Object data) throws JajaCodeVisitorException{
@@ -469,7 +478,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
         System.out.println(tas.Tas_verifEspaceLibre());
 
       return true;
-  };
+  }
 
 
 
@@ -497,7 +506,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
              System.out.println(pile.AfficherPile());
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTAStore node, Object data) throws JajaCodeVisitorException{
@@ -523,7 +532,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
     System.out.println(tas.Tas_verifEspaceLibre());
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTIf node, Object data) throws JajaCodeVisitorException{
@@ -546,7 +555,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTGoto node, Object data) throws JajaCodeVisitorException{
@@ -561,7 +570,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
       sn.jjtAccept(this, data);
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTInc node, Object data) throws JajaCodeVisitorException{
@@ -577,7 +586,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
      System.out.println(pile.AfficherPile());
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTAInc node, Object data) throws JajaCodeVisitorException{
@@ -597,14 +606,14 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTNop node, Object data) throws JajaCodeVisitorException{
       System.out.println("VA TE FAIRE ENCULE");
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTJCStop node, Object data) throws JajaCodeVisitorException{
@@ -615,33 +624,33 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
       System.exit(0);
       return true;
-  };
+  }
 
   public Object visit(ASTJCIdent node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTJCIdent");
        System.out.println(node.getValeur());
       return node.getValeur();
-  };
+  }
 
   public Object visit(ASTJCType node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTJCType");
       return node.getValeur();
-  };
+  }
 
   public Object visit(ASTJCSorte node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTJCSorte");
       return node.getValeur();
-  };
+  }
 
   public Object visit(ASTJCVrai node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTJCVrai");
       return true;
-  };
+  }
 
   public Object visit(ASTJCFaux node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTJCFaux");
       return false;
-  };
+  }
 
   public Object visit(ASTNeg node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTNeg");
@@ -659,7 +668,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
              System.out.println(pile.AfficherPile());
 
       return true;
-  };
+  }
 
   public Object visit(ASTNot node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTNot");
@@ -675,7 +684,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
              System.out.println(pile.AfficherPile());
 
       return true;
-  };
+  }
 
   public Object visit(ASTAdd node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTAdd");
@@ -690,7 +699,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
              System.out.println(pile.AfficherPile());
 
       return true;
-  };
+  }
 
   public Object visit(ASTSub node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTSub");
@@ -706,7 +715,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTMul node, Object data) throws JajaCodeVisitorException{
@@ -724,7 +733,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTDiv node, Object data) throws JajaCodeVisitorException{
@@ -742,7 +751,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
              System.out.println(pile.AfficherPile());
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTCmp node, Object data) throws JajaCodeVisitorException{
@@ -761,7 +770,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
       System.out.println(pile.AfficherPile());
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTSup node, Object data) throws JajaCodeVisitorException{
@@ -783,7 +792,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
   public Object visit(ASTInf node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTInf");
@@ -804,7 +813,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTOr node, Object data) throws JajaCodeVisitorException{
@@ -826,7 +835,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTAnd node, Object data) throws JajaCodeVisitorException{
@@ -847,12 +856,12 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 
       return true;
-  };
+  }
 
 
   public Object visit(ASTJCNbre node, Object data) throws JajaCodeVisitorException{
       System.out.println("On passe par ASTJCNbre");
        System.out.println(node.getValeur());
       return node.getValeur();
-  };
+  }
 }
