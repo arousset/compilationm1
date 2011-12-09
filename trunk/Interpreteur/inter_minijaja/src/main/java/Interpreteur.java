@@ -30,6 +30,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
     Vector<String> tmp2;
     JTextArea sortie;
     JTextArea erreurs;
+
     public boolean pause = true;
 
     // Permet de gerer le pas a pas.
