@@ -87,10 +87,11 @@ public class Compilateur_minijaja {
 
     public String compile_MiniJaja(Reader file, boolean firstParser) throws MiniJajaVisitorException {
         this.minijaja = file;
-        if(firstParser)
+        //if(firstParser)
             mjj = new MiniJaja(this.minijaja);
-        else
-             mjj.ReInit(minijaja);
+        //else
+             //mjj.ReInit(minijaja);
+            System.out.println("On fait la nouvelle COMPPPPILEEEUUUH");
 
         try {       
             this.parse();

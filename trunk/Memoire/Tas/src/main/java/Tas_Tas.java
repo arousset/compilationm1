@@ -256,7 +256,7 @@ public int Tas_decrementerNbref(int addrt, String t) throws Tas_AdresseTableauIn
 	
 	public ArrayList<ArrayList <Tas_Espaces>> Tas_arrayList(){ 			// creation de l'arraylist espacesvides
 		int pouissance= Tas_pouissance(this.espaceLibre, false);
-		for (int i=0; i<pouissance; i++){
+		for (int i=0; i<pouissance+1; i++){
 			espacesVides.add(i, new ArrayList<Tas_Espaces>());
 		}
 		return espacesVides;
@@ -288,6 +288,20 @@ public int Tas_decrementerNbref(int addrt, String t) throws Tas_AdresseTableauIn
 		this.espacesOccupes.clear();
 		this.vide = null;
 		this.tas=null;
+                this.espacesVides.clear();
+	}
+
+        public void Tas_reinit(){
+		for(int i=0; i<this.espacesVides.size(); i++){
+			espacesVides.get(i).clear();
+			}
+		this.espacesOccupes.clear();
+
+                for(int i=0; i<this.tailleTas;i++) {
+                    this.tas[i] = this.vide;
+                }
+
+                this.espaceLibre = this.tailleTas;
 	}
 	
 	public Vector<String> get_Tas(){

@@ -19,19 +19,19 @@ import javax.swing.JTextArea;
  */
 
 public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
-         Pile pile;
-         Tas_Tas tas;
-         JajaCode parser;
-         String file_parsec;
-         JList listpilemjj;
-         JList listtasmjj;
+    Pile pile;
+    Tas_Tas tas;
+    JajaCode parser;
+    String file_parsec;
+    JList listpilemjj;
+    JList listtasmjj;
+    Vector<String> tmp1;
+    Vector<String> tmp2;
+    JTextArea sortie;
+    JTextArea erreurs;
+    boolean pause = false;
 
-         Vector<String> tmp1;
-        Vector<String> tmp2;
-        JTextArea sortie;
-        JTextArea erreurs;
-
-@Override
+  @Override
   public void run(){
         System.out.println("Debut du fred");
 
@@ -44,7 +44,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
 	    // Recuperation de la racine de l'AST (Abstract Syntax Tree).
 	    Node racine = parser.getJJTree().rootNode();
-
+            pile = new Pile();
 
             // Affichage de l'ASA.
 	    System.out.println("Debut arbre");
@@ -61,20 +61,21 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
                // aff_erreurs(ex.getMessage());
             }
 
+            MAJgui();
 
-
-                Vector<String> pilev = new Vector<String>();
+              /*  Vector<String> pilev = new Vector<String>();
                 Vector<String> tasv = new Vector<String>();
                 tasv = tas.get_Tas();
                 pilev = pile.get_PileV();
                 listpilemjj.updateUI();
-                listtasmjj.updateUI();
+                listtasmjj.updateUI();*/
+            
        // throw new UnsupportedOperationException("Not supported yet.");
     }
 
 
 
-        boolean pause = false;
+        
 
 
 
@@ -102,10 +103,10 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
     {
         file_parsec = file;
         try {
-            if(firstParser)
+          //  if(firstParser)
                 parser = new JajaCode(new FileReader(new File(file_parsec)));
-            else
-                parser.ReInit(new FileReader(new File(file_parsec)));
+           // else
+           //     parser.ReInit(new FileReader(new File(file_parsec)));
         } catch (FileNotFoundException ex) {
             aff_erreurs(ex.getMessage());
         }
@@ -145,7 +146,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
   public void MAJgui()
   {
-      aff_sortie("Pause dans l'interpretationJajaCode");
+      aff_sortie("Pause dans l'interpretation");
       System.out.println("ON ET RENTRER");
                 Vector<String> pilev = new Vector<String>();
                 Vector<String> tasv = new Vector<String>();
@@ -157,10 +158,12 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
 
                   for (int i=0; i< tasv.size(); i++) {
                         tmp2.add(tasv.elementAt(i).toString());
-                  }
-                    for (int i=0; i< pilev.size(); i++) {
+                    }
+
+                    for (int i=pilev.size()-1; i>=0 ; i--) {
                         tmp1.add(pilev.elementAt(i).toString());
                     }
+
                     listpilemjj.updateUI();
                     listtasmjj.updateUI();
   }
@@ -210,7 +213,7 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
         try {
             pile.swap();
         } catch (PileVideException ex) {
-            Logger.getLogger(InterpreteurVisitorJajacode.class.getName()).log(Level.SEVERE, null, ex);
+           // Logger.getLogger(InterpreteurVisitorJajacode.class.getName()).log(Level.SEVERE, null, ex);
         }
 
                    System.out.println("----------nouvelle-----------");
@@ -305,12 +308,12 @@ public class Interpreteur_Jajacode extends Thread implements JajaCodeVisitor {
             System.out.println("----------nouvelle-----------");
             System.out.println(pile.AfficherPile());
             System.out.println(tas.get_Tas());
-            return true;
+
         } catch (Tas_ExceptionEspaceDispo ex) {
-           return null;
+            Logger.getLogger(Interpreteur_Jajacode.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-
+         return true;
 
 
   };
