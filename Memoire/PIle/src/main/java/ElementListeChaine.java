@@ -66,7 +66,7 @@ public class ElementListeChaine {
                 prec.setNext(this.next);
             }
             if(this.next!=null){
-                this.next.setNext(this.prec);
+                this.next.setPrec(this.prec);
             }
         }
         else{
