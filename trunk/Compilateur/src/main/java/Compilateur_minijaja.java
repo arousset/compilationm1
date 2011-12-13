@@ -95,7 +95,10 @@ public class Compilateur_minijaja {
 
         try {       
             this.parse();
-            this.controleType();
+            
+            // LA BONNE ZOUBEE
+            
+           // this.controleType();
             return this.compile();
         }catch(MiniJajaVisitorException ex) {
             throw new MiniJajaCompilationProcessusException(ex.toString());
