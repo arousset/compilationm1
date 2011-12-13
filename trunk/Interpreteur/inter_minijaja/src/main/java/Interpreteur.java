@@ -30,6 +30,7 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
     Vector<String> tmp2;
     JTextArea sortie;
     JTextArea erreurs;
+    boolean enculage = false;
 
     public boolean pause = true;
 
@@ -159,8 +160,10 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
                 tasv = tas.get_Tas();
                 pilev = pile.get_PileV();  
                 
-                tmp2.clear();
-                tmp1.clear();
+                if(!tasv.isEmpty())
+                    tmp2.clear();
+                if(!pilev.isEmpty())
+                    tmp1.clear();
                 
                   for (int i=0; i< tasv.size(); i++) {
                         tmp2.add(tasv.elementAt(i).toString());
@@ -209,8 +212,13 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       node.jjtGetChild(2).jjtAccept(this, data);
       
         // ENLEVER LES 2 COMMENTAIRES SUIVANTS
+      
+      if (enculage){
+         pile.supprimer(name,tas);
+         tas.Tas_dump();     
         // pile.supprimer(name,tas);
         // tas.Tas_dump();
+      }
      System.out.println("hahaha" + tas.get_Tas());
      System.out.println("hahaha" + pile.AfficherPile());
       
@@ -471,7 +479,9 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       
          // ENLEVER LE COMMENTAIRE SUIVANT      
         //   pile.supprimer("main", tas);
-      
+            if (enculage){
+            pile.supprimer("main",tas);
+      }
       
      System.out.println(pile.AfficherPile());
       
@@ -722,8 +732,9 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
        
        
        // ENLEVER LE COMMENTAIRE SUIVANT   
-       
-       // pile.supprimer(ident_fonction,tas);
+       if (enculage){
+        pile.supprimer(ident_fonction,tas);
+       }
        return "";
      
      
@@ -1442,12 +1453,15 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
                   System.out.println("EXECPTION");
                   pile.getPile().get(i).getQuad().setValue(new BooleanValue(""+o.jjtGetChild(0).jjtAccept(this, data)));                    
               }
-                try {
+              
+              try {
                     throw new ParametreInvalideException("le parametre ne peut pas etre une operation");
                 } catch (ParametreInvalideException ex) {
-                    Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+                   // aff_erreurs("parametres de fonctions invalide");
                 }
                   
+               
+               
           }
 
         if (o.jjtGetChild(1).toString() != "exnil"){
@@ -1475,7 +1489,9 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
       
       // ENLEVER LE COMMENTAIRE SUIVANT   
       
-      
+      if(enculage){
+          pile.supprimer(ident_fonction,tas);
+      }
     // pile.supprimer(ident_fonction,tas);
      System.out.println(pile.AfficherPile());
       return retour.substring(35); 

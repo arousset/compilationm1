@@ -121,7 +121,7 @@ boolean firstParser = true;
         jList3.setListData(pilemjj);
         jList4.setListData(tasmjj);*/
        // interminijaja = new Interpreteur(jList3,jList4, textSortie, textErreurs);
-        interjajacode = new Interpreteur_Jajacode(jList1,jList2, textSortie, textErreurs);
+
     }
 
 
@@ -346,11 +346,27 @@ boolean firstParser = true;
         jMenuItem10.setEnabled(true);
         jMenuItem11.setEnabled(true);
         jMenuItem12.setEnabled(true);
+        
+         interjajacode = new Interpreteur_Jajacode(jList1,jList2, textSortie, textErreurs);
          interjajacode.setSettings(pathFile, firstParser);
-                if(firstParser)
+         
+         
+         
+         
+         
+         System.out.println("c  ac ca " + pathFile);
+         
+        
+         
+                if(firstParser){
                     interjajacode.start();
-                else
+                    System.out.println("ducul");
+                }
+                else{
                     interjajacode.run();
+                    System.out.println("pd");
+                    
+                }
 
                  firstParser = false;
         
