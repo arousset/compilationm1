@@ -3,7 +3,7 @@
   protected JJTJajaCodeState jjtree = new JJTJajaCodeState();
 
 
-	public JJTJajaCodeState getJJTree() {
+	public JJTJajaCodeState legetJJTree() {
 		return jjtree;
 	}
 	
