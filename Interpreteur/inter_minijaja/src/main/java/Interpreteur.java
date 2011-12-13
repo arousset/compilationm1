@@ -334,7 +334,8 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
             System.out.println(tas.get_Tas());
 
         } catch (Tas_ExceptionEspaceDispo ex) {
-            Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+            aff_erreurs(ex.getMessage());
         }
         return "";
   }
@@ -813,7 +814,8 @@ public class Interpreteur extends Thread implements MiniJajaVisitor {
                             tas.Tas_incrementerNbref(ancienne_adresse, ident_affecation, pile.searchident(eval_affectation).getQuad().getValeur(), eval_affectation);
                             pile.searchident(ident_affecation).getQuad().setValue(new TabValue(pile.searchident(eval_affectation).getQuad().getValeur()));
                         } catch (Tas_AdresseTableauInconnue ex) {
-                            Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+                            //Logger.getLogger(Interpreteur.class.getName()).log(Level.SEVERE, null, ex);
+                            aff_erreurs(ex.getMessage());
                         }
             }
             else{      
