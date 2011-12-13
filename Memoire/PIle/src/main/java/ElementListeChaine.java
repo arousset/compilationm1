@@ -61,18 +61,21 @@ public class ElementListeChaine {
     }
     
     public void del(Symbole s){
-        if(this.val==s){
+        if((this.val==s)){
             if(this.prec!=null){
-                prec.setNext(this.next);
+                this.prec.setNext(this.next);
             }
             if(this.next!=null){
                 this.next.setPrec(this.prec);
             }
+            this.val=null;
         }
         else{
             if(this.next!=null){
                 this.next.del(s);
             }
+
+
         }
     }
 
