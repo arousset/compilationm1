@@ -62,22 +62,50 @@ public class TestElementListeChaine extends TestCase {
          ElementListeChaine n= new ElementListeChaine(new Symbole("no", "valer", "gene", "tye", "contneur","potee"));
          ElementListeChaine p= new ElementListeChaine(new Symbole("n4o", "vale4r", "4gene", "t4ye", "4contneur","pot4ee"));
          ElementListeChaine e= new ElementListeChaine(s,p,n);
+        Symbole as= new Symbole("ndom", "vdaleur", "gednre", "typde", "codnteneur","portdee");
 
-         Assert.assertEquals(e.recherche(s).getVal(),s);
+         e.add(as);
+         Assert.assertEquals(e.recherche(as).getVal(),as);
 
     }
-/*
+
+
     public void testDel(){
          Symbole s= new Symbole("nom", "valeur", "genre", "type", "conteneur","portee");
          ElementListeChaine n= new ElementListeChaine(new Symbole("no", "valer", "gene", "tye", "contneur","potee"));
          ElementListeChaine p= new ElementListeChaine(new Symbole("n4o", "vale4r", "4gene", "t4ye", "4contneur","pot4ee"));
 
-         ElementListeChaine e= new ElementListeChaine(s,p,n);
-
+        ElementListeChaine e= new ElementListeChaine(s,p,n);
+       // ElementListeChaine e= new ElementListeChaine(s);
          Symbole as= new Symbole("ndom", "vdaleur", "gednre", "typde", "codnteneur","portdee");
 
         e.add(as);
-        e.add(s);
-        Assert.assertEquals(e.recherche(s),"null");
-    }*/
+        e.del(s);
+        Assert.assertEquals(e.recherche(s),null);
+    }
+
+    public void testRechercheType(){
+        Symbole s= new Symbole("nom", "valeur", "genre", "type", "conteneur","portee");
+         ElementListeChaine n= new ElementListeChaine(new Symbole("no", "valer", "gene", "tye", "contneur","potee"));
+         ElementListeChaine p= new ElementListeChaine(new Symbole("n4o", "vale4r", "4gene", "t4ye", "4contneur","pot4ee"));
+         ElementListeChaine e= new ElementListeChaine(s,p,n);
+        Symbole as= new Symbole("ndom", "vdaleur", "gednre", "typde", "codnteneur","portdee");
+
+         e.add(as);
+         Assert.assertEquals(e.rechercheType("nom", "genre", "portee"),"type");
+
+    }
+
+    public void testRecherchePortee(){
+        Symbole s= new Symbole("nom", "valeur", "genre", "type", "conteneur","portee");
+         ElementListeChaine n= new ElementListeChaine(new Symbole("no", "valer", "gene", "tye", "contneur","potee"));
+         ElementListeChaine p= new ElementListeChaine(new Symbole("n4o", "vale4r", "4gene", "t4ye", "4contneur","pot4ee"));
+         ElementListeChaine e= new ElementListeChaine(s,p,n);
+        Symbole as= new Symbole("ndom", "vdaleur", "gednre", "typde", "codnteneur","portdee");
+
+         e.add(as);
+         Assert.assertEquals(e.recherchePortee("nom","genre"),"portee");
+
+    }
+
 }
